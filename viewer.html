@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MTC-Brain Dashboard</title>
+<style>
+  :root {
+    --bg: #1a1a1a;
+    --surface: #242424;
+    --border: #333;
+    --gold: #c8a84e;
+    --green: #4a7c59;
+    --text: #e0e0e0;
+    --text-muted: #999;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 2rem;
+    line-height: 1.6;
+  }
+  h1 {
+    color: var(--gold);
+    font-size: 1.8rem;
+    margin-bottom: 0.25rem;
+  }
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  @media (max-width: 768px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+  .card h2 {
+    color: var(--green);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+  }
+  .card.full-width {
+    grid-column: 1 / -1;
+  }
+  .empty {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.9rem;
+  }
+  .file-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .file-item:last-child { border-bottom: none; }
+  .file-name { color: var(--gold); }
+  .file-preview { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem; }
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    margin-right: 0.5rem;
+  }
+  .instructions {
+    background: var(--surface);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+  }
+  .instructions h2 { color: var(--gold); margin-bottom: 0.5rem; }
+  .instructions p { color: var(--text-muted); }
+  .instructions code {
+    background: var(--bg);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
+  }
+  #drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    transition: border-color 0.2s;
+  }
+  #drop-zone.drag-over {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .refresh-btn {
+    background: var(--green);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    float: right;
+    margin-top: -2.5rem;
+  }
+  .refresh-btn:hover { opacity: 0.9; }
+</style>
+</head>
+<body>
+
+<h1>MTC-Brain</h1>
+<p class="subtitle">Michelle Townsend Consulting. Knowledge System Dashboard.</p>
+
+<div class="instructions">
+  <h2>How This Works</h2>
+  <p>This dashboard is a static viewer for your MTC-Brain folder system. Because browsers cannot read local files directly for security reasons, this page shows the folder structure and instructions. To see live content, open Claude Code pointed at this folder and ask for a status update.</p>
+  <p style="margin-top: 0.5rem;">Your folders: <code>owner-inbox/</code> <code>team-inbox/</code> <code>clients/</code> <code>projects/</code> <code>daily/</code> <code>resources/</code></p>
+</div>
+
+<div class="grid">
+
+  <div class="card">
+    <h2>Active Clients</h2>
+    <div id="clients-list">
+      <p class="empty">No client files yet. Add .md files to the clients/ folder.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Active Projects</h2>
+    <div id="projects-list">
+      <p class="empty">No project files yet. Add .md files to the projects/ folder.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Today's Itinerary</h2>
+    <div id="daily-view">
+      <p class="empty">No daily file for today. Ask Claude Code: "Build me today's itinerary."</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Owner Inbox</h2>
+    <div id="inbox-view">
+      <p class="empty">Owner inbox is empty. Processed items from team-inbox will appear here.</p>
+    </div>
+  </div>
+
+  <div class="card full-width">
+    <h2>Folder System Overview</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+      <div class="file-item">
+        <span class="status-dot"></span>
+        <span class="file-name">owner-inbox/</span>
+        <div class="file-preview">Finished work for your review</div>
+      </div>
+      <div class="file-item">
+        <span class="status-dot"></span>
+        <span class="file-name">team-inbox/</span>
+        <div class="file-preview">Drop notes, transcripts, screenshots here</div>
+      </div>
+      <div class="file-item">
+        <span class="status-dot"></span>
+        <span class="file-name">clients/</span>
+        <div class="file-preview">One .md file per client</div>
+      </div>
+      <div class="file-item">
+        <span class="status-dot"></span>
+        <span class="file-name">projects/</span>
+        <div class="file-preview">One .md file per project/build</div>
+      </div>
+      <div class="file-item">
+        <span class="status-dot"></span>
+        <span class="file-name">daily/</span>
+        <div class="file-preview">Daily itinerary files (YYYY-MM-DD.md)</div>
+      </div>
+      <div class="file-item">
+        <span class="status-dot"></span>
+        <span class="file-name">resources/</span>
+        <div class="file-preview">Reference docs, templates, guides</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card full-width">
+    <h2>Quick Start</h2>
+    <div style="font-size: 0.9rem; color: var(--text-muted);">
+      <p><strong style="color: var(--gold);">Morning routine:</strong> Open Claude Code in this folder. Say "Build me today's itinerary. Here's what's on my plate:" and brain dump.</p>
+      <p style="margin-top: 0.5rem;"><strong style="color: var(--gold);">Add a client:</strong> Ask Claude Code: "Create a client file for [name]."</p>
+      <p style="margin-top: 0.5rem;"><strong style="color: var(--gold);">Process inbox:</strong> Drop a file in team-inbox/, then ask Claude Code: "Check team-inbox and process whatever's there."</p>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
