@@ -279,34 +279,61 @@
 
     /* ── STATS ────────────────────────────────────────────── */
     #stats {
+      position: relative;
       background: var(--surface);
-      padding: 108px 0;
+      padding: 216px 0;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
+      isolation: isolate;
+    }
+
+    /* Grain texture overlay */
+    #stats::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.055;
+      pointer-events: none;
+      filter: url(#grain);
+      background: var(--surface);
+    }
+
+    #stats > * {
+      position: relative;
+      z-index: 1;
     }
 
     .stats-row {
       display: grid;
-      grid-template-columns: 2.2fr 1fr 1fr 1fr;
+      grid-template-columns: 1.6fr 1fr;
       gap: 0;
-      align-items: start;
+      align-items: center;
+    }
+
+    /* Counter takes the full left column */
+    .stat-counter {
+      padding: 0 72px 0 0;
+      border-right: 1px solid var(--border);
+    }
+
+    /* Right column: stack the three small stats */
+    .stats-right {
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+      padding-left: 72px;
     }
 
     .stat {
-      padding: 0 48px 0 0;
-    }
-
-    .stat + .stat {
-      padding-left: 48px;
-      padding-right: 0;
-      border-left: 1px solid var(--border);
+      /* individual small stats, no extra padding needed */
     }
 
     .stat-num {
       font-family: var(--mono);
-      font-size: 2rem;
-      font-weight: 400;
-      color: var(--gold);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #d4b438;
       line-height: 1;
       margin-bottom: 14px;
     }
@@ -321,37 +348,49 @@
     }
 
     .stat-counter .stat-num {
-      font-size: clamp(2.8rem, 5.5vw, 4.8rem);
-      letter-spacing: -0.02em;
-      margin-bottom: 18px;
+      font-size: clamp(4rem, 8vw, 7.5rem);
+      font-weight: 700;
+      color: #d4b438;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 22px;
     }
 
     @media (max-width: 900px) {
       .stats-row {
-        grid-template-columns: 1fr 1fr;
-        gap: 52px;
+        grid-template-columns: 1fr;
+        gap: 0;
       }
 
-      .stat { padding: 0; }
-      .stat + .stat { padding: 0; border-left: none; }
-
       .stat-counter {
-        grid-column: 1 / -1;
+        padding: 0 0 56px 0;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
         text-align: center;
       }
 
       .stat-counter .stat-num {
-        font-size: clamp(3.2rem, 10vw, 5.5rem);
+        font-size: clamp(4rem, 14vw, 6.5rem);
+      }
+
+      .stats-right {
+        padding: 56px 0 0 0;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 40px;
+      }
+
+      .stats-right .stat {
+        flex: 1 1 140px;
       }
     }
 
     @media (max-width: 500px) {
-      .stats-row {
-        grid-template-columns: 1fr;
-        gap: 44px;
+      .stats-right {
+        flex-direction: column;
+        gap: 36px;
       }
 
-      .stat-counter { grid-column: auto; }
       .stat { text-align: center; }
     }
 
@@ -481,6 +520,18 @@
 </section>
 
 <!-- ── STATS ─────────────────────────────────────────────── -->
+<!-- SVG grain filter — hidden, referenced by CSS -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="grain" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+      <feBlend in="SourceGraphic" in2="grayNoise" mode="overlay" result="blended"/>
+      <feComposite in="blended" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+</svg>
+
 <section id="stats">
   <div class="wrap-wide">
     <div class="stats-row">
@@ -490,19 +541,21 @@
         <div class="stat-label">hours of being human</div>
       </div>
 
-      <div class="stat reveal">
-        <div class="stat-num">20+</div>
-        <div class="stat-label">years inside mission-driven organizations</div>
-      </div>
+      <div class="stats-right">
+        <div class="stat reveal">
+          <div class="stat-num">20+</div>
+          <div class="stat-label">years inside mission-driven organizations</div>
+        </div>
 
-      <div class="stat reveal">
-        <div class="stat-num">1</div>
-        <div class="stat-label">planet we all share</div>
-      </div>
+        <div class="stat reveal">
+          <div class="stat-num">1</div>
+          <div class="stat-label">planet we all share</div>
+        </div>
 
-      <div class="stat reveal">
-        <div class="stat-num">&infin;</div>
-        <div class="stat-label">caring about the world and the people who make it work</div>
+        <div class="stat reveal">
+          <div class="stat-num">&infin;</div>
+          <div class="stat-label">caring about the world and the people who make it work</div>
+        </div>
       </div>
 
     </div>
