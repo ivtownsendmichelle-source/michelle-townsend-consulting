@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTC Brain Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #1a1a1a;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #c9a84c;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            color: #7a9e6d;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            max-width: 1100px;
+        }
+        .card {
+            background: #242424;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        .card h2 {
+            color: #c9a84c;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+        }
+        .card.full { grid-column: 1 / -1; }
+        .empty {
+            color: #666;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        .file-item {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #2a2a2a;
+            font-size: 0.9rem;
+        }
+        .file-item:last-child { border-bottom: none; }
+        .file-name { color: #7a9e6d; }
+        .status { color: #c9a84c; font-size: 0.85rem; }
+        .instructions {
+            background: #1e2a1e;
+            border: 1px solid #3a5a3a;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            max-width: 1100px;
+        }
+        .instructions h3 { color: #7a9e6d; margin-bottom: 0.5rem; }
+        .instructions p { font-size: 0.9rem; color: #999; }
+        code {
+            background: #333;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>MTC Brain Dashboard</h1>
+    <p class="subtitle">Michelle Townsend Consulting. Knowledge and business management system.</p>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Active Clients</h2>
+            <div id="clients">
+                <p class="empty">No client files yet. Add .md files to clients/ to see them here.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Active Projects</h2>
+            <div id="projects">
+                <p class="empty">No project files yet. Add .md files to projects/ to see them here.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Today's Itinerary</h2>
+            <div id="daily">
+                <p class="empty">No itinerary for today. Ask Claude to build one.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Owner Inbox</h2>
+            <div id="inbox">
+                <p class="empty">Nothing in the inbox yet.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="instructions">
+        <h3>How to use this dashboard</h3>
+        <p>This is a static snapshot. To make it live with your data, open Claude Code in your MTC-Brain folder and say:</p>
+        <p style="margin-top: 0.5rem;"><code>"Update viewer.html with my current clients, projects, and today's daily file."</code></p>
+        <p style="margin-top: 0.5rem;">Claude will read your folders and rewrite this file with real data. Open it in any browser. No server needed.</p>
+    </div>
+</body>
+</html>
