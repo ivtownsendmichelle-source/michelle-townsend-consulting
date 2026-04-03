@@ -1,669 +1,652 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Michelle Townsend Consulting</title>
-<meta name="description" content="Michelle Townsend helps nonprofits, food banks, and community organizations navigate AI safely. Based in Southern Oregon. Working everywhere.">
-
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%231B3A2D'/><text y='.9em' font-size='72' x='50%' text-anchor='middle' dominant-baseline='top' fill='%23C8A850'>M</text></svg>">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-<style>
-/* ─── RESET & ROOT ─────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --black:      #0a1209;
-  --forest:     #1B3A2D;
-  --forest-mid: #224d3a;
-  --gold:       #C8A850;
-  --gold-soft:  #d9bc75;
-  --cream:      #F5F0E8;
-  --cream-dim:  rgba(245, 240, 232, 0.65);
-  --cream-faint:rgba(245, 240, 232, 0.35);
-  --border:     rgba(200, 168, 80, 0.2);
-  --sans:       'Inter', system-ui, sans-serif;
-  --serif:      'Lora', Georgia, serif;
-}
-
-html { scroll-behavior: smooth; font-size: 16px; }
-
-body {
-  font-family: var(--sans);
-  background: var(--black);
-  color: var(--cream);
-  line-height: 1.7;
-  overflow-x: hidden;
-}
-
-a { color: inherit; text-decoration: none; }
-
-img { display: block; max-width: 100%; }
-
-/* ─── LAYOUT ───────────────────────────────────────────────── */
-.wrap {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 0 28px;
-}
-
-.wrap-wide {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 28px;
-}
-
-section {
-  padding: 100px 0;
-}
-
-/* ─── FADE ON SCROLL ───────────────────────────────────────── */
-.fade-in {
-  opacity: 0;
-  transition: opacity 0.8s ease;
-}
-.fade-in.visible {
-  opacity: 1;
-}
-
-/* ─── NAV ──────────────────────────────────────────────────── */
-#nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  background: var(--forest);
-  border-bottom: 1px solid var(--border);
-}
-
-.nav-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 60px;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 28px;
-}
-
-.nav-name {
-  font-family: var(--serif);
-  font-size: 1rem;
-  color: var(--cream);
-  font-weight: 400;
-}
-
-.nav-links {
-  display: flex;
-  list-style: none;
-  gap: 4px;
-}
-
-.nav-links a {
-  display: block;
-  padding: 6px 12px;
-  font-size: 0.82rem;
-  color: var(--cream-dim);
-  border-radius: 6px;
-  transition: color 0.2s;
-}
-
-.nav-links a:hover {
-  color: var(--gold-soft);
-}
-
-.nav-links .nav-cta {
-  color: var(--gold);
-  font-weight: 600;
-}
-
-.nav-links .nav-cta:hover {
-  color: var(--gold-soft);
-}
-
-/* Mobile nav toggle */
-.nav-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 6px;
-}
-.nav-toggle span {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background: var(--cream);
-  border-radius: 2px;
-}
-
-@media (max-width: 700px) {
-  .nav-links {
-    display: none;
-    position: absolute;
-    top: 60px; left: 0; right: 0;
-    background: var(--forest);
-    flex-direction: column;
-    padding: 12px 16px 20px;
-    border-top: 1px solid var(--border);
-    gap: 2px;
-  }
-  .nav-links.open { display: flex; }
-  .nav-links a { padding: 10px 14px; font-size: 0.9rem; }
-  .nav-toggle { display: flex; }
-}
-
-/* ─── HERO ─────────────────────────────────────────────────── */
-#hero {
-  min-height: 100vh;
-  background: var(--forest);
-  padding-top: 60px;
-  display: flex;
-  align-items: center;
-}
-
-.hero-inner {
-  padding: 80px 0;
-}
-
-.hero-inner h1 {
-  font-family: var(--serif);
-  font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.2rem);
-  font-weight: 400;
-  color: var(--cream);
-  line-height: 1.55;
-  max-width: 680px;
-  margin-bottom: 20px;
-}
-
-.hero-inner h1 strong {
-  font-weight: 600;
-  color: var(--gold-soft);
-}
-
-.hero-body {
-  max-width: 640px;
-  color: var(--cream-dim);
-  font-size: 1.05rem;
-  line-height: 1.8;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  margin-bottom: 40px;
-}
-
-.hero-body p.alert {
-  border-left: 3px solid var(--gold);
-  padding-left: 16px;
-  color: var(--cream);
-  font-style: italic;
-}
-
-.btn {
-  display: inline-block;
-  padding: 13px 28px;
-  background: var(--gold);
-  color: var(--forest);
-  font-weight: 600;
-  font-size: 0.92rem;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s;
-  text-decoration: none;
-}
-
-.btn:hover {
-  background: var(--gold-soft);
-}
-
-/* ─── STATS ────────────────────────────────────────────────── */
-#stats {
-  background: var(--black);
-  padding: 80px 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 40px;
-  align-items: center;
-}
-
-.stat {
-  padding: 20px 0;
-}
-
-.stat-num {
-  font-family: var(--serif);
-  font-size: 2rem;
-  font-weight: 600;
-  color: var(--gold);
-  line-height: 1;
-  margin-bottom: 10px;
-}
-
-.stat-label {
-  font-size: 0.78rem;
-  color: var(--cream-faint);
-  line-height: 1.5;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-/* Hours counter gets special treatment */
-.stat-hours {
-  border-right: 1px solid var(--border);
-  padding-right: 40px;
-}
-
-.stat-hours .stat-num {
-  font-size: clamp(2.4rem, 5vw, 3.8rem);
-  color: var(--gold);
-  letter-spacing: -0.02em;
-}
-
-.hours-live {
-  display: inline-block;
-}
-
-/* subtle pulse to indicate it's live */
-@keyframes pulse-glow {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.82; }
-}
-.stat-hours .stat-num {
-  animation: pulse-glow 4s ease-in-out infinite;
-}
-
-@media (max-width: 800px) {
-  .stats-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-  }
-  .stat-hours {
-    grid-column: 1 / -1;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-    padding-right: 0;
-    padding-bottom: 32px;
-    text-align: center;
-  }
-  .stat-hours .stat-num {
-    font-size: clamp(3rem, 10vw, 5rem);
-  }
-}
-
-@media (max-width: 480px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-  .stat-hours {
-    grid-column: auto;
-  }
-  .stat { text-align: center; }
-}
-
-/* ─── MY STORY ─────────────────────────────────────────────── */
-#story {
-  background: var(--forest);
-}
-
-.section-label {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 20px;
-}
-
-.section-heading {
-  font-family: var(--serif);
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
-  font-weight: 400;
-  color: var(--cream);
-  line-height: 1.35;
-  margin-bottom: 36px;
-}
-
-.prose {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  color: var(--cream-dim);
-  font-size: 1.05rem;
-  line-height: 1.8;
-  max-width: 680px;
-}
-
-.prose p strong {
-  color: var(--cream);
-  font-weight: 500;
-}
-
-/* ─── SERVICES ─────────────────────────────────────────────── */
-#services {
-  background: var(--black);
-}
-
-/* ─── WHO I HELP ───────────────────────────────────────────── */
-#who {
-  background: var(--forest);
-}
-
-/* ─── MY PROMISE ───────────────────────────────────────────── */
-#promise {
-  background: var(--black);
-}
-
-.promise-text {
-  font-family: var(--serif);
-  font-size: clamp(1.2rem, 3vw, 1.7rem);
-  font-weight: 400;
-  font-style: italic;
-  color: var(--cream);
-  line-height: 1.6;
-  max-width: 640px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* ─── CONTACT ──────────────────────────────────────────────── */
-#contact {
-  background: var(--forest);
-}
-
-.contact-body {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  max-width: 560px;
-}
-
-.contact-body p {
-  font-size: 1.05rem;
-  color: var(--cream-dim);
-  line-height: 1.8;
-}
-
-.contact-info {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 8px 0;
-}
-
-.contact-info a {
-  color: var(--gold-soft);
-  font-size: 1rem;
-  transition: color 0.2s;
-}
-
-.contact-info a:hover {
-  color: var(--gold);
-}
-
-.contact-note {
-  font-size: 0.85rem;
-  color: var(--cream-faint);
-  border-left: 2px solid var(--border);
-  padding-left: 14px;
-  line-height: 1.65;
-}
-
-/* ─── FOOTER ───────────────────────────────────────────────── */
-footer {
-  background: #070e06;
-  border-top: 1px solid var(--border);
-  padding: 52px 0 40px;
-}
-
-.footer-quote {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 0.85rem;
-  color: var(--cream-faint);
-  margin-bottom: 28px;
-}
-
-.footer-name {
-  font-size: 0.95rem;
-  color: var(--cream-dim);
-  margin-bottom: 8px;
-  font-weight: 500;
-}
-
-.footer-sub {
-  font-size: 0.8rem;
-  color: var(--cream-faint);
-  line-height: 1.6;
-  margin-bottom: 28px;
-}
-
-.footer-copy {
-  font-size: 0.75rem;
-  color: rgba(245, 240, 232, 0.2);
-}
-
-/* ─── DIVIDER ──────────────────────────────────────────────── */
-.divider {
-  width: 40px;
-  height: 2px;
-  background: var(--gold);
-  margin-bottom: 32px;
-  opacity: 0.5;
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Michelle Townsend. Fractional Chief AI Officer.</title>
+  <meta name="description" content="Michelle Townsend is a Fractional Chief AI Officer for mission-driven organizations. Two decades inside nonprofits, food banks, and community groups. Based in Southern Oregon.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── RESET ────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── TOKENS ───────────────────────────────────────────── */
+    :root {
+      --bg:       #0e0e0c;
+      --surface:  #141412;
+      --gold:     #c9a830;
+      --cream:    #e8e7e0;
+      --muted:    #555550;
+      --border:   rgba(255, 255, 255, 0.08);
+      --serif:    'Lora', Georgia, serif;
+      --mono:     'DM Mono', 'Courier New', monospace;
+    }
+
+    /* ── BASE ─────────────────────────────────────────────── */
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: var(--serif);
+      background: var(--bg);
+      color: var(--cream);
+      line-height: 1.75;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── LAYOUT ───────────────────────────────────────────── */
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 36px;
+    }
+
+    .wrap-wide {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 36px;
+    }
+
+    /* ── SCROLL REVEAL ────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+    }
+
+    /* ── HERO STAGGER ─────────────────────────────────────── */
+    .h-fade {
+      opacity: 0;
+      animation: fadeOnly 0.9s ease forwards;
+    }
+
+    @keyframes fadeOnly {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .h-fade:nth-child(1) { animation-delay: 0ms; }
+    .h-fade:nth-child(2) { animation-delay: 200ms; }
+    .h-fade:nth-child(3) { animation-delay: 400ms; }
+    .h-fade:nth-child(4) { animation-delay: 600ms; }
+    .h-fade:nth-child(5) { animation-delay: 800ms; }
+
+    /* ── NAV ──────────────────────────────────────────────── */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 36px;
+    }
+
+    .nav-name {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      font-variant-caps: small-caps;
+      color: var(--cream);
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 8px 18px;
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 20px;
+      height: 1.5px;
+      background: var(--cream);
+    }
+
+    @media (max-width: 660px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0; right: 0;
+        background: var(--bg);
+        flex-direction: column;
+        border-top: 1px solid var(--border);
+        padding: 16px 0 24px;
+      }
+
+      .nav-links.open { display: flex; }
+
+      .nav-links a {
+        padding: 12px 36px;
+        font-size: 0.88rem;
+      }
+
+      .nav-toggle { display: flex; }
+    }
+
+    /* ── SECTION LABEL ────────────────────────────────────── */
+    .label {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 52px;
+    }
+
+    /* ── PROSE ────────────────────────────────────────────── */
+    .prose {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      line-height: 1.88;
+      color: var(--cream);
+      max-width: 680px;
+    }
+
+    /* ── BUTTON ───────────────────────────────────────────── */
+    .btn {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 14px 34px;
+      background: var(--gold);
+      color: var(--bg);
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover {
+      opacity: 0.82;
+    }
+
+    /* ── HERO ─────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      background: var(--bg);
+      padding-top: 64px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-inner {
+      padding: 96px 0 84px;
+    }
+
+    .hero-eyebrow {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 32px;
+    }
+
+    .hero-h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+      line-height: 1.18;
+      color: var(--cream);
+      max-width: 640px;
+      margin-bottom: 24px;
+    }
+
+    .hero-sub {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.05rem, 2vw, 1.28rem);
+      line-height: 1.55;
+      color: var(--muted);
+      max-width: 560px;
+      margin-bottom: 48px;
+    }
+
+    .hero-body {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      line-height: 1.88;
+      color: var(--cream);
+      max-width: 620px;
+      margin-bottom: 56px;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .hero-note {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    /* ── STATS ────────────────────────────────────────────── */
+    #stats {
+      background: var(--surface);
+      padding: 108px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr 1fr 1fr;
+      gap: 0;
+      align-items: start;
+    }
+
+    .stat {
+      padding: 0 48px 0 0;
+    }
+
+    .stat + .stat {
+      padding-left: 48px;
+      padding-right: 0;
+      border-left: 1px solid var(--border);
+    }
+
+    .stat-num {
+      font-family: var(--mono);
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      line-height: 1.65;
+      text-transform: uppercase;
+    }
+
+    .stat-counter .stat-num {
+      font-size: clamp(2.8rem, 5.5vw, 4.8rem);
+      letter-spacing: -0.02em;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .stats-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 52px;
+      }
+
+      .stat { padding: 0; }
+      .stat + .stat { padding: 0; border-left: none; }
+
+      .stat-counter {
+        grid-column: 1 / -1;
+        text-align: center;
+      }
+
+      .stat-counter .stat-num {
+        font-size: clamp(3.2rem, 10vw, 5.5rem);
+      }
+    }
+
+    @media (max-width: 500px) {
+      .stats-row {
+        grid-template-columns: 1fr;
+        gap: 44px;
+      }
+
+      .stat-counter { grid-column: auto; }
+      .stat { text-align: center; }
+    }
+
+    /* ── DARK SECTION ─────────────────────────────────────── */
+    .s-dark {
+      background: var(--bg);
+      padding: 120px 0;
+    }
+
+    /* ── SURFACE SECTION ──────────────────────────────────── */
+    .s-surface {
+      background: var(--surface);
+      padding: 120px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── CONTACT DETAILS ──────────────────────────────────── */
+    .contact-details {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 40px 0 48px;
+    }
+
+    .contact-details a {
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      letter-spacing: 0.04em;
+      color: var(--cream);
+      transition: color 0.2s;
+    }
+
+    .contact-details a:hover {
+      color: var(--gold);
+    }
+
+    .contact-location {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── FOOTER ───────────────────────────────────────────── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 72px 0 56px;
+    }
+
+    .footer-quote {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+
+    .footer-name {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cream);
+      margin-bottom: 8px;
+    }
+
+    .footer-domain {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      color: rgba(232, 231, 224, 0.18);
+    }
+
+    /* ── GOLD RULE ────────────────────────────────────────── */
+    .gold-rule {
+      width: 32px;
+      height: 1px;
+      background: var(--gold);
+      margin-bottom: 52px;
+      opacity: 0.5;
+    }
+
+  </style>
 </head>
 <body>
 
-<!-- ── NAV ─────────────────────────────────────────────────── -->
+<!-- ── NAV ──────────────────────────────────────────────── -->
 <nav id="nav">
   <div class="nav-inner">
     <span class="nav-name">Michelle Townsend</span>
     <ul class="nav-links" id="nav-links">
-      <li><a href="#story">My Story</a></li>
-      <li><a href="#services">What I Do</a></li>
-      <li><a href="#who">Who I Help</a></li>
-      <li><a href="#promise">My Promise</a></li>
-      <li><a href="#contact" class="nav-cta">Let's Talk</a></li>
+      <li><a href="#story">Story</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#who">Who</a></li>
+      <li><a href="#promise">Promise</a></li>
+      <li><a href="#contact">Contact</a></li>
     </ul>
-    <button class="nav-toggle" id="nav-toggle" aria-label="Open menu">
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
       <span></span><span></span><span></span>
     </button>
   </div>
 </nav>
 
-<!-- ── HERO ────────────────────────────────────────────────── -->
+<!-- ── HERO ─────────────────────────────────────────────── -->
 <section id="hero">
   <div class="wrap hero-inner">
-
-    <h1>My name is <strong>Michelle Townsend.</strong> AI is advancing faster than anyone was ready for.</h1>
-
-    <div class="hero-body">
-      <p>When the light bulb was invented, years passed between the technology being available and people actually adopting it. But now adoption is speeding up like a rubber band slingshotting us into the future without time to put checks and balances into place.</p>
-
-      <p>I realized that all the small organizations I love, the nonprofits, the food banks, the community groups, might not be able to see the potential pitfalls before it's too late.</p>
-
-      <p class="alert">Did you know there are popular note-taking tools people are bringing into Zoom meetings that can mine your data, scrub your websites, take your financial information somewhere you don't know about, and train new models with your sensitive information?</p>
-
-      <p>Organizational health means dealing with this now. Not later.</p>
+    <span class="hero-eyebrow h-fade">Fractional Chief AI Officer</span>
+    <h1 class="hero-h1 h-fade">You needed me three months ago.</h1>
+    <p class="hero-sub h-fade">It's not too late to take control of your future.</p>
+    <p class="hero-body h-fade">Are you avoiding AI? Your employees are not. Every time a staff member opens a free AI tool, your data walks out the door. Meeting notes. Donor information. Financial records. Client conversations. Gone to a server you've never heard of, trained into a model you'll never control.</p>
+    <div class="hero-cta h-fade">
+      <a href="#contact" class="btn">Let's talk</a>
+      <span class="hero-note">Free 30-minute conversation. No pitch.</span>
     </div>
-
-    <a href="#contact" class="btn">Let's talk</a>
-
   </div>
 </section>
 
-<!-- ── STATS ───────────────────────────────────────────────── -->
+<!-- ── STATS ─────────────────────────────────────────────── -->
 <section id="stats">
   <div class="wrap-wide">
-    <div class="stats-grid">
+    <div class="stats-row">
 
-      <div class="stat stat-hours fade-in">
-        <div class="stat-num">
-          <span class="hours-live" id="hours-counter">403,800</span>
-        </div>
+      <div class="stat stat-counter reveal">
+        <div class="stat-num" id="hours-counter">0</div>
         <div class="stat-label">hours of being human</div>
       </div>
 
-      <div class="stat fade-in">
-        <div class="stat-num">10+</div>
-        <div class="stat-label">years serving on small nonprofit boards</div>
+      <div class="stat reveal">
+        <div class="stat-num">20+</div>
+        <div class="stat-label">years inside mission-driven organizations</div>
       </div>
 
-      <div class="stat fade-in">
+      <div class="stat reveal">
         <div class="stat-num">1</div>
         <div class="stat-label">planet we all share</div>
       </div>
 
-      <div class="stat fade-in">
+      <div class="stat reveal">
         <div class="stat-num">&infin;</div>
-        <div class="stat-label">caring about the world around me and the people that make it work</div>
+        <div class="stat-label">caring about the world and the people who make it work</div>
       </div>
 
     </div>
   </div>
 </section>
 
-<!-- ── MY STORY ─────────────────────────────────────────────── -->
-<section id="story">
-  <div class="wrap fade-in">
-    <span class="section-label">My Story</span>
-    <div class="divider"></div>
-
+<!-- ── WHAT'S ACTUALLY HAPPENING ─────────────────────────── -->
+<section id="problem" class="s-dark">
+  <div class="wrap reveal">
+    <span class="label">What's actually happening</span>
+    <div class="gold-rule"></div>
     <div class="prose">
-      <p>I'm not a tech person who decided to help nonprofits. I'm a community organizer who's been doing this work for over eight years. That hasn't changed.</p>
-
-      <p>What changed is I started paying attention to AI and I saw a giant gap. Nobody in the nonprofit world was talking about policy. Nobody was thinking about data protection. Nobody was asking the hard questions about what these tools are actually doing with our information.</p>
-
-      <p>And the people who ARE talking about AI? They're tech bros who've never set foot in a food bank. They don't understand this world. <strong>I do. I live in it.</strong></p>
-
-      <p>So I'm not shifting careers. I'm expanding the work I've always done. Because these organizations deserve someone in their corner who understands both the tools and the mission. And the sooner they have that, the more choices they get to make for themselves instead of having those choices made for them.</p>
+      <p>Otter.ai is in your board meetings right now. It's transcribing everything. The names, the numbers, the strategy, the fight you had about the budget. It's not just recording it. It's keeping it. Training on it. Selling access to it. And nobody in that room signed off on that.</p>
+      <p>Your board doesn't have a policy. Your bylaws don't mention data. Your ED is making AI decisions alone because nobody else understands it. Your staff is using six different tools with six different privacy agreements nobody read. Your volunteers have access to donor data on personal devices. Your institutional knowledge lives in one person's head and that person is burning out.</p>
+      <p>And somewhere in all of that, your mission is still supposed to be the thing driving every decision.</p>
     </div>
   </div>
 </section>
 
-<!-- ── WHAT I DO ─────────────────────────────────────────────── -->
-<section id="services">
-  <div class="wrap fade-in">
-    <span class="section-label">What I Do</span>
-    <div class="divider"></div>
-
+<!-- ── THE WORK ───────────────────────────────────────────── -->
+<section id="work" class="s-surface">
+  <div class="wrap reveal">
+    <span class="label">The work</span>
+    <div class="gold-rule"></div>
     <div class="prose">
-      <p>The first thing I do is look at your organizational hygiene. Are your documents living in one place or scattered across five people's desktops? Does everyone who needs access have it? Are your passwords secure or is someone's login on a sticky note? Who holds all the institutional knowledge and what happens if they leave tomorrow? We get that cleaned up first because nothing else works if the foundation is a mess.</p>
-
-      <p>From there we go deeper. What tools are you using and are they the right ones? What happens to your data when someone on your team downloads a free AI note-taker into a Zoom meeting? Do you have any policies around that? Most small orgs don't. And that's not a failure. It's just that nobody's had the time to think about it. That's what I'm here for.</p>
-
-      <p>I also look at the bigger picture. Is your board up to date on what AI means for your organization? Do your bylaws account for data governance? Is your mission still driving your decisions or has it drifted? These are the kinds of questions that protect an organization's future. I can help you draft policy recommendations, prepare board presentations, and build the kind of strategic framework that keeps you focused on your mission instead of getting pulled off course.</p>
-
-      <p>And when you need things built, I build them. A website. A custom tool that fits your actual workflow. A system that takes something your team does manually every week and makes it take five minutes instead of five hours. Whatever the organization actually needs.</p>
+      <p>The people who know me best will tell you I see the problem before they do. By the time you've named it, I've already built the solution.</p>
+      <p>I come in as your Fractional Chief AI Officer. Not a vendor. Not a trainer. The person responsible for how AI touches your organization. I look at what tools your team is using and whether anyone should be using them. I find the gaps between what your policies say and what's actually happening. I prepare your board for conversations they don't know they need to have yet.</p>
+      <p>Then we build. Custom tools designed for the way your organization actually works. Local databases that keep your data yours. Systems that handle the administrative weight that keeps brilliant people from doing the thing they came here to do. Grant research. Donor communications. Intake forms. Reporting. The work that consumes hours and produces nothing that only you can do.</p>
+      <p>This isn't about replacing people. The people doing this work are the reason it works. It's about freeing them from tasks that were never a good use of their gifts in the first place. When that weight lifts, something happens. People remember why they came. They find the work underneath the work. They get their purpose back.</p>
+      <p>AI is not going away. The organizations that ignore it don't get to opt out. They just lose ground. They become the most vulnerable. The least funded. The easiest to overlook. The ones who adapt don't just survive. They build something they never had before. More people served. More impact per dollar. More mission in every hour.</p>
     </div>
   </div>
 </section>
 
-<!-- ── WHO I HELP ────────────────────────────────────────────── -->
-<section id="who">
-  <div class="wrap fade-in">
-    <span class="section-label">Who I Help</span>
-    <div class="divider"></div>
-
+<!-- ── WHO I HELP ─────────────────────────────────────────── -->
+<section id="who" class="s-dark">
+  <div class="wrap reveal">
+    <span class="label">Who I help</span>
+    <div class="gold-rule"></div>
     <div class="prose">
-      <p>The people I work with are my friends, my neighbors, my colleagues. They're community organizers and pillars of their own communities. Some of them I've known for years. Some I haven't met yet but I already want to be inspired by them. They're people just like me and people nothing like me. What they have in common is they're doing valuable work in their communities because they believe in it. And because they believe in what they're doing, I believe in what they're doing.</p>
+      <p>The people I work with are carrying a lot. Fear of AI taking over. Fear of losing the human touch that makes their work matter. Fear that their staff will be replaced, their data stolen, their donors spooked, their board panicked.</p>
+      <p>And they're already doing too much.</p>
+      <p>I show up because I've seen what happens when the right organization finally has the right tools. It doesn't look like technology. It looks like relief. And over time that relief turns into belief. Purpose. Meaning. A little sanity restored to a world that needs it badly.</p>
+      <p>That's who I help. The ones still showing up even when it's hard. The ones doing the most important work in the room. The ones who can't afford to be left behind. Not on my watch.</p>
     </div>
   </div>
 </section>
 
-<!-- ── MY PROMISE ────────────────────────────────────────────── -->
-<section id="promise">
-  <div class="wrap fade-in">
-    <span class="section-label">My Promise</span>
-    <div class="divider"></div>
-
-    <div class="promise-text">
-      <p>I want to work for results. If it's not valuable to you, I don't want you to pay for it.</p>
-      <p>I want you to know that I stand behind what I deliver. I don't just want to sell you something. I want to change the way you interact with the world around you.</p>
+<!-- ── MY STORY ───────────────────────────────────────────── -->
+<section id="story" class="s-surface">
+  <div class="wrap reveal">
+    <span class="label">My story</span>
+    <div class="gold-rule"></div>
+    <div class="prose">
+      <p>I don't know exactly what I see that others don't. I just know I've always seen it.</p>
+      <p>I have spent two decades inside organizations of every shape and size. Nonprofits. Private sector. Community groups. Farms. Food banks. Businesses trying to reach more people with less. I have been in the rooms where decisions get made. I have watched what happens when nobody asks the hard questions in time.</p>
+      <p>That's not a resume. That's a different kind of knowing.</p>
+      <p>I didn't come to AI from technology. I came to it from the work. I started paying attention because I saw what was coming for the organizations I love. Nobody was talking about policy. Nobody was thinking about data protection. The people who were talking about AI had never set foot in a food bank.</p>
+      <p>I live in this world. I understand the mission. And I know how to protect it.</p>
     </div>
   </div>
 </section>
 
-<!-- ── CONTACT ───────────────────────────────────────────────── -->
-<section id="contact">
-  <div class="wrap fade-in">
-    <span class="section-label">Let's Talk</span>
-    <div class="divider"></div>
+<!-- ── MY PROMISE ─────────────────────────────────────────── -->
+<section id="promise" class="s-dark">
+  <div class="wrap reveal">
+    <span class="label">My promise</span>
+    <div class="gold-rule"></div>
+    <div class="prose">
+      <p>People are the whole point. The technology serves them or it doesn't belong here.</p>
+      <p>The faster we use these tools to connect people to each other, to their mission, to the work that actually matters, the further we all go. Together.</p>
+      <p>That is what I am committed to. Not just your organization. All of us.</p>
+      <p>I help the people who help others, so we can all get better together.</p>
+    </div>
+  </div>
+</section>
 
-    <div class="contact-body">
+<!-- ── CONTACT ────────────────────────────────────────────── -->
+<section id="contact" class="s-surface">
+  <div class="wrap reveal">
+    <span class="label">Let's talk</span>
+    <div class="gold-rule"></div>
+    <div class="prose">
       <p>A free 30-minute conversation. No pressure. Just two people talking about what's possible.</p>
-
-      <div class="contact-info">
-        <a href="mailto:ivtownsend.michelle@gmail.com">ivtownsend.michelle@gmail.com</a>
-        <a href="tel:5414152460">541-415-2460</a>
-      </div>
-
-      <p class="contact-note">I work with organizations locally in Southern Oregon and remotely nationwide via Zoom.</p>
-
-      <a href="mailto:ivtownsend.michelle@gmail.com" class="btn">Let's talk</a>
     </div>
+    <div class="contact-details">
+      <a href="mailto:hello@missionfirst.ai">hello@missionfirst.ai</a>
+      <a href="tel:5414152460">541-415-2460</a>
+      <span class="contact-location">Southern Oregon's Illinois Valley. Working with organizations everywhere.</span>
+    </div>
+    <a href="mailto:hello@missionfirst.ai" class="btn">Let's talk</a>
   </div>
 </section>
 
-<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
 <footer>
   <div class="wrap">
     <p class="footer-quote">You are not behind. You are building.</p>
     <p class="footer-name">Michelle Townsend Consulting</p>
-    <p class="footer-sub">Based in Southern Oregon's Illinois Valley. Working with organizations everywhere.</p>
+    <p class="footer-domain">missionfirst.ai</p>
     <p class="footer-copy">&copy; 2026</p>
   </div>
 </footer>
 
 <script>
-// ── Mobile nav ──────────────────────────────────────────────
-const toggle = document.getElementById('nav-toggle');
-const navLinks = document.getElementById('nav-links');
-toggle.addEventListener('click', () => navLinks.classList.toggle('open'));
-navLinks.querySelectorAll('a').forEach(a => {
-  a.addEventListener('click', () => navLinks.classList.remove('open'));
-});
+  // ── Mobile nav ───────────────────────────────────────────
+  const toggle = document.getElementById('nav-toggle');
+  const navLinks = document.getElementById('nav-links');
 
-// ── Live hours counter ──────────────────────────────────────
-// Birth: February 21, 1980, 6:00 AM Pacific Time (UTC-8 in February)
-const birth = new Date('1980-02-21T14:00:00Z');
-const counterEl = document.getElementById('hours-counter');
-
-function updateHours() {
-  const ms = Date.now() - birth.getTime();
-  const hours = Math.floor(ms / 3600000);
-  counterEl.textContent = hours.toLocaleString('en-US');
-}
-
-updateHours();
-setInterval(updateHours, 1000);
-
-// ── Scroll fade-in ──────────────────────────────────────────
-const fadeEls = document.querySelectorAll('.fade-in');
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      observer.unobserve(e.target);
-    }
+  toggle.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
   });
-}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
 
-fadeEls.forEach(el => observer.observe(el));
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+
+  // ── Live hours counter ────────────────────────────────────
+  // Born February 21, 1980 at 6:00 AM Pacific Standard Time (UTC-8)
+  const birth = new Date('1980-02-21T14:00:00Z');
+  const counterEl = document.getElementById('hours-counter');
+
+  function updateHours() {
+    const elapsed = Date.now() - birth.getTime();
+    const hours = Math.floor(elapsed / 3600000);
+    counterEl.textContent = hours.toLocaleString('en-US');
+  }
+
+  updateHours();
+  setInterval(updateHours, 1000);
+
+  // ── Scroll reveal ─────────────────────────────────────────
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -48px 0px' });
+
+  revealEls.forEach(el => observer.observe(el));
 </script>
+
 </body>
 </html>
