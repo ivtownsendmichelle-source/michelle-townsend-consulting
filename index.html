@@ -193,6 +193,10 @@
       max-width: 680px;
     }
 
+    .prose p {
+      color: #e8e7e0;
+    }
+
     /* ── BUTTON ───────────────────────────────────────────── */
     .btn {
       display: inline-block;
@@ -238,7 +242,7 @@
     .hero-h1 {
       font-family: var(--serif);
       font-weight: 700;
-      font-size: clamp(3rem, 8.5vw, 7.5rem);
+      font-size: clamp(2.8rem, 6vw, 5rem);
       line-height: 1.04;
       color: var(--cream);
       max-width: 100%;
@@ -246,7 +250,7 @@
       letter-spacing: -0.02em;
     }
 
-    .hero-h1 .gold {
+    .hero-h1 > .hero-gold {
       color: var(--gold);
     }
 
@@ -515,7 +519,7 @@
 <section id="hero">
   <div class="wrap hero-inner">
     <span class="hero-eyebrow h-fade">Fractional Chief AI Officer</span>
-    <h1 class="hero-h1 h-fade">You needed me<br><span class="gold">three months ago.</span></h1>
+    <h1 class="hero-h1 h-fade">You needed me<br><span class="hero-gold">three months ago.</span></h1>
     <p class="hero-sub h-fade">It's not too late to take control of your future.</p>
     <p class="hero-body h-fade">Are you avoiding AI? Your employees are not. Every time a staff member opens a free AI tool, your data walks out the door. Meeting notes. Donor information. Financial records. Client conversations. Gone to a server you've never heard of, trained into a model you'll never control.</p>
     <div class="hero-cta h-fade">
