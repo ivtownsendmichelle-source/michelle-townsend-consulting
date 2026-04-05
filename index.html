@@ -194,6 +194,32 @@
       margin-bottom: 32px;
     }
 
+    /* ── WORK DISPLAY STATEMENT ──────────────────────────── */
+    .work-display {
+      font-family: var(--display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #e8e7e0;
+      max-width: 680px;
+      margin-bottom: 36px;
+    }
+
+    /* ── INLINE GOLD STATEMENT ────────────────────────────── */
+    .gold-statement {
+      font-family: var(--display);
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: #c9a830;
+      margin-bottom: 12px;
+    }
+
+    /* ── PROSE CALLOUT ────────────────────────────────────── */
+    .prose-callout {
+      border-left: 3px solid #c9a830;
+      padding-left: 12px;
+    }
+
     /* ── PROSE ────────────────────────────────────────────── */
     .prose {
       display: flex;
@@ -635,12 +661,13 @@
   <div class="wrap reveal">
     <span class="label">The work</span>
     <div class="gold-rule"></div>
+    <p class="work-display">The people who know me best will tell you I see the problem before they do. By the time you've named it, I've already built the solution.</p>
     <div class="prose">
-      <p>The people who know me best will tell you I see the problem before they do. By the time you've named it, I've already built the solution.</p>
       <p>I come in as your Fractional Chief AI Officer. Not a vendor. Not a trainer. The person responsible for how AI touches your organization. I look at what tools your team is using and whether anyone should be using them. I find the gaps between what your policies say and what's actually happening. I prepare your board for conversations they don't know they need to have yet.</p>
       <p>Then we build. Custom tools designed for the way your organization actually works. Local databases that keep your data yours. Systems that handle the administrative weight that keeps brilliant people from doing the thing they came here to do. Grant research. Donor communications. Intake forms. Reporting. The work that consumes hours and produces nothing that only you can do.</p>
-      <p>This isn't about replacing people. The people doing this work are the reason it works. It's about freeing them from tasks that were never a good use of their gifts in the first place. When that weight lifts, something happens. People remember why they came. They find the work underneath the work. They get their purpose back.</p>
-      <p>AI is not going away. The organizations that ignore it don't get to opt out. They just lose ground. They become the most vulnerable. The least funded. The easiest to overlook. The ones who adapt don't just survive. They build something they never had before. More people served. More impact per dollar. More mission in every hour.</p>
+      <p class="prose-callout">This isn't about replacing people. The people doing this work are the reason it works. It's about freeing them from tasks that were never a good use of their gifts in the first place. When that weight lifts, something happens. People remember why they came. They find the work underneath the work. They get their purpose back.</p>
+      <p class="gold-statement">AI is not going away.</p>
+      <p>The organizations that ignore it don't get to opt out. They just lose ground. They become the most vulnerable. The least funded. The easiest to overlook. The ones who adapt don't just survive. They build something they never had before. More people served. More impact per dollar. More mission in every hour.</p>
     </div>
   </div>
 </section>
