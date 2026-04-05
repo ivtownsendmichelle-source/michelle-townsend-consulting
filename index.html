@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 
   <style>
     /* ── RESET ────────────────────────────────────────────── */
@@ -237,12 +237,17 @@
 
     .hero-h1 {
       font-family: var(--serif);
-      font-weight: 400;
-      font-size: clamp(2.6rem, 5.5vw, 4.2rem);
-      line-height: 1.18;
+      font-weight: 700;
+      font-size: clamp(3rem, 8.5vw, 7.5rem);
+      line-height: 1.04;
       color: var(--cream);
-      max-width: 640px;
-      margin-bottom: 24px;
+      max-width: 100%;
+      margin-bottom: 36px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-h1 .gold {
+      color: var(--gold);
     }
 
     .hero-sub {
@@ -510,7 +515,7 @@
 <section id="hero">
   <div class="wrap hero-inner">
     <span class="hero-eyebrow h-fade">Fractional Chief AI Officer</span>
-    <h1 class="hero-h1 h-fade">You needed me three months ago.</h1>
+    <h1 class="hero-h1 h-fade">You needed me<br><span class="gold">three months ago.</span></h1>
     <p class="hero-sub h-fade">It's not too late to take control of your future.</p>
     <p class="hero-body h-fade">Are you avoiding AI? Your employees are not. Every time a staff member opens a free AI tool, your data walks out the door. Meeting notes. Donor information. Financial records. Client conversations. Gone to a server you've never heard of, trained into a model you'll never control.</p>
     <div class="hero-cta h-fade">
