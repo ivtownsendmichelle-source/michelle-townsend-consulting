@@ -175,12 +175,23 @@
     .label {
       display: block;
       font-family: var(--display);
-      font-size: 0.68rem;
+      font-size: 0.8125rem;
       font-weight: 600;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.28em;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 52px;
+      margin-bottom: 24px;
+    }
+
+    /* ── SECTION LEDE ─────────────────────────────────────── */
+    .section-lede {
+      font-family: var(--display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #e8e7e0;
+      max-width: 680px;
+      margin-bottom: 32px;
     }
 
     /* ── PROSE ────────────────────────────────────────────── */
@@ -514,11 +525,10 @@
 
     /* ── GOLD RULE ────────────────────────────────────────── */
     .gold-rule {
-      width: 32px;
+      width: 60px;
       height: 1px;
-      background: var(--gold);
-      margin-bottom: 52px;
-      opacity: 0.5;
+      background: #c9a830;
+      margin-bottom: 40px;
     }
 
   </style>
@@ -604,8 +614,9 @@
   <div class="wrap reveal">
     <span class="label">What's actually happening</span>
     <div class="gold-rule"></div>
+    <p class="section-lede">Otter.ai is in your board meetings right now.</p>
     <div class="prose">
-      <p>Otter.ai is in your board meetings right now. It's transcribing everything. The names, the numbers, the strategy, the fight you had about the budget. It's not just recording it. It's keeping it. Training on it. Selling access to it. And nobody in that room signed off on that.</p>
+      <p>It's transcribing everything. The names, the numbers, the strategy, the fight you had about the budget. It's not just recording it. It's keeping it. Training on it. Selling access to it. And nobody in that room signed off on that.</p>
       <p>Your board doesn't have a policy. Your bylaws don't mention data. Your ED is making AI decisions alone because nobody else understands it. Your staff is using six different tools with six different privacy agreements nobody read. Your volunteers have access to donor data on personal devices. Your institutional knowledge lives in one person's head and that person is burning out.</p>
       <p>And somewhere in all of that, your mission is still supposed to be the thing driving every decision.</p>
     </div>
