@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     /* ── RESET ────────────────────────────────────────────── */
@@ -24,6 +24,7 @@
       --border:   rgba(255, 255, 255, 0.08);
       --serif:    'Lora', Georgia, serif;
       --mono:     'DM Mono', 'Courier New', monospace;
+      --display:  'Space Grotesk', system-ui, sans-serif;
     }
 
     /* ── BASE ─────────────────────────────────────────────── */
@@ -119,9 +120,10 @@
     .nav-links a {
       display: block;
       padding: 8px 18px;
-      font-family: var(--mono);
-      font-size: 0.76rem;
-      letter-spacing: 0.06em;
+      font-family: var(--display);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
       color: var(--muted);
       transition: color 0.2s;
     }
@@ -172,9 +174,10 @@
     /* ── SECTION LABEL ────────────────────────────────────── */
     .label {
       display: block;
-      font-family: var(--mono);
-      font-size: 0.66rem;
-      letter-spacing: 0.24em;
+      font-family: var(--display);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--gold);
       margin-bottom: 52px;
@@ -217,7 +220,14 @@
     }
 
     /* ── HERO ─────────────────────────────────────────────── */
+    @keyframes grid-drift {
+      from { background-position: 0 0; }
+      to   { background-position: 72px 72px; }
+    }
+
     #hero {
+      position: relative;
+      overflow: hidden;
       min-height: 100vh;
       background: var(--bg);
       padding-top: 64px;
@@ -225,7 +235,22 @@
       align-items: center;
     }
 
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+      background-size: 72px 72px;
+      animation: grid-drift 40s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
     .hero-inner {
+      position: relative;
+      z-index: 1;
       padding: 96px 0 84px;
     }
 
@@ -240,14 +265,14 @@
     }
 
     .hero-h1 {
-      font-family: var(--serif);
+      font-family: var(--display);
       font-weight: 700;
       font-size: clamp(2.8rem, 6vw, 5rem);
       line-height: 1.04;
       color: var(--cream);
       max-width: 100%;
       margin-bottom: 36px;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
     }
 
     .hero-h1 > .hero-gold {
