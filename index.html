@@ -586,6 +586,61 @@
       z-index: 1;
     }
 
+    /* ── WHO I SERVE / WHAT I DO ─────────────────────────── */
+    .two-col-section {
+      padding: 80px 40px;
+      background: #0a0a0a;
+    }
+
+    .two-col-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .two-col-box {
+      border: 1px solid #C8A850;
+      padding: 40px;
+      background: #111;
+    }
+
+    .two-col-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: #C8A850;
+      margin: 0 0 28px 0;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #C8A850;
+    }
+
+    .two-col-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .two-col-list li {
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      color: #F5F0E8;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(200, 168, 80, 0.15);
+      line-height: 1.5;
+    }
+
+    .two-col-list li:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 768px) {
+      .two-col-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
     /* ── CONTACT SECTION ─────────────────────────────────── */
     #contact {
       position: relative;
@@ -870,6 +925,35 @@
       <p class="prose-callout">This isn't about replacing people. The people doing this work are the reason it works. It's about freeing them from tasks that were never a good use of their gifts in the first place. When that weight lifts, something happens. People remember why they came. They find the work underneath the work. They get their purpose back.</p>
       <p class="gold-statement">AI is not going away.</p>
       <p>The organizations that ignore it don't get to opt out. They just lose ground. They become the most vulnerable. The least funded. The easiest to overlook. The ones who adapt don't just survive. They build something they never had before. More people served. More impact per dollar. More mission in every hour.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHO I SERVE / WHAT I DO ───────────────────────────── -->
+<section id="who-serve" class="two-col-section">
+  <div class="two-col-inner">
+    <div class="two-col-box">
+      <h3 class="two-col-label">WHO I SERVE</h3>
+      <ul class="two-col-list">
+        <li>Rural nonprofits</li>
+        <li>Food banks</li>
+        <li>Farmers markets</li>
+        <li>Agricultural associations</li>
+        <li>Community development organizations</li>
+        <li>Mission-driven small businesses</li>
+        <li>Regional and statewide associations</li>
+      </ul>
+    </div>
+    <div class="two-col-box">
+      <h3 class="two-col-label">WHAT I DO</h3>
+      <ul class="two-col-list">
+        <li>AI Governance Assessments</li>
+        <li>Fractional CAIO retainer</li>
+        <li>Board and policy preparation</li>
+        <li>Organizational hygiene and data protection</li>
+        <li>Custom tool and workflow builds</li>
+        <li>Staff AI training and governance frameworks</li>
+      </ul>
     </div>
   </div>
 </section>
