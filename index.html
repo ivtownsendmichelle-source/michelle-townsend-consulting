@@ -406,7 +406,7 @@
       display: grid;
       grid-template-columns: 1.6fr 1fr;
       gap: 0;
-      align-items: center;
+      align-items: start;
     }
 
     /* Counter takes the full left column */
@@ -443,19 +443,26 @@
     }
 
     .stat-num {
-      font-family: var(--mono);
-      font-size: 2.2rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 3rem;
       font-weight: 700;
-      color: #d4b438;
+      color: #C8A850;
       line-height: 1;
       margin-bottom: 14px;
+    }
+
+    .stats-right .stat-num {
+      font-family: 'Space Grotesk', sans-serif !important;
+      font-size: 56px !important;
+      font-weight: 700 !important;
+      color: #C8A850 !important;
     }
 
     .stat-label {
       font-family: var(--mono);
       font-size: 0.68rem;
       letter-spacing: 0.06em;
-      color: var(--muted);
+      color: #888;
       line-height: 1.65;
       text-transform: uppercase;
     }
@@ -623,7 +630,7 @@
     }
 
     .two-col-list li {
-      font-family: 'Lora', serif;
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 16px;
       color: #F5F0E8;
       padding: 10px 0;
@@ -885,12 +892,12 @@
         </div>
 
         <div class="stat reveal">
-          <div class="stat-num">1</div>
+          <div class="stat-num" style="font-size: 56px; font-weight: 700; color: #C8A850; font-family: 'Space Grotesk', sans-serif;">1</div>
           <div class="stat-label">planet we all share</div>
         </div>
 
         <div class="stat reveal">
-          <div class="stat-num">&infin;</div>
+          <div class="stat-num" style="font-size: 56px; font-weight: 700; color: #C8A850; font-family: 'Space Grotesk', sans-serif;">&infin;</div>
           <div class="stat-label">caring about the world and the people who make it work</div>
         </div>
       </div>
