@@ -367,6 +367,7 @@
       padding-top: 64px;
       display: flex;
       align-items: center;
+      isolation: isolate;
     }
 
     #hero::before {
@@ -437,6 +438,52 @@
       font-family: var(--serif);
       font-size: 1rem;
       color: #b8b8b0;
+    }
+
+    /* ── HERO FLOATING WORDS ─────────────────────────────── */
+    @keyframes word-drift-a {
+      from { transform: translate(0, 0); }
+      to   { transform: translate(10px, 8px); }
+    }
+    @keyframes word-drift-b {
+      from { transform: translate(0, 0); }
+      to   { transform: translate(-8px, -10px); }
+    }
+    @keyframes word-drift-c {
+      from { transform: translate(0, 0); }
+      to   { transform: translate(12px, -8px); }
+    }
+    @keyframes word-drift-d {
+      from { transform: translate(0, 0); }
+      to   { transform: translate(-10px, 12px); }
+    }
+    @keyframes word-drift-e {
+      from { transform: translate(0, 0); }
+      to   { transform: translate(4px, -14px); }
+    }
+    @keyframes word-drift-f {
+      from { transform: translate(0, 0); }
+      to   { transform: translate(14px, 4px); }
+    }
+
+    .hero-words {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .hw {
+      position: absolute;
+      color: #C8A850;
+      font-family: var(--mono);
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
     }
 
     /* ── STATS ────────────────────────────────────────────── */
@@ -918,6 +965,44 @@
 
 <!-- ── HERO ─────────────────────────────────────────────── -->
 <section id="hero">
+  <!-- Floating background words -->
+  <div class="hero-words" aria-hidden="true">
+    <!-- Left column -->
+    <span class="hw" style="left:1%;top:15%;font-size:11px;opacity:0.13;animation-name:word-drift-a;animation-duration:32s;animation-delay:-5s">organizational health</span>
+    <span class="hw" style="left:3%;top:28%;font-size:12px;opacity:0.14;animation-name:word-drift-d;animation-duration:27s;animation-delay:-10s">compliance</span>
+    <span class="hw" style="left:2%;top:40%;font-size:20px;opacity:0.17;animation-name:word-drift-c;animation-duration:31s;animation-delay:-19s">resilience</span>
+    <span class="hw" style="left:5%;top:54%;font-size:11px;opacity:0.12;animation-name:word-drift-b;animation-duration:35s;animation-delay:-12s">bylaws</span>
+    <span class="hw" style="left:2%;top:67%;font-size:13px;opacity:0.14;animation-name:word-drift-e;animation-duration:28s;animation-delay:-8s">succession</span>
+    <span class="hw" style="left:1%;top:78%;font-size:12px;opacity:0.13;animation-name:word-drift-f;animation-duration:38s;animation-delay:-3s">infrastructure</span>
+    <span class="hw" style="left:6%;top:88%;font-size:11px;opacity:0.12;animation-name:word-drift-a;animation-duration:25s;animation-delay:-15s">risk</span>
+    <span class="hw" style="left:1%;top:48%;font-size:11px;opacity:0.12;animation-name:word-drift-a;animation-duration:37s;animation-delay:-22s">institutional knowledge</span>
+    <!-- Right column -->
+    <span class="hw" style="left:87%;top:20%;font-size:13px;opacity:0.14;animation-name:word-drift-b;animation-duration:30s;animation-delay:-7s">accountability</span>
+    <span class="hw" style="left:85%;top:33%;font-size:11px;opacity:0.12;animation-name:word-drift-a;animation-duration:36s;animation-delay:-18s">documentation</span>
+    <span class="hw" style="left:88%;top:47%;font-size:14px;opacity:0.14;animation-name:word-drift-d;animation-duration:26s;animation-delay:-2s">workflow</span>
+    <span class="hw" style="left:86%;top:61%;font-size:13px;opacity:0.13;animation-name:word-drift-c;animation-duration:40s;animation-delay:-10s">consent</span>
+    <span class="hw" style="left:87%;top:74%;font-size:14px;opacity:0.14;animation-name:word-drift-e;animation-duration:29s;animation-delay:-6s">protection</span>
+    <span class="hw" style="left:85%;top:86%;font-size:17px;opacity:0.15;animation-name:word-drift-f;animation-duration:33s;animation-delay:-14s">security</span>
+    <!-- Top strip -->
+    <span class="hw" style="left:7%;top:7%;font-size:17px;opacity:0.15;animation-name:word-drift-f;animation-duration:26s;animation-delay:-21s">service</span>
+    <span class="hw" style="left:14%;top:5%;font-size:14px;opacity:0.14;animation-name:word-drift-c;animation-duration:31s;animation-delay:-9s">data governance</span>
+    <span class="hw" style="left:30%;top:11%;font-size:15px;opacity:0.15;animation-name:word-drift-a;animation-duration:37s;animation-delay:-4s">transparency</span>
+    <span class="hw" style="left:47%;top:4%;font-size:17px;opacity:0.16;animation-name:word-drift-b;animation-duration:28s;animation-delay:-16s">oversight</span>
+    <span class="hw" style="left:62%;top:9%;font-size:14px;opacity:0.14;animation-name:word-drift-d;animation-duration:34s;animation-delay:-1s">stewardship</span>
+    <span class="hw" style="left:75%;top:5%;font-size:11px;opacity:0.12;animation-name:word-drift-e;animation-duration:39s;animation-delay:-11s">sustainability</span>
+    <span class="hw" style="left:80%;top:12%;font-size:12px;opacity:0.13;animation-name:word-drift-a;animation-duration:40s;animation-delay:-12s">data privacy</span>
+    <!-- Bottom strip -->
+    <span class="hw" style="left:8%;top:86%;font-size:13px;opacity:0.13;animation-name:word-drift-b;animation-duration:33s;animation-delay:-5s">capacity</span>
+    <span class="hw" style="left:10%;top:92%;font-size:20px;opacity:0.17;animation-name:word-drift-d;animation-duration:32s;animation-delay:-13s">purpose</span>
+    <span class="hw" style="left:26%;top:95%;font-size:18px;opacity:0.16;animation-name:word-drift-b;animation-duration:27s;animation-delay:-7s">impact</span>
+    <span class="hw" style="left:44%;top:91%;font-size:16px;opacity:0.15;animation-name:word-drift-f;animation-duration:36s;animation-delay:-20s">community</span>
+    <span class="hw" style="left:58%;top:94%;font-size:15px;opacity:0.14;animation-name:word-drift-a;animation-duration:25s;animation-delay:-3s">belonging</span>
+    <span class="hw" style="left:71%;top:90%;font-size:22px;opacity:0.18;animation-name:word-drift-c;animation-duration:38s;animation-delay:-17s">trust</span>
+    <span class="hw" style="left:80%;top:95%;font-size:14px;opacity:0.13;animation-name:word-drift-e;animation-duration:30s;animation-delay:-8s">dignity</span>
+    <span class="hw" style="left:76%;top:86%;font-size:14px;opacity:0.13;animation-name:word-drift-c;animation-duration:28s;animation-delay:-9s">AI policy</span>
+    <span class="hw" style="left:10%;top:83%;font-size:13px;opacity:0.13;animation-name:word-drift-d;animation-duration:35s;animation-delay:-16s">mission drift</span>
+    <span class="hw" style="left:83%;top:91%;font-size:15px;opacity:0.14;animation-name:word-drift-b;animation-duration:29s;animation-delay:-6s">the foundation</span>
+  </div>
   <!-- Dot grid — hero only -->
   <div class="hero-dots" aria-hidden="true">
     <div class="dots-layer"></div>
