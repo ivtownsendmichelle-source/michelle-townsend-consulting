@@ -340,6 +340,17 @@
     .dots-layer:nth-child(3) { background-position:   0px  72px; animation-delay:   -4s; }
     .dots-layer:nth-child(4) { background-position:  72px  72px; animation-delay:   -6s; }
 
+    /* ── HERO FRAME ─────────────────────────────────────── */
+    .hero-frame {
+      border: 1px solid #C8A850;
+      background: rgba(14, 14, 12, 0.88);
+      padding: 52px;
+    }
+
+    @media (max-width: 660px) {
+      .hero-frame { padding: 32px 24px; }
+    }
+
     /* ── HERO ─────────────────────────────────────────────── */
     @keyframes grid-drift {
       from { background-position: 0 0; }
@@ -927,13 +938,15 @@
     <div class="dots-layer"></div>
   </div>
   <div class="wrap hero-inner">
-    <span class="hero-eyebrow h-fade">Fractional Chief AI Officer</span>
-    <h1 class="hero-h1 h-fade">You needed me<br><span class="hero-gold">three months ago.</span></h1>
-    <p class="hero-sub h-fade">It's not too late to take control of your future.</p>
-    <p class="hero-body h-fade">Are you avoiding AI? Your employees are not. Every time a staff member opens a free AI tool, your data walks out the door. Meeting notes. Donor information. Financial records. Client conversations. Gone to a server you've never heard of, trained into a model you'll never control.</p>
-    <div class="hero-cta h-fade">
-      <a href="#contact" class="btn">Let's talk</a>
-      <span class="hero-note">Free 30-minute conversation.</span>
+    <div class="hero-frame">
+      <span class="hero-eyebrow h-fade">Fractional Chief AI Officer</span>
+      <h1 class="hero-h1 h-fade">You needed me<br><span class="hero-gold">three months ago.</span></h1>
+      <p class="hero-sub h-fade">It's not too late to take control of your future.</p>
+      <p class="hero-body h-fade">Are you avoiding AI? Your employees are not. Every time a staff member opens a free AI tool, your data walks out the door. Meeting notes. Donor information. Financial records. Client conversations. Gone to a server you've never heard of, trained into a model you'll never control.</p>
+      <div class="hero-cta h-fade">
+        <a href="#contact" class="btn">Let's talk</a>
+        <span class="hero-note">Free 30-minute conversation.</span>
+      </div>
     </div>
   </div>
 </section>
