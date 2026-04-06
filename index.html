@@ -441,29 +441,9 @@
     }
 
     /* ── HERO FLOATING WORDS ─────────────────────────────── */
-    @keyframes word-drift-a {
-      from { transform: translate(0, 0); }
-      to   { transform: translate(10px, 8px); }
-    }
-    @keyframes word-drift-b {
-      from { transform: translate(0, 0); }
-      to   { transform: translate(-8px, -10px); }
-    }
-    @keyframes word-drift-c {
-      from { transform: translate(0, 0); }
-      to   { transform: translate(12px, -8px); }
-    }
-    @keyframes word-drift-d {
-      from { transform: translate(0, 0); }
-      to   { transform: translate(-10px, 12px); }
-    }
-    @keyframes word-drift-e {
-      from { transform: translate(0, 0); }
-      to   { transform: translate(4px, -14px); }
-    }
-    @keyframes word-drift-f {
-      from { transform: translate(0, 0); }
-      to   { transform: translate(14px, 4px); }
+    @keyframes floatWord {
+      0%   { transform: translate(0px, 0px);   opacity: 0.35; }
+      100% { transform: translate(20px, -15px); opacity: 0.55; }
     }
 
     .hero-words {
@@ -965,40 +945,40 @@
   <!-- Floating background words -->
   <div class="hero-words" aria-hidden="true">
     <!-- Left column -->
-    <span class="hw" style="left:1%;top:15%;font-size:13px;opacity:0.38;animation:word-drift-a 32s ease-in-out -5s infinite alternate">organizational health</span>
-    <span class="hw" style="left:3%;top:28%;font-size:15px;opacity:0.42;animation:word-drift-d 27s ease-in-out -10s infinite alternate">compliance</span>
-    <span class="hw" style="left:2%;top:40%;font-size:24px;opacity:0.50;animation:word-drift-c 31s ease-in-out -19s infinite alternate">resilience</span>
-    <span class="hw" style="left:5%;top:54%;font-size:13px;opacity:0.36;animation:word-drift-b 35s ease-in-out -12s infinite alternate">bylaws</span>
-    <span class="hw" style="left:2%;top:67%;font-size:16px;opacity:0.41;animation:word-drift-e 28s ease-in-out -8s infinite alternate">succession</span>
-    <span class="hw" style="left:1%;top:78%;font-size:14px;opacity:0.39;animation:word-drift-f 38s ease-in-out -3s infinite alternate">infrastructure</span>
-    <span class="hw" style="left:6%;top:88%;font-size:13px;opacity:0.37;animation:word-drift-a 25s ease-in-out -15s infinite alternate">risk</span>
-    <span class="hw" style="left:1%;top:48%;font-size:13px;opacity:0.37;animation:word-drift-b 37s ease-in-out -22s infinite alternate">institutional knowledge</span>
+    <span class="hw" style="left:1%;top:15%;font-size:13px;animation:floatWord 35s ease-in-out 0s infinite alternate">organizational health</span>
+    <span class="hw" style="left:3%;top:28%;font-size:15px;animation:floatWord 28s ease-in-out 1.5s infinite alternate">compliance</span>
+    <span class="hw" style="left:2%;top:40%;font-size:24px;animation:floatWord 22s ease-in-out 3s infinite alternate">resilience</span>
+    <span class="hw" style="left:5%;top:54%;font-size:13px;animation:floatWord 38s ease-in-out 0.5s infinite alternate">bylaws</span>
+    <span class="hw" style="left:2%;top:67%;font-size:16px;animation:floatWord 25s ease-in-out 7s infinite alternate">succession</span>
+    <span class="hw" style="left:1%;top:78%;font-size:14px;animation:floatWord 32s ease-in-out 4.5s infinite alternate">infrastructure</span>
+    <span class="hw" style="left:6%;top:88%;font-size:13px;animation:floatWord 20s ease-in-out 9s infinite alternate">risk</span>
+    <span class="hw" style="left:1%;top:48%;font-size:13px;animation:floatWord 40s ease-in-out 2s infinite alternate">institutional knowledge</span>
     <!-- Right column -->
-    <span class="hw" style="left:87%;top:20%;font-size:16px;opacity:0.42;animation:word-drift-b 30s ease-in-out -7s infinite alternate">accountability</span>
-    <span class="hw" style="left:85%;top:33%;font-size:13px;opacity:0.37;animation:word-drift-a 36s ease-in-out -18s infinite alternate">documentation</span>
-    <span class="hw" style="left:88%;top:47%;font-size:17px;opacity:0.44;animation:word-drift-d 26s ease-in-out -2s infinite alternate">workflow</span>
-    <span class="hw" style="left:86%;top:61%;font-size:15px;opacity:0.40;animation:word-drift-c 40s ease-in-out -10s infinite alternate">consent</span>
-    <span class="hw" style="left:87%;top:74%;font-size:17px;opacity:0.42;animation:word-drift-e 29s ease-in-out -6s infinite alternate">protection</span>
-    <span class="hw" style="left:85%;top:86%;font-size:20px;opacity:0.47;animation:word-drift-f 33s ease-in-out -14s infinite alternate">security</span>
+    <span class="hw" style="left:87%;top:20%;font-size:16px;animation:floatWord 27s ease-in-out 6s infinite alternate">accountability</span>
+    <span class="hw" style="left:85%;top:33%;font-size:13px;animation:floatWord 34s ease-in-out 8s infinite alternate">documentation</span>
+    <span class="hw" style="left:88%;top:47%;font-size:17px;animation:floatWord 23s ease-in-out 1s infinite alternate">workflow</span>
+    <span class="hw" style="left:86%;top:61%;font-size:15px;animation:floatWord 36s ease-in-out 5.5s infinite alternate">consent</span>
+    <span class="hw" style="left:87%;top:74%;font-size:17px;animation:floatWord 30s ease-in-out 3.5s infinite alternate">protection</span>
+    <span class="hw" style="left:85%;top:86%;font-size:20px;animation:floatWord 26s ease-in-out 10s infinite alternate">security</span>
     <!-- Top strip -->
-    <span class="hw" style="left:7%;top:7%;font-size:21px;opacity:0.48;animation:word-drift-f 26s ease-in-out -21s infinite alternate">service</span>
-    <span class="hw" style="left:14%;top:5%;font-size:17px;opacity:0.43;animation:word-drift-c 31s ease-in-out -9s infinite alternate">data governance</span>
-    <span class="hw" style="left:30%;top:11%;font-size:18px;opacity:0.45;animation:word-drift-a 37s ease-in-out -4s infinite alternate">transparency</span>
-    <span class="hw" style="left:47%;top:4%;font-size:21px;opacity:0.49;animation:word-drift-b 28s ease-in-out -16s infinite alternate">oversight</span>
-    <span class="hw" style="left:62%;top:9%;font-size:17px;opacity:0.43;animation:word-drift-d 34s ease-in-out -1s infinite alternate">stewardship</span>
-    <span class="hw" style="left:75%;top:5%;font-size:13px;opacity:0.37;animation:word-drift-e 39s ease-in-out -11s infinite alternate">sustainability</span>
-    <span class="hw" style="left:80%;top:12%;font-size:15px;opacity:0.40;animation:word-drift-a 40s ease-in-out -12s infinite alternate">data privacy</span>
+    <span class="hw" style="left:7%;top:7%;font-size:21px;animation:floatWord 21s ease-in-out 4s infinite alternate">service</span>
+    <span class="hw" style="left:14%;top:5%;font-size:17px;animation:floatWord 39s ease-in-out 7.5s infinite alternate">data governance</span>
+    <span class="hw" style="left:30%;top:11%;font-size:18px;animation:floatWord 24s ease-in-out 0.5s infinite alternate">transparency</span>
+    <span class="hw" style="left:47%;top:4%;font-size:21px;animation:floatWord 31s ease-in-out 9.5s infinite alternate">oversight</span>
+    <span class="hw" style="left:62%;top:9%;font-size:17px;animation:floatWord 37s ease-in-out 2.5s infinite alternate">stewardship</span>
+    <span class="hw" style="left:75%;top:5%;font-size:13px;animation:floatWord 29s ease-in-out 6.5s infinite alternate">sustainability</span>
+    <span class="hw" style="left:80%;top:12%;font-size:15px;animation:floatWord 33s ease-in-out 1s infinite alternate">data privacy</span>
     <!-- Bottom strip -->
-    <span class="hw" style="left:8%;top:86%;font-size:16px;opacity:0.41;animation:word-drift-b 33s ease-in-out -5s infinite alternate">capacity</span>
-    <span class="hw" style="left:10%;top:92%;font-size:24px;opacity:0.52;animation:word-drift-d 32s ease-in-out -13s infinite alternate">purpose</span>
-    <span class="hw" style="left:26%;top:95%;font-size:22px;opacity:0.50;animation:word-drift-b 27s ease-in-out -7s infinite alternate">impact</span>
-    <span class="hw" style="left:44%;top:91%;font-size:19px;opacity:0.46;animation:word-drift-f 36s ease-in-out -20s infinite alternate">community</span>
-    <span class="hw" style="left:58%;top:94%;font-size:18px;opacity:0.44;animation:word-drift-a 25s ease-in-out -3s infinite alternate">belonging</span>
-    <span class="hw" style="left:71%;top:90%;font-size:28px;opacity:0.55;animation:word-drift-c 38s ease-in-out -17s infinite alternate">trust</span>
-    <span class="hw" style="left:80%;top:95%;font-size:17px;opacity:0.42;animation:word-drift-e 30s ease-in-out -8s infinite alternate">dignity</span>
-    <span class="hw" style="left:76%;top:86%;font-size:17px;opacity:0.42;animation:word-drift-c 28s ease-in-out -9s infinite alternate">AI policy</span>
-    <span class="hw" style="left:10%;top:83%;font-size:16px;opacity:0.40;animation:word-drift-d 35s ease-in-out -16s infinite alternate">mission drift</span>
-    <span class="hw" style="left:83%;top:91%;font-size:18px;opacity:0.44;animation:word-drift-b 29s ease-in-out -6s infinite alternate">the foundation</span>
+    <span class="hw" style="left:8%;top:86%;font-size:16px;animation:floatWord 22s ease-in-out 8.5s infinite alternate">capacity</span>
+    <span class="hw" style="left:10%;top:92%;font-size:24px;animation:floatWord 40s ease-in-out 3s infinite alternate">purpose</span>
+    <span class="hw" style="left:26%;top:95%;font-size:22px;animation:floatWord 26s ease-in-out 5s infinite alternate">impact</span>
+    <span class="hw" style="left:44%;top:91%;font-size:19px;animation:floatWord 35s ease-in-out 7s infinite alternate">community</span>
+    <span class="hw" style="left:58%;top:94%;font-size:18px;animation:floatWord 20s ease-in-out 9.5s infinite alternate">belonging</span>
+    <span class="hw" style="left:71%;top:90%;font-size:28px;animation:floatWord 38s ease-in-out 0s infinite alternate">trust</span>
+    <span class="hw" style="left:80%;top:95%;font-size:17px;animation:floatWord 24s ease-in-out 4s infinite alternate">dignity</span>
+    <span class="hw" style="left:76%;top:86%;font-size:17px;animation:floatWord 30s ease-in-out 6s infinite alternate">AI policy</span>
+    <span class="hw" style="left:10%;top:83%;font-size:16px;animation:floatWord 27s ease-in-out 2s infinite alternate">mission drift</span>
+    <span class="hw" style="left:83%;top:91%;font-size:18px;animation:floatWord 33s ease-in-out 8s infinite alternate">the foundation</span>
   </div>
   <!-- Dot grid — hero only -->
   <div class="hero-dots" aria-hidden="true">
