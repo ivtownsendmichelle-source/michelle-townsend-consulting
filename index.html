@@ -354,13 +354,19 @@
     }
 
     /* ── HERO IMAGE ──────────────────────────────────────── */
+    /*
+      Frame left edge = 50vw − 430px (half-viewport minus half-frame).
+      right: calc(50% + 450px) places image right edge at 50vw − 450px,
+      giving a guaranteed 20px gap before the frame at every viewport.
+      Width is implicit: fills from left:40px to that right boundary.
+    */
     .hero-img {
       position: absolute;
       left: 40px;
+      right: calc(50% + 450px);
       top: 50%;
       transform: translateY(-50%);
-      width: 220px;
-      height: 500px;
+      height: 520px;
       max-height: calc(100vh - 200px);
       object-fit: cover;
       display: block;
@@ -368,7 +374,7 @@
       z-index: 1;
     }
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1300px) {
       .hero-img { display: none; }
     }
 
