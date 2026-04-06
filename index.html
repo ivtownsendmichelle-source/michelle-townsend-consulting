@@ -305,8 +305,9 @@
 
     /* ── HERO DOT GRID ───────────────────────────────────── */
     @keyframes dot-pulse {
-      0%, 100% { opacity: 0.35; }
-      50%       { opacity: 0.45; }
+      0%   { opacity: 0.20; }
+      50%  { opacity: 0.45; }
+      100% { opacity: 0.20; }
     }
 
     .hero-dots {
@@ -320,10 +321,12 @@
     .dots-layer {
       position: absolute;
       inset: 0;
-      background-image: radial-gradient(circle, #C8A850 1.5px, transparent 1.5px);
+      background-image: radial-gradient(circle, #C8A850 2px, transparent 2px);
       background-size: 48px 48px;
       background-position: 0 0;
+      opacity: 0.20;
       animation: dot-pulse 7s ease-in-out infinite;
+      animation-fill-mode: both;
     }
     .dots-layer:nth-child(2) { background-position: 24px 0;    animation-delay: -1.75s; }
     .dots-layer:nth-child(3) { background-position: 0   24px;  animation-delay: -3.5s;  }
