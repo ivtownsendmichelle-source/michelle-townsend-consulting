@@ -342,15 +342,11 @@
 
     /* ── HERO FRAME ─────────────────────────────────────── */
     .hero-frame {
-      flex: 0 1 680px;
-      min-width: 0;
       border: 1px solid #C8A850;
       background: rgba(14, 14, 12, 0.88);
       padding: 52px;
-    }
-
-    @media (max-width: 860px) {
-      .hero-frame { padding: 40px 32px; flex: 1; }
+      max-width: 860px;
+      margin: 0 auto;
     }
 
     @media (max-width: 660px) {
@@ -359,15 +355,20 @@
 
     /* ── HERO IMAGE ──────────────────────────────────────── */
     .hero-img {
-      flex: 0 0 280px;
-      width: 280px;
+      position: absolute;
+      left: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 220px;
+      height: 500px;
+      max-height: calc(100vh - 200px);
       object-fit: cover;
       display: block;
       border: 1px solid #C8A850;
-      min-height: 0;
+      z-index: 1;
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 1200px) {
       .hero-img { display: none; }
     }
 
@@ -394,23 +395,7 @@
     .hero-inner {
       position: relative;
       z-index: 1;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 72px 40px 72px 40px;
-    }
-
-    /* ── HERO GROUP (image + frame centered as one unit) ─── */
-    .hero-group {
-      display: flex;
-      align-items: stretch;
-      gap: 0;
-      width: 100%;
-      max-width: 960px;
-      margin: 0 auto;
-    }
-
-    @media (max-width: 860px) {
-      .hero-group { max-width: 100%; }
+      padding: 72px 0;
     }
 
     .hero-eyebrow {
@@ -975,18 +960,16 @@
     <div class="dots-layer"></div>
     <div class="dots-layer"></div>
   </div>
-  <div class="hero-inner">
-    <div class="hero-group">
-      <img class="hero-img" src="vege-web.jpg" alt="Vegetable garden">
-      <div class="hero-frame">
-        <span class="hero-eyebrow h-fade">Fractional Chief AI Officer</span>
-        <h1 class="hero-h1 h-fade">You needed me<br><span class="hero-gold">three months ago.</span></h1>
-        <p class="hero-sub h-fade">It's not too late to take control of your future.</p>
-        <p class="hero-body h-fade">Are you avoiding AI? Your employees are not. Every time a staff member opens a free AI tool, your data walks out the door. Meeting notes. Donor information. Financial records. Client conversations. Gone to a server you've never heard of, trained into a model you'll never control.</p>
-        <div class="hero-cta h-fade">
-          <a href="#contact" class="btn">Let's talk</a>
-          <span class="hero-note">Free 30-minute conversation.</span>
-        </div>
+  <img class="hero-img" src="vege-web.jpg" alt="Vegetable garden">
+  <div class="wrap-wide hero-inner">
+    <div class="hero-frame">
+      <span class="hero-eyebrow h-fade">Fractional Chief AI Officer</span>
+      <h1 class="hero-h1 h-fade">You needed me<br><span class="hero-gold">three months ago.</span></h1>
+      <p class="hero-sub h-fade">It's not too late to take control of your future.</p>
+      <p class="hero-body h-fade">Are you avoiding AI? Your employees are not. Every time a staff member opens a free AI tool, your data walks out the door. Meeting notes. Donor information. Financial records. Client conversations. Gone to a server you've never heard of, trained into a model you'll never control.</p>
+      <div class="hero-cta h-fade">
+        <a href="#contact" class="btn">Let's talk</a>
+        <span class="hero-note">Free 30-minute conversation.</span>
       </div>
     </div>
   </div>
