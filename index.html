@@ -395,10 +395,20 @@
       position: relative;
       z-index: 1;
       padding: 72px 0;
+    }
+
+    /* ── HERO GROUP (image + frame centered as one unit) ─── */
+    .hero-group {
       display: flex;
       align-items: stretch;
-      justify-content: center;
       gap: 0;
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 860px) {
+      .hero-group { max-width: 100%; }
     }
 
     .hero-eyebrow {
@@ -964,15 +974,17 @@
     <div class="dots-layer"></div>
   </div>
   <div class="wrap-wide hero-inner">
-    <img class="hero-img" src="vege-web.jpg" alt="Vegetable garden">
-    <div class="hero-frame">
-      <span class="hero-eyebrow h-fade">Fractional Chief AI Officer</span>
-      <h1 class="hero-h1 h-fade">You needed me<br><span class="hero-gold">three months ago.</span></h1>
-      <p class="hero-sub h-fade">It's not too late to take control of your future.</p>
-      <p class="hero-body h-fade">Are you avoiding AI? Your employees are not. Every time a staff member opens a free AI tool, your data walks out the door. Meeting notes. Donor information. Financial records. Client conversations. Gone to a server you've never heard of, trained into a model you'll never control.</p>
-      <div class="hero-cta h-fade">
-        <a href="#contact" class="btn">Let's talk</a>
-        <span class="hero-note">Free 30-minute conversation.</span>
+    <div class="hero-group">
+      <img class="hero-img" src="vege-web.jpg" alt="Vegetable garden">
+      <div class="hero-frame">
+        <span class="hero-eyebrow h-fade">Fractional Chief AI Officer</span>
+        <h1 class="hero-h1 h-fade">You needed me<br><span class="hero-gold">three months ago.</span></h1>
+        <p class="hero-sub h-fade">It's not too late to take control of your future.</p>
+        <p class="hero-body h-fade">Are you avoiding AI? Your employees are not. Every time a staff member opens a free AI tool, your data walks out the door. Meeting notes. Donor information. Financial records. Client conversations. Gone to a server you've never heard of, trained into a model you'll never control.</p>
+        <div class="hero-cta h-fade">
+          <a href="#contact" class="btn">Let's talk</a>
+          <span class="hero-note">Free 30-minute conversation.</span>
+        </div>
       </div>
     </div>
   </div>
