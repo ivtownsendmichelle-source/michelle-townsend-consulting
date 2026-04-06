@@ -819,17 +819,34 @@
 
     /* ── GOLD RULE ────────────────────────────────────────── */
     .gold-rule {
-      width: 60px;
+      width: 80px;
       height: 1px;
       background: #c9a830;
       margin-bottom: 40px;
     }
 
+    /* ── EDGE LINES ──────────────────────────────────────── */
+    .edge-line {
+      position: fixed;
+      top: 0;
+      width: 1px;
+      height: 100%;
+      background: rgba(201,168,48,0.3);
+      z-index: 9999;
+      pointer-events: none;
+    }
+    .edge-line--left  { left: 40px; }
+    .edge-line--right { right: 40px; }
+
+    @media (max-width: 767px) {
+      .edge-line { display: none; }
+    }
+
   </style>
 </head>
 <body>
-<div style="position:fixed;top:0;left:40px;width:1px;height:100%;background:rgba(201,168,48,0.3);z-index:9999;pointer-events:none;"></div>
-<div style="position:fixed;top:0;right:40px;width:1px;height:100%;background:rgba(201,168,48,0.3);z-index:9999;pointer-events:none;"></div>
+<div class="edge-line edge-line--left"></div>
+<div class="edge-line edge-line--right"></div>
 
 <!-- ── NAV ──────────────────────────────────────────────── -->
 <nav id="nav">
