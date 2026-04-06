@@ -303,11 +303,18 @@
       opacity: 0.82;
     }
 
-    /* ── HERO DOT GRID ───────────────────────────────────── */
+    /* ── HERO DOT GRID (intersection dots only) ─────────── */
+    /*
+      Each layer uses background-size: 144px (2× grid) so it places
+      one dot per 144px cell. Four layers at the four 72px quadrant
+      offsets together cover every grid intersection exactly once —
+      one dot per crossing, no dot field. Each quarter pulses at a
+      different phase for a "grid being drawn" feel.
+    */
     @keyframes dot-pulse {
-      0%   { opacity: 0.20; }
-      50%  { opacity: 0.45; }
-      100% { opacity: 0.20; }
+      0%   { opacity: 0.15; }
+      50%  { opacity: 0.50; }
+      100% { opacity: 0.15; }
     }
 
     .hero-dots {
@@ -322,15 +329,16 @@
       position: absolute;
       inset: 0;
       background-image: radial-gradient(circle, #C8A850 2px, transparent 2px);
-      background-size: 72px 72px;
-      background-position: 0 0;
-      opacity: 0.20;
-      animation: dot-pulse 7s ease-in-out infinite;
+      background-size: 144px 144px;
+      opacity: 0.15;
+      animation: dot-pulse 8s ease-in-out infinite;
       animation-fill-mode: both;
     }
-    .dots-layer:nth-child(2) { background-position: 36px 0;    animation-delay: -1.75s; }
-    .dots-layer:nth-child(3) { background-position: 0   36px;  animation-delay: -3.5s;  }
-    .dots-layer:nth-child(4) { background-position: 36px 36px; animation-delay: -5.25s; }
+    /* Four quadrant offsets → every 72px intersection covered once */
+    .dots-layer:nth-child(1) { background-position:   0px   0px; animation-delay:    0s; }
+    .dots-layer:nth-child(2) { background-position:  72px   0px; animation-delay:   -2s; }
+    .dots-layer:nth-child(3) { background-position:   0px  72px; animation-delay:   -4s; }
+    .dots-layer:nth-child(4) { background-position:  72px  72px; animation-delay:   -6s; }
 
     /* ── HERO ─────────────────────────────────────────────── */
     @keyframes grid-drift {
