@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Board Project — Michelle Townsend Consulting</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/reactflow@11.11.4/dist/style.css" />
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/reactflow@11.11.4/dist/umd/index.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 0; background: #0A0A0A; font-family: system-ui, sans-serif; color: #F5F0E8; overflow: hidden; }
+
+    /* React Flow overrides */
+    .react-flow__edge-path { stroke: #C8A850 !important; stroke-width: 2 !important; stroke-dasharray: 5 5 !important; }
+    .react-flow__arrowhead { display: none !important; }
+    .react-flow__edge-marker { display: none !important; }
+    .react-flow__background { background: #0A0A0A !important; }
+    .react-flow__controls { background: #1A1A1A !important; border: 1px solid #2A2A2A !important; }
+    .react-flow__controls-button { background: #1A1A1A !important; border-bottom: 1px solid #2A2A2A !important; fill: #F5F0E8 !important; }
+    .react-flow__controls-button:hover { background: #1B3A2D !important; }
+    .react-flow__minimap { background: #111 !important; }
+    .react-flow__handle { width: 12px !important; height: 12px !important; background: #C8A850 !important; border: 2px solid #0A0A0A !important; border-radius: 50% !important; }
+    .react-flow__handle:hover { background: #E8C860 !important; }
+    .react-flow__pane { cursor: default; }
+
+    /* Node cards */
+    .node-card { background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 10px; box-shadow: 0 4px 24px rgba(0,0,0,0.5); min-width: 280px; max-width: 360px; }
+    .node-card:focus-within { border-color: #C8A850; box-shadow: 0 4px 24px rgba(200,168,80,0.15); }
+
+    /* Inputs */
+    .node-input { background: transparent; border: 1px solid #2A2A2A; border-radius: 6px; color: #F5F0E8; padding: 6px 10px; font-size: 13px; width: 100%; outline: none; resize: vertical; transition: border-color 0.15s; }
+    .node-input:focus { border-color: #C8A850; box-shadow: 0 0 0 2px rgba(200,168,80,0.15); }
+    .node-input::placeholder { color: #555; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #444; }
+
+    /* Gold glow on focused toolbar inputs */
+    .toolbar-input:focus { outline: none; border-color: #C8A850 !important; box-shadow: 0 0 0 2px rgba(200,168,80,0.2); }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #C8A850; color: #0A0A0A; padding: 8px 20px; border-radius: 20px; font-weight: 600; font-size: 14px; z-index: 9999; pointer-events: none; animation: fadeInOut 2s ease; }
+    @keyframes fadeInOut { 0% { opacity: 0; transform: translateX(-50%) translateY(10px); } 15% { opacity: 1; transform: translateX(-50%) translateY(0); } 80% { opacity: 1; } 100% { opacity: 0; } }
+
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+    .modal-box { background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 12px; padding: 24px; min-width: 300px; max-width: 420px; }
+
+    /* Claude panel messages */
+    .claude-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .msg-user { align-self: flex-end; background: #C8A850; color: #0A0A0A; border-radius: 16px 16px 4px 16px; padding: 8px 14px; max-width: 85%; font-size: 13px; }
+    .msg-claude { align-self: flex-start; background: #1A1A1A; border: 1px solid #2A2A2A; color: #F5F0E8; border-radius: 16px 16px 16px 4px; padding: 8px 14px; max-width: 95%; font-size: 13px; white-space: pre-wrap; }
+
+    /* Drag over style */
+    .drag-over { border-color: #C8A850 !important; background: rgba(200,168,80,0.05) !important; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { ReactFlowProvider, ReactFlow, addEdge, Background, Controls, Handle, Position, useNodesState, useEdgesState, useReactFlow, BackgroundVariant } = window.ReactFlow;
+const { useState, useEffect, useCallback, useRef } = React;
+
+// ─── Constants ───────────────────────────────────────────────────────────────
+
+const NODE_TYPE_DEFS = {
+  PROJECT:        { label: 'Project',        tagBg: '#C8A850', tagText: '#000' },
+  AUDIENCE:       { label: 'Audience',       tagBg: '#2D7A4F', tagText: '#fff' },
+  EXISTS_ALREADY: { label: 'Exists Already', tagBg: '#2563EB', tagText: '#fff' },
+  CONSTRAINTS:    { label: 'Constraints',    tagBg: '#DC2626', tagText: '#fff' },
+  SUCCESS:        { label: 'Success',        tagBg: '#7C3AED', tagText: '#fff' },
+  OPEN_QUESTIONS: { label: 'Open Questions', tagBg: '#D97706', tagText: '#000' },
+  MOOD_BOARD:     { label: 'Mood Board',     tagBg: '#4B5563', tagText: '#fff' },
+  NOTES:          { label: 'Notes',          tagBg: '#F5F0E8', tagText: '#000' },
+};
+
+const NODE_TYPE_ORDER = ['PROJECT','AUDIENCE','EXISTS_ALREADY','CONSTRAINTS','SUCCESS','OPEN_QUESTIONS','MOOD_BOARD','NOTES'];
+
+const STORAGE_KEY = 'board-project-boards';
+
+function genId() { return `node-${Date.now()}-${Math.random().toString(36).slice(2,7)}`; }
+
+// ─── Field Renderer ───────────────────────────────────────────────────────────
+
+function NodeFields({ type, data, onUpdate, nodeId }) {
+  const ta = (label, field, placeholder='') => (
+    <div key={field} className="mb-2">
+      <label style={{fontSize:11,color:'#888',display:'block',marginBottom:3}}>{label}</label>
+      <textarea
+        className="node-input"
+        rows={2}
+        placeholder={placeholder}
+        value={data[field] || ''}
+        onChange={e => onUpdate(nodeId, field, e.target.value)}
+      />
+    </div>
+  );
+  const inp = (label, field, placeholder='') => (
+    <div key={field} className="mb-2">
+      <label style={{fontSize:11,color:'#888',display:'block',marginBottom:3}}>{label}</label>
+      <input
+        type="text"
+        className="node-input"
+        placeholder={placeholder}
+        value={data[field] || ''}
+        onChange={e => onUpdate(nodeId, field, e.target.value)}
+      />
+    </div>
+  );
+
+  if (type === 'PROJECT') return <>{inp('Title','title','Project title')}{ta('Description','description','One sentence description')}</>;
+  if (type === 'AUDIENCE') return <>{ta("Who it's for",'who','Who is this for?')}{ta("What they need",'needs','What do they need?')}{ta("What they struggle with",'struggles','Pain points...')}</>;
+  if (type === 'EXISTS_ALREADY') return <>{ta("What's built",'built','What already exists?')}{ta("What's not built",'not_built','What still needs building?')}{ta('Tools in use','tools','Tech stack, tools...')}</>;
+  if (type === 'CONSTRAINTS') return <>{ta('Tech constraints','tech','e.g. React only, no backend...')}{ta('Time & budget','time','Timeline, budget limits...')}{ta('Must-haves','must','Non-negotiable requirements...')}{ta('Hard nos','nos','Things we are NOT doing...')}</>;
+  if (type === 'SUCCESS') return <>{ta('Done looks like','done','Describe the finished product...')}{ta("How you'll know it worked",'know','Measurable success criteria...')}</>;
+  if (type === 'OPEN_QUESTIONS') return <>{ta('Things not decided','undecided','What is still up in the air?')}{ta('Things to figure out during build','figure_out','Questions to answer as we go...')}</>;
+  if (type === 'MOOD_BOARD') return <MoodBoardFields data={data} onUpdate={onUpdate} nodeId={nodeId} />;
+  if (type === 'NOTES') return <>{ta('Anything else','notes','Freeform notes...')}</>;
+  return null;
+}
+
+function MoodBoardFields({ data, onUpdate, nodeId }) {
+  const [dragOver, setDragOver] = useState(false);
+  const fileRef = useRef();
+  const images = data.images || [];
+
+  const handleFiles = (files) => {
+    Array.from(files).forEach(f => {
+      if (!f.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        onUpdate(nodeId, 'images', [...(data.images || []), e.target.result]);
+      };
+      reader.readAsDataURL(f);
+    });
+  };
+
+  return (
+    <div>
+      <div
+        className={`node-input ${dragOver ? 'drag-over' : ''}`}
+        style={{minHeight:60,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',textAlign:'center',color:'#666',fontSize:12,border:'1px dashed #2A2A2A',marginBottom:8}}
+        onClick={() => fileRef.current.click()}
+        onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={e => { e.preventDefault(); setDragOver(false); handleFiles(e.dataTransfer.files); }}
+      >
+        Drop images here or click to upload
+      </div>
+      <input ref={fileRef} type="file" accept="image/*" multiple style={{display:'none'}} onChange={e => handleFiles(e.target.files)} />
+      {images.length > 0 && (
+        <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:4}}>
+          {images.map((src,i) => (
+            <div key={i} style={{position:'relative'}}>
+              <img src={src} alt="" style={{width:'100%',height:80,objectFit:'cover',borderRadius:4,display:'block'}} />
+              <button
+                onClick={() => onUpdate(nodeId, 'images', images.filter((_,idx) => idx !== i))}
+                style={{position:'absolute',top:2,right:2,background:'rgba(0,0,0,0.7)',border:'none',color:'#fff',borderRadius:'50%',width:18,height:18,fontSize:11,cursor:'pointer',lineHeight:'18px',padding:0}}
+              >×</button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Custom Node Component ────────────────────────────────────────────────────
+
+function CustomNode({ id, data, type }) {
+  const [expanded, setExpanded] = useState(true);
+  const def = NODE_TYPE_DEFS[type] || NODE_TYPE_DEFS.NOTES;
+
+  return (
+    <div className="node-card" style={{position:'relative'}}>
+      <Handle type="target" position={Position.Left} id="left" />
+      <Handle type="source" position={Position.Right} id="right" />
+
+      {/* Header */}
+      <div style={{padding:'10px 12px 8px 12px',borderBottom: expanded ? '1px solid #2A2A2A' : 'none'}}>
+        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}>
+          <span style={{background:def.tagBg,color:def.tagText,fontSize:10,fontWeight:700,padding:'2px 8px',borderRadius:20,letterSpacing:'0.05em',textTransform:'uppercase',whiteSpace:'nowrap',flexShrink:0}}>
+            {def.label}
+          </span>
+          <div style={{flex:1}} />
+          <button
+            onClick={() => setExpanded(v => !v)}
+            style={{background:'transparent',border:'none',color:'#888',cursor:'pointer',padding:'2px 4px',fontSize:14,lineHeight:1,minWidth:24,minHeight:24,display:'flex',alignItems:'center',justifyContent:'center'}}
+            title={expanded ? 'Collapse' : 'Expand'}
+          >
+            {expanded ? '▲' : '▽'}
+          </button>
+          <button
+            onClick={() => data.onDelete && data.onDelete(id)}
+            style={{background:'transparent',border:'none',color:'#555',cursor:'pointer',padding:'2px 4px',fontSize:15,lineHeight:1,minWidth:24,minHeight:24,display:'flex',alignItems:'center',justifyContent:'center'}}
+            onMouseEnter={e => e.currentTarget.style.color='#DC2626'}
+            onMouseLeave={e => e.currentTarget.style.color='#555'}
+            title="Delete node"
+          >
+            ✕
+          </button>
+        </div>
+        <input
+          className="node-input"
+          placeholder="Node title..."
+          value={data.title || ''}
+          onChange={e => data.onUpdate && data.onUpdate(id, 'title', e.target.value)}
+          style={{fontWeight:700,fontSize:14}}
+        />
+      </div>
+
+      {/* Content */}
+      {expanded && (
+        <div style={{padding:'10px 12px 12px 12px'}}>
+          <NodeFields type={type} data={data} onUpdate={data.onUpdate} nodeId={id} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Register all node types
+const nodeTypes = {};
+NODE_TYPE_ORDER.forEach(t => {
+  nodeTypes[t] = (props) => <CustomNode {...props} type={t} />;
+});
+
+// ─── Templates ────────────────────────────────────────────────────────────────
+
+function makeTemplateNodes(templateName) {
+  const id = genId;
+  if (templateName === 'Dashboard Build') {
+    return [
+      { id: id(), type: 'PROJECT', position: { x: 300, y: 60 }, data: { title: 'Dashboard Build', description: 'A data dashboard for internal teams' } },
+      { id: id(), type: 'AUDIENCE', position: { x: 60, y: 240 }, data: { who: 'Internal team members', needs: 'Quick access to metrics', struggles: 'Too much time in spreadsheets' } },
+      { id: id(), type: 'EXISTS_ALREADY', position: { x: 380, y: 240 }, data: { built: 'Backend API exists', not_built: 'Frontend dashboard', tools: 'Node.js, PostgreSQL' } },
+      { id: id(), type: 'CONSTRAINTS', position: { x: 700, y: 240 }, data: { tech: 'React frontend only', time: '4 weeks', must: 'Mobile responsive', nos: 'No new backend services' } },
+      { id: id(), type: 'SUCCESS', position: { x: 220, y: 460 }, data: { done: 'Team can see KPIs at a glance', know: 'Adoption rate > 80% in 2 weeks' } },
+    ];
+  }
+  if (templateName === 'Intake Form') {
+    return [
+      { id: id(), type: 'PROJECT', position: { x: 300, y: 60 }, data: { title: 'Intake Form Build', description: 'A public-facing form that collects client information' } },
+      { id: id(), type: 'AUDIENCE', position: { x: 60, y: 240 }, data: { who: 'New clients or applicants', needs: 'Easy way to submit information', struggles: 'Long email chains, missing info' } },
+      { id: id(), type: 'EXISTS_ALREADY', position: { x: 380, y: 240 }, data: { built: 'Nothing yet', not_built: 'Everything', tools: 'TBD' } },
+      { id: id(), type: 'CONSTRAINTS', position: { x: 700, y: 240 }, data: { tech: 'Single page, no backend preferred', time: '1 week', must: 'Email notification on submit', nos: 'No database required' } },
+      { id: id(), type: 'SUCCESS', position: { x: 220, y: 460 }, data: { done: 'Form live, submissions arrive via email', know: 'First real submission received' } },
+    ];
+  }
+  // Blank
+  return [
+    { id: id(), type: 'PROJECT', position: { x: 300, y: 200 }, data: { title: '', description: '' } },
+  ];
+}
+
+function initialNode() {
+  return [{ id: genId(), type: 'PROJECT', position: { x: 300, y: 200 }, data: { title: '', description: '' } }];
+}
+
+// ─── Node Picker Modal ────────────────────────────────────────────────────────
+
+function NodePickerModal({ position, onSelect, onClose }) {
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-box" onClick={e => e.stopPropagation()}>
+        <h3 style={{color:'#C8A850',marginTop:0,marginBottom:16,fontSize:16,fontWeight:700}}>Add Node</h3>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
+          {NODE_TYPE_ORDER.map(t => {
+            const def = NODE_TYPE_DEFS[t];
+            return (
+              <button
+                key={t}
+                onClick={() => onSelect(t)}
+                style={{
+                  background:'#111',border:'1px solid #2A2A2A',borderRadius:8,padding:'10px 12px',
+                  cursor:'pointer',textAlign:'left',transition:'border-color 0.15s',minHeight:44,
+                  display:'flex',alignItems:'center',gap:8
+                }}
+                onMouseEnter={e => e.currentTarget.style.borderColor='#C8A850'}
+                onMouseLeave={e => e.currentTarget.style.borderColor='#2A2A2A'}
+              >
+                <span style={{background:def.tagBg,color:def.tagText,fontSize:9,fontWeight:700,padding:'2px 6px',borderRadius:10,textTransform:'uppercase',whiteSpace:'nowrap'}}>{def.label}</span>
+              </button>
+            );
+          })}
+        </div>
+        <button
+          onClick={onClose}
+          style={{marginTop:16,background:'transparent',border:'1px solid #2A2A2A',color:'#888',borderRadius:6,padding:'6px 16px',cursor:'pointer',fontSize:13,width:'100%'}}
+        >Cancel</button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Claude Panel ─────────────────────────────────────────────────────────────
+
+function ClaudePanel({ apiKey, onAddNode, onUpdateNode, nodes, collapsed, onToggle }) {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef();
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const parseAndExecuteActions = useCallback((text, rawMessages) => {
+    const lines = text.split('\n');
+    const displayLines = [];
+    lines.forEach(line => {
+      if (line.trim().startsWith('ACTION:')) {
+        try {
+          const jsonStr = line.trim().slice('ACTION:'.length).trim();
+          const action = JSON.parse(jsonStr);
+          if (action.action === 'add_node') {
+            onAddNode(action.type || 'NOTES', action.title || '', action.content || '');
+          } else if (action.action === 'update_node') {
+            if (action.nodeId && action.field) {
+              onUpdateNode(action.nodeId, action.field, action.value || '');
+            }
+          }
+        } catch(e) { displayLines.push(line); }
+      } else {
+        displayLines.push(line);
+      }
+    });
+    return displayLines.join('\n').trim();
+  }, [onAddNode, onUpdateNode]);
+
+  const sendMessage = useCallback(async () => {
+    if (!input.trim() || loading) return;
+    if (!apiKey) return;
+
+    const userMsg = { role: 'user', content: input.trim() };
+    const newMessages = [...messages, { role: 'user', content: input.trim() }];
+    setMessages(newMessages);
+    setInput('');
+    setLoading(true);
+
+    // Build context from nodes
+    const nodesSummary = nodes.map(n => {
+      const def = NODE_TYPE_DEFS[n.type] || {};
+      const fields = Object.entries(n.data)
+        .filter(([k]) => !['onUpdate','onDelete','images'].includes(k))
+        .map(([k,v]) => `  ${k}: ${v}`)
+        .join('\n');
+      return `[${def.label || n.type}] ID:${n.id}\n${fields}`;
+    }).join('\n\n');
+
+    const systemPrompt = `You are a project planning assistant helping the user build a structured brief for a software build. Your job is to ask smart questions, help fill in node content, and make sure the brief will give Claude Code everything it needs to start building without asking clarifying questions. Be direct and concise. When the user asks you to add or update a node, respond with a JSON command block in this exact format on its own line: ACTION:{"action":"add_node","type":"CONSTRAINTS","title":"Budget","content":"No backend. No paid services."} The UI will parse lines starting with ACTION: and execute them. For update: {"action":"update_node","nodeId":"id","field":"fieldName","value":"text"}. You can include normal text before or after the ACTION line.\n\nCurrent board nodes:\n${nodesSummary}`;
+
+    const apiMessages = newMessages.map(m => ({ role: m.role, content: m.content }));
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+          'anthropic-dangerous-direct-browser-calls': 'true',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-5',
+          max_tokens: 1024,
+          system: systemPrompt,
+          messages: apiMessages,
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error?.message || `HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+      const rawText = data.content?.[0]?.text || '';
+      const displayText = parseAndExecuteActions(rawText, newMessages);
+
+      setMessages(prev => [...prev, { role: 'assistant', content: displayText || '(action executed)' }]);
+    } catch(e) {
+      setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${e.message}` }]);
+    } finally {
+      setLoading(false);
+    }
+  }, [input, loading, messages, apiKey, nodes, parseAndExecuteActions]);
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) sendMessage();
+  };
+
+  if (collapsed) {
+    return (
+      <div style={{width:40,background:'#111111',borderLeft:'1px solid #2A2A2A',display:'flex',flexDirection:'column',alignItems:'center',paddingTop:12}}>
+        <button onClick={onToggle} style={{background:'transparent',border:'none',color:'#C8A850',cursor:'pointer',fontSize:18,padding:4,minWidth:32,minHeight:32}} title="Open Claude panel">◁</button>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{width:320,background:'#111111',borderLeft:'1px solid #2A2A2A',display:'flex',flexDirection:'column',flexShrink:0}}>
+      {/* Header */}
+      <div style={{padding:'12px 16px',borderBottom:'1px solid #2A2A2A',display:'flex',alignItems:'center',justifyContent:'space-between',background:'#0D0D0D'}}>
+        <span style={{color:'#C8A850',fontWeight:700,fontSize:15,letterSpacing:'0.02em'}}>Claude</span>
+        <button onClick={onToggle} style={{background:'transparent',border:'none',color:'#666',cursor:'pointer',fontSize:16,minWidth:32,minHeight:32,display:'flex',alignItems:'center',justifyContent:'center'}} title="Collapse">▷</button>
+      </div>
+
+      {/* Messages */}
+      <div className="claude-messages">
+        {!apiKey && (
+          <div style={{color:'#666',fontSize:13,textAlign:'center',padding:16,lineHeight:1.5}}>
+            Enter your Anthropic API key in the toolbar to enable Claude.
+          </div>
+        )}
+        {messages.map((m, i) => (
+          <div key={i} className={m.role === 'user' ? 'msg-user' : 'msg-claude'}>
+            {m.content}
+          </div>
+        ))}
+        {loading && (
+          <div className="msg-claude" style={{color:'#888'}}>Thinking…</div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input */}
+      <div style={{padding:10,borderTop:'1px solid #2A2A2A',display:'flex',gap:8,alignItems:'flex-end'}}>
+        <textarea
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={apiKey ? "Ask Claude… (Ctrl+Enter to send)" : "API key required"}
+          disabled={!apiKey || loading}
+          rows={3}
+          style={{flex:1,background:'#1A1A1A',border:'1px solid #2A2A2A',borderRadius:8,color:'#F5F0E8',padding:'8px 10px',fontSize:13,resize:'none',outline:'none',transition:'border-color 0.15s'}}
+          onFocus={e => e.target.style.borderColor='#C8A850'}
+          onBlur={e => e.target.style.borderColor='#2A2A2A'}
+        />
+        <button
+          onClick={sendMessage}
+          disabled={!apiKey || loading || !input.trim()}
+          style={{background:'#C8A850',border:'none',color:'#0A0A0A',fontWeight:700,borderRadius:8,padding:'8px 12px',cursor:'pointer',fontSize:13,minHeight:44,opacity:(!apiKey||loading||!input.trim())?0.4:1,transition:'opacity 0.15s'}}
+        >Send</button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Flow Canvas ──────────────────────────────────────────────────────────────
+
+function FlowCanvas({ nodes, edges, onNodesChange, onEdgesChange, onConnect, onPaneDoubleClick, onDeleteNode }) {
+  const defaultEdgeOptions = {
+    animated: true,
+    style: { stroke: '#C8A850', strokeDasharray: '5 5', strokeWidth: 2 },
+    markerEnd: null,
+    markerStart: null,
+  };
+
+  return (
+    <ReactFlow
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      onConnect={onConnect}
+      nodeTypes={nodeTypes}
+      defaultEdgeOptions={defaultEdgeOptions}
+      onPaneClick={e => {
+        if (e.detail === 2) onPaneDoubleClick(e);
+      }}
+      fitView
+      fitViewOptions={{ padding: 0.2 }}
+      minZoom={0.2}
+      maxZoom={2}
+      deleteKeyCode="Delete"
+      style={{ background: '#0A0A0A' }}
+    >
+      <Background variant={BackgroundVariant.Dots} gap={20} color="#222222" />
+      <Controls />
+    </ReactFlow>
+  );
+}
+
+// ─── Toolbar ──────────────────────────────────────────────────────────────────
+
+function Toolbar({
+  boardName, setBoardName, apiKey, setApiKey,
+  onSave, onNewBoard, savedBoards, onLoadBoard, selectedBoard,
+  onTemplate, onGenerateBrief, onExportJson
+}) {
+  const btnBase = {
+    border:'none',borderRadius:6,padding:'6px 14px',cursor:'pointer',fontWeight:600,fontSize:13,
+    minHeight:36,transition:'background 0.15s'
+  };
+  const goldBtn = { ...btnBase, background:'#C8A850', color:'#0A0A0A' };
+  const ghostBtn = { ...btnBase, background:'#1A1A1A', color:'#F5F0E8', border:'1px solid #2A2A2A' };
+
+  return (
+    <div style={{
+      background:'#111111',borderTop:'1px solid #2A2A2A',padding:'8px 16px',
+      display:'flex',alignItems:'center',gap:10,flexWrap:'wrap',zIndex:10
+    }}>
+      {/* Left: board controls */}
+      <div style={{display:'flex',alignItems:'center',gap:8,flex:'0 0 auto'}}>
+        <input
+          className="toolbar-input"
+          value={boardName}
+          onChange={e => setBoardName(e.target.value)}
+          placeholder="Untitled Board"
+          style={{background:'#1A1A1A',border:'1px solid #2A2A2A',borderRadius:6,color:'#F5F0E8',padding:'6px 10px',fontSize:13,minWidth:140,minHeight:36}}
+        />
+        {Object.keys(savedBoards).length > 0 && (
+          <select
+            value={selectedBoard}
+            onChange={e => onLoadBoard(e.target.value)}
+            style={{background:'#1A1A1A',border:'1px solid #2A2A2A',borderRadius:6,color:'#F5F0E8',padding:'6px 10px',fontSize:13,minHeight:36,cursor:'pointer'}}
+          >
+            <option value="">Switch board…</option>
+            {Object.keys(savedBoards).map(name => (
+              <option key={name} value={name}>{name}</option>
+            ))}
+          </select>
+        )}
+        <button style={goldBtn} onClick={onSave}>Save</button>
+        <button style={ghostBtn} onClick={onNewBoard}>New Board</button>
+        <button style={ghostBtn} onClick={onExportJson}>Export JSON</button>
+      </div>
+
+      {/* Center: templates */}
+      <div style={{display:'flex',alignItems:'center',gap:6,flex:'1 1 auto',justifyContent:'center'}}>
+        <span style={{color:'#555',fontSize:11,marginRight:4}}>Templates:</span>
+        {['Dashboard Build','Intake Form','Blank'].map(t => (
+          <button
+            key={t}
+            style={ghostBtn}
+            onClick={() => onTemplate(t)}
+          >{t}</button>
+        ))}
+      </div>
+
+      {/* Right: API key + Generate */}
+      <div style={{display:'flex',alignItems:'center',gap:8,flex:'0 0 auto'}}>
+        <input
+          className="toolbar-input"
+          type="password"
+          value={apiKey}
+          onChange={e => setApiKey(e.target.value)}
+          placeholder="Anthropic API Key"
+          style={{background:'#1A1A1A',border:'1px solid #2A2A2A',borderRadius:6,color:'#F5F0E8',padding:'6px 10px',fontSize:13,minWidth:180,minHeight:36}}
+        />
+        <button
+          style={{...goldBtn, fontSize:14, padding:'8px 20px', minHeight:40}}
+          onClick={onGenerateBrief}
+        >Generate Brief</button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main App ─────────────────────────────────────────────────────────────────
+
+function App() {
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [boardName, setBoardName] = useState('Untitled Board');
+  const [savedBoards, setSavedBoards] = useState({});
+  const [selectedBoard, setSelectedBoard] = useState('');
+  const [apiKey, setApiKey] = useState('');
+  const [pickerState, setPickerState] = useState(null); // {x, y, clientX, clientY}
+  const [toast, setToast] = useState('');
+  const [claudePanelCollapsed, setClaudePanelCollapsed] = useState(false);
+  const reactFlowInstance = useRef(null);
+
+  // ── Attach callbacks to node data ──
+  const onUpdateNodeData = useCallback((nodeId, field, value) => {
+    setNodes(nds => nds.map(n => {
+      if (n.id !== nodeId) return n;
+      const newData = { ...n.data, [field]: value };
+      return { ...n, data: newData };
+    }));
+  }, [setNodes]);
+
+  const onDeleteNode = useCallback((nodeId) => {
+    setNodes(nds => nds.filter(n => n.id !== nodeId));
+    setEdges(eds => eds.filter(e => e.source !== nodeId && e.target !== nodeId));
+  }, [setNodes, setEdges]);
+
+  // Inject callbacks into node data whenever nodes/callbacks change
+  const nodesWithCallbacks = nodes.map(n => ({
+    ...n,
+    data: { ...n.data, onUpdate: onUpdateNodeData, onDelete: onDeleteNode }
+  }));
+
+  // ── Load from localStorage on mount ──
+  useEffect(() => {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        const boards = JSON.parse(raw);
+        setSavedBoards(boards);
+      } catch(e) {}
+    }
+    const savedKey = localStorage.getItem('board-project-apikey');
+    if (savedKey) setApiKey(savedKey);
+
+    // Load initial state
+    const initialNodes = initialNode();
+    setNodes(initialNodes);
+    setEdges([]);
+  }, []);
+
+  // Save API key to localStorage
+  useEffect(() => {
+    localStorage.setItem('board-project-apikey', apiKey);
+  }, [apiKey]);
+
+  // Auto-save every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (boardName) doSave(boardName);
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [nodes, edges, boardName]);
+
+  const doSave = useCallback((name) => {
+    setSavedBoards(prev => {
+      const next = {
+        ...prev,
+        [name]: {
+          name,
+          nodes: nodes.map(n => ({ ...n, data: Object.fromEntries(Object.entries(n.data).filter(([k]) => !['onUpdate','onDelete'].includes(k))) })),
+          edges,
+          updatedAt: new Date().toISOString()
+        }
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
+  }, [nodes, edges]);
+
+  const handleSave = useCallback(() => {
+    doSave(boardName);
+    showToast('Saved!');
+  }, [doSave, boardName]);
+
+  const handleNewBoard = useCallback(() => {
+    const name = window.prompt('Board name:', 'New Board');
+    if (!name) return;
+    const newNodes = initialNode();
+    setNodes(newNodes);
+    setEdges([]);
+    setBoardName(name);
+    setSelectedBoard('');
+  }, [setNodes, setEdges]);
+
+  const handleLoadBoard = useCallback((name) => {
+    if (!name) return;
+    const board = savedBoards[name];
+    if (!board) return;
+    setNodes(board.nodes || []);
+    setEdges(board.edges || []);
+    setBoardName(board.name);
+    setSelectedBoard(name);
+  }, [savedBoards, setNodes, setEdges]);
+
+  const handleTemplate = useCallback((templateName) => {
+    if (!window.confirm(`Load "${templateName}" template? This will replace the current board.`)) return;
+    const newNodes = makeTemplateNodes(templateName);
+    setNodes(newNodes);
+    setEdges([]);
+    setBoardName(templateName);
+  }, [setNodes, setEdges]);
+
+  const onConnect = useCallback((params) => {
+    setEdges(eds => addEdge({
+      ...params,
+      animated: true,
+      style: { stroke: '#C8A850', strokeDasharray: '5 5', strokeWidth: 2 },
+    }, eds));
+  }, [setEdges]);
+
+  const onPaneDoubleClick = useCallback((e) => {
+    if (!reactFlowInstance.current) return;
+    // screenToFlowPosition is the v11 API (project() was v10)
+    const projectFn = reactFlowInstance.current.screenToFlowPosition || reactFlowInstance.current.project;
+    if (!projectFn) return;
+    const flowPos = projectFn({ x: e.clientX, y: e.clientY });
+    setPickerState({ x: flowPos.x, y: flowPos.y, clientX: e.clientX, clientY: e.clientY });
+  }, []);
+
+  const handlePickerSelect = useCallback((type) => {
+    if (!pickerState) return;
+    const newNode = {
+      id: genId(),
+      type,
+      position: { x: pickerState.x - 140, y: pickerState.y - 40 },
+      data: {}
+    };
+    setNodes(nds => [...nds, newNode]);
+    setPickerState(null);
+  }, [pickerState, setNodes]);
+
+  // Add node from Claude panel
+  const handleAddNodeFromClaude = useCallback((type, title, content) => {
+    const existing = nodes.length;
+    const col = existing % 3;
+    const row = Math.floor(existing / 3);
+    const newNode = {
+      id: genId(),
+      type: NODE_TYPE_ORDER.includes(type) ? type : 'NOTES',
+      position: { x: 100 + col * 320, y: 100 + row * 260 },
+      data: { title, notes: content, description: content }
+    };
+    setNodes(nds => [...nds, newNode]);
+  }, [nodes, setNodes]);
+
+  const handleUpdateNodeFromClaude = useCallback((nodeId, field, value) => {
+    onUpdateNodeData(nodeId, field, value);
+  }, [onUpdateNodeData]);
+
+  // Generate Brief
+  const handleGenerateBrief = useCallback(async () => {
+    const rawNodes = nodes.map(n => ({
+      ...n,
+      data: Object.fromEntries(Object.entries(n.data).filter(([k]) => !['onUpdate','onDelete'].includes(k)))
+    }));
+
+    const getType = (t) => rawNodes.filter(n => n.type === t);
+
+    const field = (nodes, key) => nodes.map(n => n.data[key]).filter(Boolean).join('\n');
+
+    const projectNodes = getType('PROJECT');
+    const title = field(projectNodes, 'title') || boardName;
+    const desc = field(projectNodes, 'description');
+
+    const audience = getType('AUDIENCE');
+    const exists = getType('EXISTS_ALREADY');
+    const constraints = getType('CONSTRAINTS');
+    const success = getType('SUCCESS');
+    const questions = getType('OPEN_QUESTIONS');
+    const notes = getType('NOTES');
+
+    const lines = [];
+    lines.push(`# ${title}`);
+    if (desc) lines.push(desc);
+    lines.push('');
+
+    if (audience.length) {
+      lines.push('## Audience');
+      audience.forEach(n => {
+        if (n.data.who) lines.push(`**Who:** ${n.data.who}`);
+        if (n.data.needs) lines.push(`**Needs:** ${n.data.needs}`);
+        if (n.data.struggles) lines.push(`**Struggles:** ${n.data.struggles}`);
+      });
+      lines.push('');
+    }
+
+    if (exists.length) {
+      lines.push('## What Exists');
+      exists.forEach(n => {
+        if (n.data.built) lines.push(`**Built:** ${n.data.built}`);
+        if (n.data.not_built) lines.push(`**Not built:** ${n.data.not_built}`);
+        if (n.data.tools) lines.push(`**Tools:** ${n.data.tools}`);
+      });
+      lines.push('');
+    }
+
+    if (constraints.length) {
+      lines.push('## Constraints');
+      constraints.forEach(n => {
+        if (n.data.tech) lines.push(`**Tech:** ${n.data.tech}`);
+        if (n.data.time) lines.push(`**Time/Budget:** ${n.data.time}`);
+        if (n.data.must) lines.push(`**Must-haves:** ${n.data.must}`);
+        if (n.data.nos) lines.push(`**Hard nos:** ${n.data.nos}`);
+      });
+      lines.push('');
+    }
+
+    if (success.length) {
+      lines.push('## Success Looks Like');
+      success.forEach(n => {
+        if (n.data.done) lines.push(`**Done looks like:** ${n.data.done}`);
+        if (n.data.know) lines.push(`**How we'll know:** ${n.data.know}`);
+      });
+      lines.push('');
+    }
+
+    if (questions.length) {
+      lines.push('## Open Questions');
+      questions.forEach(n => {
+        if (n.data.undecided) lines.push(`**Undecided:** ${n.data.undecided}`);
+        if (n.data.figure_out) lines.push(`**To figure out:** ${n.data.figure_out}`);
+      });
+      lines.push('');
+    }
+
+    if (notes.length) {
+      lines.push('## Notes');
+      notes.forEach(n => {
+        if (n.data.notes) lines.push(n.data.notes);
+      });
+      lines.push('');
+    }
+
+    lines.push('---');
+    lines.push('*Generated by Board Project | Michelle Townsend Consulting*');
+
+    const md = lines.join('\n');
+
+    // Download
+    const sanitized = boardName.replace(/[^a-z0-9\-_\s]/gi,'').replace(/\s+/g,'-').toLowerCase();
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${sanitized || 'brief'}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    // Clipboard
+    try {
+      await navigator.clipboard.writeText(md);
+      showToast('Copied to clipboard!');
+    } catch(e) {
+      showToast('Downloaded!');
+    }
+  }, [nodes, boardName]);
+
+  const handleExportJson = useCallback(() => {
+    const data = {
+      name: boardName,
+      nodes: nodes.map(n => ({
+        ...n,
+        data: Object.fromEntries(Object.entries(n.data).filter(([k]) => !['onUpdate','onDelete'].includes(k)))
+      })),
+      edges,
+      exportedAt: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const sanitized = boardName.replace(/[^a-z0-9\-_\s]/gi,'').replace(/\s+/g,'-').toLowerCase();
+    a.download = `${sanitized || 'board'}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('JSON exported!');
+  }, [nodes, edges, boardName]);
+
+  const showToast = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 2100);
+  };
+
+  return (
+    <div style={{display:'flex',flexDirection:'column',height:'100vh',overflow:'hidden'}}>
+      {/* Main area: canvas + claude panel */}
+      <div style={{flex:1,display:'flex',overflow:'hidden',position:'relative'}}>
+        <div style={{flex:1,position:'relative'}}>
+          <FlowWithInstance
+            nodes={nodesWithCallbacks}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onPaneDoubleClick={onPaneDoubleClick}
+            onDeleteNode={onDeleteNode}
+            onInit={inst => { reactFlowInstance.current = inst; }}
+          />
+        </div>
+
+        <ClaudePanel
+          apiKey={apiKey}
+          onAddNode={handleAddNodeFromClaude}
+          onUpdateNode={handleUpdateNodeFromClaude}
+          nodes={nodes}
+          collapsed={claudePanelCollapsed}
+          onToggle={() => setClaudePanelCollapsed(v => !v)}
+        />
+      </div>
+
+      {/* Toolbar at bottom */}
+      <Toolbar
+        boardName={boardName}
+        setBoardName={setBoardName}
+        apiKey={apiKey}
+        setApiKey={setApiKey}
+        onSave={handleSave}
+        onNewBoard={handleNewBoard}
+        savedBoards={savedBoards}
+        onLoadBoard={handleLoadBoard}
+        selectedBoard={selectedBoard}
+        onTemplate={handleTemplate}
+        onGenerateBrief={handleGenerateBrief}
+        onExportJson={handleExportJson}
+      />
+
+      {/* Node picker modal */}
+      {pickerState && (
+        <NodePickerModal
+          position={pickerState}
+          onSelect={handlePickerSelect}
+          onClose={() => setPickerState(null)}
+        />
+      )}
+
+      {/* Toast */}
+      {toast && <div className="toast">{toast}</div>}
+    </div>
+  );
+}
+
+// Separate component to access useReactFlow inside provider
+function FlowWithInstance({ nodes, edges, onNodesChange, onEdgesChange, onConnect, onPaneDoubleClick, onDeleteNode, onInit }) {
+  const defaultEdgeOptions = {
+    animated: true,
+    style: { stroke: '#C8A850', strokeDasharray: '5 5', strokeWidth: 2 },
+  };
+
+  return (
+    <div style={{width:'100%',height:'100%'}}>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        nodeTypes={nodeTypes}
+        defaultEdgeOptions={defaultEdgeOptions}
+        onPaneClick={e => {
+          if (e.detail === 2) onPaneDoubleClick(e);
+        }}
+        fitView
+        fitViewOptions={{ padding: 0.2 }}
+        minZoom={0.2}
+        maxZoom={2}
+        deleteKeyCode="Delete"
+        style={{ background: '#0A0A0A', width: '100%', height: '100%' }}
+        onInit={inst => onInit(inst)}
+      >
+        <Background variant={BackgroundVariant.Dots} gap={20} color="#222222" />
+        <Controls />
+      </ReactFlow>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <ReactFlowProvider>
+    <App />
+  </ReactFlowProvider>
+);
+</script>
+</body>
+</html>
