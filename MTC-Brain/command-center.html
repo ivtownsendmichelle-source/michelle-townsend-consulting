@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Command Center — Michelle Townsend Consulting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green-deep:  #1E3D1A;
+  --green:       #2D5A27;
+  --green-mid:   #3D7A35;
+  --green-light: #E8F0E6;
+  --gold:        #C9A84C;
+  --gold-light:  #E8C96A;
+  --gold-pale:   #F5EDD6;
+  --cream:       #FAF7F0;
+  --cream-dark:  #F0EAD8;
+  --white:       #FFFFFF;
+  --text-dark:   #1A1A1A;
+  --text-mid:    #444444;
+  --text-light:  #888888;
+  --shadow-sm:   0 2px 8px rgba(30,61,26,.10);
+  --shadow-md:   0 4px 20px rgba(30,61,26,.13);
+  --shadow-lg:   0 8px 40px rgba(30,61,26,.16);
+  --radius:      12px;
+  --radius-sm:   8px;
+  --transition:  0.2s ease;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── SCROLLBAR ────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream-dark); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+/* ── ANIMATIONS ──────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,.35); }
+  50%       { box-shadow: 0 0 0 8px rgba(201,168,76,0); }
+}
+@keyframes countBounce {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.fade-up { animation: fadeUp .55s ease both; }
+.fade-up:nth-child(1) { animation-delay: .05s; }
+.fade-up:nth-child(2) { animation-delay: .12s; }
+.fade-up:nth-child(3) { animation-delay: .19s; }
+.fade-up:nth-child(4) { animation-delay: .26s; }
+.fade-up:nth-child(5) { animation-delay: .33s; }
+.fade-up:nth-child(6) { animation-delay: .40s; }
+.bounce { animation: countBounce .3s ease; }
+
+/* ── HEADER ──────────────────────────────────────────────────────── */
+header {
+  background: linear-gradient(135deg, var(--green-deep) 0%, var(--green) 100%);
+  color: var(--cream);
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent, transparent 40px,
+    rgba(255,255,255,.015) 40px, rgba(255,255,255,.015) 80px
+  );
+  pointer-events: none;
+}
+.header-top-bar {
+  height: 5px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+}
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 28px 32px 24px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: start;
+  position: relative;
+  z-index: 1;
+}
+.header-left h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--cream);
+  letter-spacing: -.5px;
+  line-height: 1.15;
+  margin-bottom: 4px;
+}
+.header-left h1 span { color: var(--gold-light); }
+.header-left .tagline {
+  font-size: .85rem;
+  color: rgba(250,247,240,.65);
+  font-style: italic;
+  letter-spacing: .3px;
+}
+.header-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+#greeting {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--gold-light);
+}
+#date-display {
+  font-size: .82rem;
+  color: rgba(250,247,240,.7);
+  letter-spacing: .4px;
+}
+.quote-bar {
+  border-top: 1px solid rgba(201,168,76,.25);
+  margin: 0 32px;
+  padding: 14px 0 18px;
+  max-width: calc(1280px - 64px);
+  margin-left: auto; margin-right: auto;
+  position: relative; z-index: 1;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.quote-mark {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  line-height: .6;
+  color: var(--gold);
+  opacity: .7;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+#quote-text {
+  font-family: 'Playfair Display', serif;
+  font-size: .95rem;
+  font-style: italic;
+  color: rgba(250,247,240,.88);
+  line-height: 1.55;
+}
+#quote-attr {
+  font-size: .75rem;
+  color: var(--gold);
+  margin-top: 4px;
+  font-style: normal;
+  letter-spacing: .4px;
+}
+
+/* ── MAIN LAYOUT ─────────────────────────────────────────────────── */
+main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 28px 32px 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 22px;
+}
+
+/* ── CARDS ───────────────────────────────────────────────────────── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(201,168,76,.18);
+  overflow: hidden;
+  transition: box-shadow var(--transition);
+}
+.card:hover { box-shadow: var(--shadow-md); }
+.card-header {
+  background: var(--green-deep);
+  padding: 13px 20px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.card-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--gold-light);
+  letter-spacing: .2px;
+}
+.card-header .card-badge {
+  font-size: .7rem;
+  background: rgba(201,168,76,.2);
+  color: var(--gold-light);
+  border: 1px solid rgba(201,168,76,.3);
+  padding: 2px 8px;
+  border-radius: 20px;
+  letter-spacing: .5px;
+  white-space: nowrap;
+}
+.card-body { padding: 18px 20px; }
+
+/* ── FULL-WIDTH CARD ─────────────────────────────────────────────── */
+.full-width { grid-column: 1 / -1; }
+
+/* ── STATUS BAR ─────────────────────────────────────────────────── */
+.status-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.status-tile {
+  background: var(--white);
+  border: 1px solid rgba(201,168,76,.18);
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+}
+.status-tile:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.status-tile .status-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--green-deep);
+  line-height: 1;
+  display: block;
+  margin-bottom: 4px;
+}
+.status-tile .status-label {
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: .7px;
+}
+.status-tile .status-sub {
+  font-size: .72rem;
+  color: var(--text-light);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* ── DAILY PLANNER ───────────────────────────────────────────────── */
+.planner-block {
+  background: var(--cream);
+  border: 1px solid var(--cream-dark);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  transition: border-color var(--transition), background var(--transition);
+}
+.planner-block:hover { border-color: var(--gold); background: var(--gold-pale); }
+.planner-block-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.planner-icon { font-size: 1.1rem; }
+.planner-block-title {
+  font-weight: 600;
+  font-size: .88rem;
+  color: var(--green-deep);
+  flex: 1;
+}
+.planner-time {
+  font-size: .72rem;
+  color: var(--text-light);
+  background: var(--green-light);
+  padding: 2px 7px;
+  border-radius: 10px;
+  letter-spacing: .3px;
+}
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  cursor: pointer;
+  font-size: .84rem;
+  color: var(--text-mid);
+  transition: color var(--transition);
+}
+.check-row:hover { color: var(--green-deep); }
+.check-row input[type=checkbox] { display: none; }
+.check-box {
+  width: 18px; height: 18px;
+  border-radius: 5px;
+  border: 2px solid var(--gold);
+  background: var(--white);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+  font-size: .7rem;
+}
+.check-row.checked .check-box {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--white);
+}
+.check-row.checked .check-label {
+  text-decoration: line-through;
+  color: var(--text-light);
+}
+.planner-input {
+  width: 100%;
+  border: none;
+  background: var(--white);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: .83rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-dark);
+  margin-top: 6px;
+  border: 1px solid var(--cream-dark);
+  transition: border-color var(--transition);
+  resize: none;
+}
+.planner-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,.12);
+}
+
+/* ── CUSTOM TASKS ────────────────────────────────────────────────── */
+.tasks-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 10px;
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--text-light);
+  letter-spacing: .8px;
+  text-transform: uppercase;
+}
+.tasks-divider::before, .tasks-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--cream-dark);
+}
+.task-add-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+#new-task-input {
+  flex: 1;
+  border: 1px solid var(--cream-dark);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: .84rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-dark);
+  background: var(--cream);
+  transition: border-color var(--transition);
+}
+#new-task-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,.12);
+  background: var(--white);
+}
+#new-task-input::placeholder { color: var(--text-light); font-style: italic; }
+.btn-add {
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  font-size: .84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+  white-space: nowrap;
+}
+.btn-add:hover { background: var(--green-deep); transform: translateY(-1px); }
+#task-list { display: flex; flex-direction: column; gap: 6px; }
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: var(--cream);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--cream-dark);
+  transition: all var(--transition);
+  animation: fadeUp .3s ease;
+}
+.task-item:hover { border-color: var(--gold); background: var(--gold-pale); }
+.task-item .task-text {
+  flex: 1;
+  font-size: .85rem;
+  color: var(--text-dark);
+  transition: all var(--transition);
+}
+.task-item.done .task-text {
+  text-decoration: line-through;
+  color: var(--text-light);
+}
+.task-item.done { background: var(--green-light); border-color: var(--green-light); }
+.task-check { cursor: pointer; flex-shrink: 0; }
+.task-del {
+  background: none; border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color var(--transition), background var(--transition);
+  line-height: 1;
+}
+.task-del:hover { color: #c0392b; background: #fde8e8; }
+.btn-reset-day {
+  width: 100%;
+  margin-top: 14px;
+  background: none;
+  border: 1.5px solid var(--gold);
+  color: var(--green-deep);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  font-size: .82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  letter-spacing: .3px;
+}
+.btn-reset-day:hover {
+  background: var(--gold-pale);
+  border-color: var(--green);
+}
+
+/* ── QUICK LINKS ─────────────────────────────────────────────────── */
+.links-group-label {
+  font-size: .7rem;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 14px 0 7px;
+}
+.links-group-label:first-child { margin-top: 0; }
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.link-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px 6px;
+  background: var(--cream);
+  border: 1px solid var(--cream-dark);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--text-dark);
+  font-size: .75rem;
+  font-weight: 500;
+  text-align: center;
+  transition: all var(--transition);
+  cursor: pointer;
+  line-height: 1.3;
+}
+.link-btn:hover {
+  background: var(--green-deep);
+  color: var(--cream);
+  border-color: var(--green-deep);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+.link-icon {
+  font-size: 1.35rem;
+  display: block;
+  line-height: 1;
+}
+.link-btn.featured {
+  background: var(--gold-pale);
+  border-color: var(--gold);
+  color: var(--green-deep);
+}
+.link-btn.featured:hover {
+  background: var(--green-deep);
+  color: var(--cream);
+  border-color: var(--green-deep);
+}
+
+/* ── LIST CARDS (Clients, Projects, Follow-ups) ─────────────────── */
+.list-add-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.list-add-row input, .list-add-row select {
+  flex: 1;
+  border: 1px solid var(--cream-dark);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  font-size: .82rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-dark);
+  background: var(--cream);
+  transition: border-color var(--transition);
+}
+.list-add-row input:focus, .list-add-row select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,.12);
+  background: var(--white);
+}
+.list-add-row input::placeholder { color: var(--text-light); font-style: italic; }
+.list-items { display: flex; flex-direction: column; gap: 8px; }
+.list-entry {
+  background: var(--cream);
+  border: 1px solid var(--cream-dark);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  transition: all var(--transition);
+  animation: fadeUp .3s ease;
+  position: relative;
+}
+.list-entry:hover { border-color: var(--gold); background: var(--gold-pale); }
+.list-entry-name {
+  font-weight: 600;
+  font-size: .88rem;
+  color: var(--green-deep);
+  margin-bottom: 2px;
+}
+.list-entry-detail {
+  font-size: .78rem;
+  color: var(--text-mid);
+  line-height: 1.4;
+}
+.list-entry-phase {
+  display: inline-block;
+  font-size: .68rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+.phase-active { background: var(--green-light); color: var(--green-deep); }
+.phase-prospect { background: var(--gold-pale); color: #8a6d00; }
+.phase-complete { background: #E8E8E8; color: #666; }
+.phase-paused { background: #fde8e8; color: #c0392b; }
+.list-entry-del {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  font-size: .85rem;
+  padding: 2px 5px;
+  border-radius: 4px;
+  transition: color var(--transition), background var(--transition);
+  opacity: 0;
+}
+.list-entry:hover .list-entry-del { opacity: 1; }
+.list-entry-del:hover { color: #c0392b; background: #fde8e8; }
+.list-empty {
+  font-size: .8rem;
+  color: var(--text-light);
+  font-style: italic;
+  padding: 8px 0;
+}
+
+/* ── AGENT TEAM ─────────────────────────────────────────────────── */
+.agent-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+.agent-tile {
+  background: var(--cream);
+  border: 1px solid var(--cream-dark);
+  border-radius: var(--radius-sm);
+  padding: 14px 12px;
+  text-align: center;
+  transition: all var(--transition);
+}
+.agent-tile:hover { border-color: var(--gold); background: var(--gold-pale); }
+.agent-tile .agent-icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 6px;
+}
+.agent-tile .agent-name {
+  font-weight: 600;
+  font-size: .85rem;
+  color: var(--green-deep);
+  margin-bottom: 2px;
+}
+.agent-tile .agent-role {
+  font-size: .72rem;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+.agent-status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+.agent-status-label {
+  font-size: .7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.agent-active .agent-status-dot { background: var(--green); }
+.agent-active .agent-status-label { color: var(--green); }
+.agent-pending .agent-status-dot { background: var(--gold); }
+.agent-pending .agent-status-label { color: #8a6d00; }
+.agent-open .agent-status-dot { background: var(--text-light); }
+.agent-open .agent-status-label { color: var(--text-light); }
+
+/* ── WEEKLY SCORECARD ────────────────────────────────────────────── */
+.scorecard-section-label {
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 10px;
+  margin-top: 4px;
+}
+.scorecard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.score-tile {
+  background: var(--cream);
+  border: 1px solid var(--cream-dark);
+  border-radius: var(--radius-sm);
+  padding: 14px 12px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.score-tile::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s ease;
+}
+.score-tile:hover { background: var(--gold-pale); border-color: var(--gold); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.score-tile:hover::before { transform: scaleX(1); }
+.score-tile:active { transform: translateY(0); }
+.score-label {
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  margin-bottom: 8px;
+}
+.score-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--green-deep);
+  line-height: 1;
+  margin-bottom: 6px;
+  display: block;
+}
+.score-status {
+  font-size: .72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 10px;
+  display: inline-block;
+}
+.status-push  { background: #fde8e8; color: #c0392b; }
+.status-track { background: var(--gold-pale); color: #8a6d00; }
+.status-crush { background: var(--green-light); color: var(--green-deep); }
+.score-hint {
+  font-size: .7rem;
+  color: var(--text-light);
+  margin-top: 4px;
+  font-style: italic;
+}
+.scorecard-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--cream-dark);
+}
+.scorecard-footer p {
+  font-size: .78rem;
+  color: var(--text-light);
+  font-style: italic;
+}
+.btn-reset-week {
+  background: none;
+  border: 1.5px solid var(--cream-dark);
+  color: var(--text-light);
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.btn-reset-week:hover { border-color: var(--gold); color: var(--green-deep); background: var(--gold-pale); }
+
+/* ── FOLLOW-UPS ─────────────────────────────────────────────────── */
+.followup-date {
+  font-size: .7rem;
+  color: var(--gold);
+  font-weight: 600;
+}
+.followup-overdue { color: #c0392b; }
+
+/* ── STICKY NOTE ─────────────────────────────────────────────────── */
+.sticky-wrap { position: relative; }
+#sticky-note {
+  width: 100%;
+  min-height: 110px;
+  border: none;
+  resize: vertical;
+  font-family: 'Inter', sans-serif;
+  font-size: .9rem;
+  color: var(--text-dark);
+  background: transparent;
+  line-height: 1.7;
+  padding: 4px 2px;
+}
+#sticky-note:focus { outline: none; }
+#sticky-note::placeholder { color: var(--text-light); font-style: italic; }
+.sticky-saved {
+  font-size: .7rem;
+  color: var(--green-mid);
+  opacity: 0;
+  transition: opacity .4s;
+  text-align: right;
+  margin-top: 4px;
+  font-style: italic;
+}
+.sticky-saved.show { opacity: 1; }
+
+/* ── FOOTER ──────────────────────────────────────────────────────── */
+footer {
+  background: var(--green-deep);
+  color: rgba(250,247,240,.5);
+  text-align: center;
+  padding: 16px 32px;
+  font-size: .78rem;
+}
+footer .footer-motto {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--gold);
+  font-size: .9rem;
+  display: block;
+  margin-bottom: 5px;
+}
+.footer-bar {
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  main { grid-template-columns: 1fr; padding: 18px 18px 32px; }
+  .full-width { grid-column: 1; }
+  .status-bar { grid-template-columns: repeat(2, 1fr); }
+  .scorecard-grid { grid-template-columns: repeat(2,1fr); }
+  .agent-grid { grid-template-columns: repeat(3, 1fr); }
+  .header-inner { grid-template-columns: 1fr; }
+  .header-right { text-align: left; }
+  .header-left h1 { font-size: 1.7rem; }
+  .quote-bar { margin: 0 18px; }
+  main { gap: 16px; }
+}
+@media (max-width: 520px) {
+  .links-grid { grid-template-columns: repeat(2,1fr); }
+  .scorecard-grid { grid-template-columns: 1fr 1fr; }
+  .status-bar { grid-template-columns: 1fr 1fr; }
+  .agent-grid { grid-template-columns: repeat(2, 1fr); }
+  .header-left h1 { font-size: 1.45rem; }
+  .header-inner { padding: 20px 18px 16px; }
+  .card-body { padding: 14px 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════════════ -->
+<div class="header-top-bar"></div>
+<header>
+  <div class="header-inner fade-up">
+    <div class="header-left">
+      <h1>Michelle <span>Townsend</span> Consulting</h1>
+      <p class="tagline">Organizational Health for the People Doing the Hardest Work.</p>
+    </div>
+    <div class="header-right">
+      <span id="greeting">Good morning, Michelle</span>
+      <span id="date-display">Loading...</span>
+    </div>
+  </div>
+  <div class="quote-bar fade-up">
+    <div class="quote-mark">&ldquo;</div>
+    <div>
+      <p id="quote-text"></p>
+      <p id="quote-attr"></p>
+    </div>
+  </div>
+</header>
+
+<!-- ══ MAIN ════════════════════════════════════════════════════════ -->
+<main>
+
+  <!-- ── STATUS BAR ─────────────────────────────────────────── -->
+  <div class="full-width fade-up">
+    <div class="status-bar">
+      <div class="status-tile">
+        <span class="status-num" id="stat-clients">0</span>
+        <div class="status-label">Active Clients</div>
+      </div>
+      <div class="status-tile">
+        <span class="status-num" id="stat-projects">0</span>
+        <div class="status-label">Active Projects</div>
+      </div>
+      <div class="status-tile">
+        <span class="status-num" id="stat-pipeline">$0</span>
+        <div class="status-label">Pipeline</div>
+        <div class="status-sub" id="stat-pipeline-sub"></div>
+      </div>
+      <div class="status-tile">
+        <span class="status-num" id="stat-team">2/5</span>
+        <div class="status-label">Team Active</div>
+        <div class="status-sub">agents online</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DAILY PLANNER ─────────────────────────────────────── -->
+  <div class="card fade-up">
+    <div class="card-header">
+      <h2>Daily Planner</h2>
+      <span class="card-badge">4 x 15 MIN</span>
+    </div>
+    <div class="card-body">
+
+      <!-- Social Media -->
+      <div class="planner-block">
+        <div class="planner-block-header">
+          <span class="planner-icon">📱</span>
+          <span class="planner-block-title">Social Media</span>
+          <span class="planner-time">15 min</span>
+        </div>
+        <label class="check-row" id="row-posted">
+          <input type="checkbox" id="cb-posted" data-key="cb-posted">
+          <div class="check-box">✓</div>
+          <span class="check-label">Posted today</span>
+        </label>
+        <label class="check-row" id="row-engaged">
+          <input type="checkbox" id="cb-engaged" data-key="cb-engaged">
+          <div class="check-box">✓</div>
+          <span class="check-label">Engaged for 10 minutes</span>
+        </label>
+      </div>
+
+      <!-- Outreach -->
+      <div class="planner-block">
+        <div class="planner-block-header">
+          <span class="planner-icon">✉️</span>
+          <span class="planner-block-title">Outreach</span>
+          <span class="planner-time">15 min</span>
+        </div>
+        <label class="check-row" id="row-sent">
+          <input type="checkbox" id="cb-sent" data-key="cb-sent">
+          <div class="check-box">✓</div>
+          <span class="check-label">Sent one message</span>
+        </label>
+        <input class="planner-input" id="outreach-notes" type="text"
+          placeholder="Who did I contact today?" maxlength="200">
+      </div>
+
+      <!-- Learn -->
+      <div class="planner-block">
+        <div class="planner-block-header">
+          <span class="planner-icon">📚</span>
+          <span class="planner-block-title">Learn</span>
+          <span class="planner-time">15 min</span>
+        </div>
+        <label class="check-row" id="row-learned">
+          <input type="checkbox" id="cb-learned" data-key="cb-learned">
+          <div class="check-box">✓</div>
+          <span class="check-label">Practiced something new</span>
+        </label>
+        <textarea class="planner-input" id="learn-notes" rows="2"
+          placeholder="What did I learn or practice today?"></textarea>
+      </div>
+
+      <!-- Admin -->
+      <div class="planner-block">
+        <div class="planner-block-header">
+          <span class="planner-icon">📋</span>
+          <span class="planner-block-title">Admin</span>
+          <span class="planner-time">15 min</span>
+        </div>
+        <label class="check-row" id="row-tracker">
+          <input type="checkbox" id="cb-tracker" data-key="cb-tracker">
+          <div class="check-box">✓</div>
+          <span class="check-label">Updated project tracker</span>
+        </label>
+        <label class="check-row" id="row-followup">
+          <input type="checkbox" id="cb-followup" data-key="cb-followup">
+          <div class="check-box">✓</div>
+          <span class="check-label">Followed up on outstanding items</span>
+        </label>
+      </div>
+
+      <!-- Custom Tasks -->
+      <div class="tasks-divider">Today's Tasks</div>
+      <div class="task-add-row">
+        <input type="text" id="new-task-input" placeholder="Add a task and press Enter..." maxlength="120">
+        <button class="btn-add" onclick="addTask()">+ Add</button>
+      </div>
+      <div id="task-list"></div>
+
+      <button class="btn-reset-day" onclick="resetDay()">Reset for new day</button>
+    </div>
+  </div>
+
+  <!-- ── QUICK LINKS ────────────────────────────────────────── -->
+  <div class="card fade-up">
+    <div class="card-header">
+      <h2>Quick Links</h2>
+      <span class="card-badge">TOOLS</span>
+    </div>
+    <div class="card-body">
+
+      <p class="links-group-label">Client-Facing</p>
+      <div class="links-grid">
+        <a class="link-btn featured" href="https://ivtownsendmichelle-source.github.io/michelle-townsend-consulting/" target="_blank">
+          <span class="link-icon">🌿</span>My Website
+        </a>
+        <a class="link-btn featured" href="https://ivtownsendmichelle-source.github.io/ai-readiness-checklist/" target="_blank">
+          <span class="link-icon">✅</span>AI Checklist
+        </a>
+        <a class="link-btn featured" href="https://ivtownsendmichelle-source.github.io/client-intake/" target="_blank">
+          <span class="link-icon">📋</span>Client Intake
+        </a>
+        <a class="link-btn featured" href="https://ivtownsendmichelle-source.github.io/Chironote/" target="_blank">
+          <span class="link-icon">⚕️</span>ChiroNote
+        </a>
+        <a class="link-btn featured" href="https://ivtownsendmichelle-source.github.io/terraforming-mars-scorer/" target="_blank">
+          <span class="link-icon">🚀</span>Mars Scorer
+        </a>
+      </div>
+
+      <p class="links-group-label">Build Tools</p>
+      <div class="links-grid">
+        <a class="link-btn" href="../board-project/index.html" target="_blank">
+          <span class="link-icon">📐</span>Board Project
+        </a>
+        <a class="link-btn" href="https://github.com/ivtownsendmichelle-source" target="_blank">
+          <span class="link-icon">🐙</span>GitHub
+        </a>
+        <a class="link-btn" href="https://claude.ai" target="_blank">
+          <span class="link-icon">🤖</span>Claude AI
+        </a>
+      </div>
+
+      <p class="links-group-label">Daily Tools</p>
+      <div class="links-grid">
+        <a class="link-btn" href="https://mail.google.com" target="_blank">
+          <span class="link-icon">📧</span>Gmail
+        </a>
+        <a class="link-btn" href="https://drive.google.com" target="_blank">
+          <span class="link-icon">💾</span>Google Drive
+        </a>
+        <a class="link-btn" href="https://calendly.com" target="_blank">
+          <span class="link-icon">📅</span>Calendly
+        </a>
+      </div>
+
+      <p class="links-group-label">Social &amp; Outreach</p>
+      <div class="links-grid">
+        <a class="link-btn" href="https://linkedin.com" target="_blank">
+          <span class="link-icon">💼</span>LinkedIn
+        </a>
+        <a class="link-btn" href="https://facebook.com" target="_blank">
+          <span class="link-icon">👥</span>Facebook
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ACTIVE CLIENTS ─────────────────────────────────────── -->
+  <div class="card fade-up">
+    <div class="card-header">
+      <h2>Active Clients</h2>
+      <span class="card-badge" id="client-count-badge">0 CLIENTS</span>
+    </div>
+    <div class="card-body">
+      <div class="list-add-row">
+        <input type="text" id="client-name-input" placeholder="Client name..." maxlength="80">
+        <select id="client-phase-input">
+          <option value="active">Active</option>
+          <option value="prospect">Prospect</option>
+          <option value="paused">Paused</option>
+          <option value="complete">Complete</option>
+        </select>
+        <button class="btn-add" onclick="addClient()">+ Add</button>
+      </div>
+      <div class="list-items" id="client-list"></div>
+    </div>
+  </div>
+
+  <!-- ── ACTIVE PROJECTS ────────────────────────────────────── -->
+  <div class="card fade-up">
+    <div class="card-header">
+      <h2>Active Projects</h2>
+      <span class="card-badge" id="project-count-badge">0 PROJECTS</span>
+    </div>
+    <div class="card-body">
+      <div class="list-add-row">
+        <input type="text" id="project-name-input" placeholder="Project name..." maxlength="80">
+        <select id="project-phase-input">
+          <option value="active">In Progress</option>
+          <option value="prospect">Scoping</option>
+          <option value="paused">Paused</option>
+          <option value="complete">Complete</option>
+        </select>
+        <button class="btn-add" onclick="addProject()">+ Add</button>
+      </div>
+      <div class="list-items" id="project-list"></div>
+    </div>
+  </div>
+
+  <!-- ── AGENT TEAM ─────────────────────────────────────────── -->
+  <div class="card full-width fade-up">
+    <div class="card-header">
+      <h2>The Team</h2>
+      <span class="card-badge">AGENT STATUS</span>
+    </div>
+    <div class="card-body">
+      <div class="agent-grid">
+        <div class="agent-tile agent-active">
+          <span class="agent-icon">🎩</span>
+          <div class="agent-name">Maxwell</div>
+          <div class="agent-role">Head Agent</div>
+          <span class="agent-status-dot"></span>
+          <span class="agent-status-label">Active</span>
+        </div>
+        <div class="agent-tile agent-pending">
+          <span class="agent-icon">✍️</span>
+          <div class="agent-name">Sally</div>
+          <div class="agent-role">Copywriter</div>
+          <span class="agent-status-dot"></span>
+          <span class="agent-status-label">Pending</span>
+        </div>
+        <div class="agent-tile agent-open">
+          <span class="agent-icon">🔍</span>
+          <div class="agent-name">TBD</div>
+          <div class="agent-role">Researcher</div>
+          <span class="agent-status-dot"></span>
+          <span class="agent-status-label">Open Role</span>
+        </div>
+        <div class="agent-tile agent-open">
+          <span class="agent-icon">🧠</span>
+          <div class="agent-name">TBD</div>
+          <div class="agent-role">Strategist</div>
+          <span class="agent-status-dot"></span>
+          <span class="agent-status-label">Open Role</span>
+        </div>
+        <div class="agent-tile agent-open">
+          <span class="agent-icon">📣</span>
+          <div class="agent-name">TBD</div>
+          <div class="agent-role">Marketing</div>
+          <span class="agent-status-dot"></span>
+          <span class="agent-status-label">Open Role</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WEEKLY SCORECARD ──────────────────────────────────── -->
+  <div class="card full-width fade-up">
+    <div class="card-header">
+      <h2>Weekly Scorecard</h2>
+      <span class="card-badge">CLICK TO INCREMENT</span>
+    </div>
+    <div class="card-body">
+      <div class="scorecard-section-label">Social Activity</div>
+      <div class="scorecard-grid">
+        <div class="score-tile" onclick="increment('messages')" title="Click to add">
+          <div class="score-label">Messages Sent</div>
+          <span class="score-num" id="count-messages">0</span>
+          <span class="score-status" id="status-messages"></span>
+          <div class="score-hint">tap to count</div>
+        </div>
+        <div class="score-tile" onclick="increment('calls')" title="Click to add">
+          <div class="score-label">Discovery Calls</div>
+          <span class="score-num" id="count-calls">0</span>
+          <span class="score-status" id="status-calls"></span>
+          <div class="score-hint">tap to count</div>
+        </div>
+        <div class="score-tile" onclick="increment('posts')" title="Click to add">
+          <div class="score-label">Posts Made</div>
+          <span class="score-num" id="count-posts">0</span>
+          <span class="score-status" id="status-posts"></span>
+          <div class="score-hint">tap to count</div>
+        </div>
+        <div class="score-tile" onclick="increment('practice')" title="Click to add">
+          <div class="score-label">Practice Sessions</div>
+          <span class="score-num" id="count-practice">0</span>
+          <span class="score-status" id="status-practice"></span>
+          <div class="score-hint">tap to count</div>
+        </div>
+      </div>
+
+      <div class="scorecard-section-label" style="margin-top:18px">Business Metrics</div>
+      <div class="scorecard-grid">
+        <div class="score-tile" onclick="increment('proposals')" title="Click to add">
+          <div class="score-label">Proposals Sent</div>
+          <span class="score-num" id="count-proposals">0</span>
+          <span class="score-status" id="status-proposals"></span>
+          <div class="score-hint">tap to count</div>
+        </div>
+        <div class="score-tile" onclick="increment('leads')" title="Click to add">
+          <div class="score-label">New Leads</div>
+          <span class="score-num" id="count-leads">0</span>
+          <span class="score-status" id="status-leads"></span>
+          <div class="score-hint">tap to count</div>
+        </div>
+        <div class="score-tile" onclick="increment('followups')" title="Click to add">
+          <div class="score-label">Follow-ups Done</div>
+          <span class="score-num" id="count-followups">0</span>
+          <span class="score-status" id="status-followups"></span>
+          <div class="score-hint">tap to count</div>
+        </div>
+        <div class="score-tile" onclick="increment('meetings')" title="Click to add">
+          <div class="score-label">Meetings Held</div>
+          <span class="score-num" id="count-meetings">0</span>
+          <span class="score-status" id="status-meetings"></span>
+          <div class="score-hint">tap to count</div>
+        </div>
+      </div>
+
+      <div class="scorecard-footer">
+        <p>Counts reset each Monday. Click any tile to increment.</p>
+        <button class="btn-reset-week" onclick="resetWeek()">Reset week</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FOLLOW-UPS ─────────────────────────────────────────── -->
+  <div class="card fade-up">
+    <div class="card-header">
+      <h2>Follow-ups</h2>
+      <span class="card-badge" id="followup-count-badge">UPCOMING</span>
+    </div>
+    <div class="card-body">
+      <div class="list-add-row">
+        <input type="text" id="followup-name-input" placeholder="Who or what..." maxlength="100">
+        <input type="date" id="followup-date-input">
+        <button class="btn-add" onclick="addFollowup()">+ Add</button>
+      </div>
+      <div class="list-items" id="followup-list"></div>
+    </div>
+  </div>
+
+  <!-- ── STICKY NOTE ────────────────────────────────────────── -->
+  <div class="card fade-up">
+    <div class="card-header">
+      <h2>Sticky Note</h2>
+      <span class="card-badge">AUTO-SAVES</span>
+    </div>
+    <div class="card-body sticky-wrap">
+      <textarea id="sticky-note" placeholder="Type anything here. Ideas, reminders, a number you need, a thing you don't want to forget. It'll be here when you come back."></textarea>
+      <p class="sticky-saved" id="sticky-saved">Saved</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════════ -->
+<div class="footer-bar"></div>
+<footer>
+  <span class="footer-motto">You are not behind. You are building.</span>
+  Organizational Health for the People Doing the Hardest Work. &nbsp;&middot;&nbsp;
+  Michelle Townsend Consulting &nbsp;&middot;&nbsp; <span id="footer-year"></span>
+</footer>
+
+<!-- ══ JAVASCRIPT ══════════════════════════════════════════════════ -->
+<script>
+// ── QUOTES LIBRARY ──────────────────────────────────────────────────
+const QUOTES = [
+  { text: "I am not afraid of storms, for I am learning how to sail my ship.", attr: "Louisa May Alcott" },
+  { text: "You don't have to be great to start, but you have to start to be great.", attr: "Zig Ziglar" },
+  { text: "The most common way people give up their power is by thinking they don't have any.", attr: "Alice Walker" },
+  { text: "Service is the rent we pay for being. It is the very purpose of life, and not something you do in your spare time.", attr: "Marian Wright Edelman" },
+  { text: "I have learned over the years that when one's mind is made up, this diminishes fear.", attr: "Rosa Parks" },
+  { text: "Done is better than perfect.", attr: "Sheryl Sandberg" },
+  { text: "The question isn't who's going to let me; it's who's going to stop me.", attr: "Ayn Rand" },
+  { text: "We do not need magic to change the world. We carry all of the power we need inside ourselves already.", attr: "J.K. Rowling" },
+  { text: "Owning our story and loving ourselves through that process is the bravest thing we'll ever do.", attr: "Brene Brown" },
+  { text: "If you're not making someone else's life better, then you're wasting your time.", attr: "Will Smith" },
+  { text: "It always seems impossible until it's done.", attr: "Nelson Mandela" },
+  { text: "In a gentle way, you can shake the world.", attr: "Mahatma Gandhi" },
+  { text: "I've learned that people will forget what you said, people will forget what you did, but people will never forget how you made them feel.", attr: "Maya Angelou" },
+  { text: "What you do speaks so loudly that I cannot hear what you say.", attr: "Ralph Waldo Emerson" },
+  { text: "Courage is not the absence of fear. It's deciding something else is more important than fear.", attr: "Ambrose Redmoon" },
+  { text: "The most difficult thing is the decision to act. The rest is merely tenacity.", attr: "Amelia Earhart" },
+  { text: "Real generosity toward the future consists in giving everything to the present.", attr: "Albert Camus" },
+  { text: "To handle yourself, use your head. To handle others, use your heart.", attr: "Eleanor Roosevelt" },
+  { text: "I alone cannot change the world, but I can cast a stone across the water to create many ripples.", attr: "Mother Teresa" },
+  { text: "You gain strength, courage, and confidence by every experience in which you really stop to look fear in the face.", attr: "Eleanor Roosevelt" },
+  { text: "The best way to find yourself is to lose yourself in the service of others.", attr: "Mahatma Gandhi" },
+  { text: "The most effective way to do it is to do it.", attr: "Amelia Earhart" },
+  { text: "Whatever you are, be a good one.", attr: "Abraham Lincoln" },
+  { text: "Don't wait for opportunity. Create it.", attr: "George Bernard Shaw" },
+  { text: "The future belongs to those who believe in the beauty of their dreams.", attr: "Eleanor Roosevelt" },
+  { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", attr: "Winston Churchill" },
+  { text: "She believed she could, so she did.", attr: "R.S. Grey" },
+  { text: "The world needs that special gift that only you have.", attr: "Marie Forleo" },
+  { text: "No one can make you feel inferior without your consent.", attr: "Eleanor Roosevelt" },
+  { text: "Start where you are. Use what you have. Do what you can.", attr: "Arthur Ashe" },
+  { text: "Act as if what you do makes a difference. It does.", attr: "William James" },
+  { text: "Community is much more than belonging to something; it's about doing something together that makes belonging matter.", attr: "Brian Stokes Mitchell" },
+  { text: "We make a living by what we get, but we make a life by what we give.", attr: "Winston Churchill" },
+  { text: "Vulnerability is not winning or losing. It's having the courage to show up when you can't control the outcome.", attr: "Brene Brown" },
+  { text: "Leadership is not about being in charge. It is about taking care of those in your charge.", attr: "Simon Sinek" },
+  { text: "I want to be in the arena. I want to be brave with my life.", attr: "Brene Brown" },
+  { text: "Resilience is accepting your new reality, even if it's less good than the one you had before.", attr: "Elizabeth Edwards" },
+  { text: "Imperfect action is better than perfect inaction.", attr: "Harry Truman" },
+  { text: "Difficult roads often lead to beautiful destinations.", attr: "Zig Ziglar" },
+  { text: "When we lift up others, we lift up ourselves.", attr: "Lolly Daskal" },
+  { text: "A community is only as strong as the people in it who show up.", attr: "Unknown" },
+  { text: "Small acts, when multiplied by millions of people, can transform the world.", attr: "Howard Zinn" },
+  { text: "If you want to go fast, go alone. If you want to go far, go together.", attr: "African Proverb" },
+  { text: "Wherever there is a human being, there is an opportunity for kindness.", attr: "Lucius Annaeus Seneca" },
+  { text: "The most powerful leadership tool you have is your own personal example.", attr: "John Wooden" },
+  { text: "Everything you've ever wanted is on the other side of fear.", attr: "George Addair" },
+  { text: "Never doubt that a small group of thoughtful, committed citizens can change the world. Indeed, it is the only thing that ever has.", attr: "Margaret Mead" },
+  { text: "The world is changed by your example, not by your opinion.", attr: "Paulo Coelho" },
+  { text: "Real change, enduring change, happens one step at a time.", attr: "Ruth Bader Ginsburg" },
+  { text: "Be so good they can't ignore you.", attr: "Steve Martin" },
+  { text: "The only way to do great work is to love what you do.", attr: "Steve Jobs" },
+  { text: "Well-behaved women seldom make history.", attr: "Laurel Thatcher Ulrich" },
+  { text: "There is no power for change greater than a community discovering what it cares about.", attr: "Margaret Wheatley" },
+  { text: "In the middle of difficulty lies opportunity.", attr: "Albert Einstein" },
+  { text: "You are braver than you believe, stronger than you seem, and smarter than you think.", attr: "A.A. Milne" },
+  { text: "We rise by lifting others.", attr: "Robert Ingersoll" },
+  { text: "What gets measured gets managed.", attr: "Peter Drucker" },
+  { text: "Culture does not make people. People make culture.", attr: "Chimamanda Ngozi Adichie" },
+];
+
+// ── GREETING & DATE ─────────────────────────────────────────────────
+function updateGreetingDate() {
+  const now = new Date();
+  const h = now.getHours();
+  const greeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greeting').textContent = greeting + ', Michelle';
+
+  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('date-display').textContent =
+    now.toLocaleDateString('en-US', opts);
+
+  document.getElementById('footer-year').textContent = now.getFullYear();
+}
+
+// ── QUOTE OF THE DAY ────────────────────────────────────────────────
+function setDailyQuote() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const diff = now - start;
+  const oneDay = 1000 * 60 * 60 * 24;
+  const dayOfYear = Math.floor(diff / oneDay);
+  const q = QUOTES[dayOfYear % QUOTES.length];
+  document.getElementById('quote-text').textContent = q.text;
+  document.getElementById('quote-attr').textContent = '-- ' + q.attr;
+}
+
+// ── PLANNER CHECKBOXES ──────────────────────────────────────────────
+const CB_KEYS = ['cb-posted','cb-engaged','cb-sent','cb-learned','cb-tracker','cb-followup'];
+
+function initCheckboxes() {
+  CB_KEYS.forEach(key => {
+    const saved = localStorage.getItem('mtc-' + key) === 'true';
+    const cb = document.getElementById(key);
+    if (cb) {
+      cb.checked = saved;
+      updateCheckRow(cb);
+    }
+  });
+}
+
+function updateCheckRow(cb) {
+  const row = cb.closest('.check-row');
+  if (!row) return;
+  if (cb.checked) row.classList.add('checked');
+  else row.classList.remove('checked');
+  const box = row.querySelector('.check-box');
+  if (box) box.textContent = cb.checked ? '\u2713' : '';
+}
+
+document.querySelectorAll('.check-row input[type=checkbox]').forEach(cb => {
+  cb.addEventListener('change', () => {
+    localStorage.setItem('mtc-' + cb.dataset.key, cb.checked);
+    updateCheckRow(cb);
+  });
+});
+
+// ── PLANNER TEXT FIELDS ─────────────────────────────────────────────
+function initPlannerFields() {
+  ['outreach-notes','learn-notes'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = localStorage.getItem('mtc-' + id) || '';
+    el.addEventListener('input', () => localStorage.setItem('mtc-' + id, el.value));
+  });
+}
+
+// ── CUSTOM TASKS ────────────────────────────────────────────────────
+let tasks = JSON.parse(localStorage.getItem('mtc-tasks') || '[]');
+
+function saveTasks() {
+  localStorage.setItem('mtc-tasks', JSON.stringify(tasks));
+}
+
+function renderTasks() {
+  const list = document.getElementById('task-list');
+  list.innerHTML = '';
+  if (tasks.length === 0) {
+    list.innerHTML = '<p class="list-empty">No tasks yet. Add one above.</p>';
+    return;
+  }
+  tasks.forEach(t => {
+    const div = document.createElement('div');
+    div.className = 'task-item' + (t.done ? ' done' : '');
+    div.innerHTML =
+      '<span class="task-check" onclick="toggleTask(\'' + t.id + '\')" title="Toggle complete">' +
+        (t.done
+          ? '<span style="color:var(--green);font-size:1.1rem;">\u2713</span>'
+          : '<span style="color:var(--gold);font-size:1rem;">\u25CB</span>') +
+      '</span>' +
+      '<span class="task-text">' + escHtml(t.text) + '</span>' +
+      '<button class="task-del" onclick="deleteTask(\'' + t.id + '\')" title="Delete">\u2715</button>';
+    list.appendChild(div);
+  });
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function addTask() {
+  const inp = document.getElementById('new-task-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  tasks.push({ id: Date.now().toString(36), text, done: false });
+  saveTasks();
+  renderTasks();
+  inp.value = '';
+  inp.focus();
+}
+
+function toggleTask(id) {
+  tasks = tasks.map(t => t.id === id ? { ...t, done: !t.done } : t);
+  saveTasks();
+  renderTasks();
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  saveTasks();
+  renderTasks();
+}
+
+document.getElementById('new-task-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addTask();
+});
+
+// ── RESET DAY ───────────────────────────────────────────────────────
+function resetDay() {
+  if (!confirm('Clear all checkboxes and notes for a fresh day? (Custom tasks will be kept.)')) return;
+  CB_KEYS.forEach(key => {
+    localStorage.setItem('mtc-' + key, 'false');
+    const cb = document.getElementById(key);
+    if (cb) { cb.checked = false; updateCheckRow(cb); }
+  });
+  ['outreach-notes','learn-notes'].forEach(id => {
+    localStorage.removeItem('mtc-' + id);
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+// ── WEEKLY SCORECARD ────────────────────────────────────────────────
+const COUNTER_KEYS = ['messages','calls','posts','practice','proposals','leads','followups','meetings'];
+let counters = JSON.parse(localStorage.getItem('mtc-counters') || '{}');
+// Ensure all keys exist
+COUNTER_KEYS.forEach(k => { if (counters[k] === undefined) counters[k] = 0; });
+
+function getStatus(n) {
+  if (n === 0)  return { label:'',            cls:'' };
+  if (n < 3)    return { label:'Keep pushing',  cls:'status-push' };
+  if (n < 5)    return { label:'On track',      cls:'status-track' };
+  return         { label:'Crushing it',         cls:'status-crush' };
+}
+
+function renderCounters() {
+  COUNTER_KEYS.forEach(key => {
+    const numEl    = document.getElementById('count-' + key);
+    const statusEl = document.getElementById('status-' + key);
+    if (!numEl || !statusEl) return;
+    numEl.textContent = counters[key] || 0;
+    const s = getStatus(counters[key] || 0);
+    statusEl.textContent = s.label;
+    statusEl.className = 'score-status ' + s.cls;
+  });
+}
+
+function increment(key) {
+  counters[key] = (counters[key] || 0) + 1;
+  localStorage.setItem('mtc-counters', JSON.stringify(counters));
+  const numEl = document.getElementById('count-' + key);
+  if (numEl) {
+    numEl.classList.remove('bounce');
+    void numEl.offsetWidth;
+    numEl.classList.add('bounce');
+  }
+  renderCounters();
+}
+
+function resetWeek() {
+  if (!confirm('Reset all weekly counters to zero?')) return;
+  COUNTER_KEYS.forEach(k => counters[k] = 0);
+  localStorage.setItem('mtc-counters', JSON.stringify(counters));
+  renderCounters();
+}
+
+// ── CLIENTS ─────────────────────────────────────────────────────────
+let clients = JSON.parse(localStorage.getItem('mtc-clients') || '[]');
+
+function saveClients() {
+  localStorage.setItem('mtc-clients', JSON.stringify(clients));
+  updateStatusBar();
+}
+
+function renderClients() {
+  const list = document.getElementById('client-list');
+  list.innerHTML = '';
+  document.getElementById('client-count-badge').textContent = clients.length + ' CLIENT' + (clients.length !== 1 ? 'S' : '');
+  if (clients.length === 0) {
+    list.innerHTML = '<p class="list-empty">No clients added yet.</p>';
+    return;
+  }
+  clients.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'list-entry';
+    const phaseClass = 'phase-' + c.phase;
+    const phaseLabel = { active:'Active', prospect:'Prospect', paused:'Paused', complete:'Complete' }[c.phase] || c.phase;
+    div.innerHTML =
+      '<div class="list-entry-name">' + escHtml(c.name) + '</div>' +
+      (c.note ? '<div class="list-entry-detail">' + escHtml(c.note) + '</div>' : '') +
+      '<span class="list-entry-phase ' + phaseClass + '">' + phaseLabel + '</span>' +
+      '<button class="list-entry-del" onclick="deleteClient(\'' + c.id + '\')" title="Remove">\u2715</button>';
+    // Click to edit note
+    div.addEventListener('dblclick', () => {
+      const note = prompt('Notes for ' + c.name + ':', c.note || '');
+      if (note !== null) {
+        c.note = note;
+        saveClients();
+        renderClients();
+      }
+    });
+    list.appendChild(div);
+  });
+}
+
+function addClient() {
+  const nameInp = document.getElementById('client-name-input');
+  const phaseInp = document.getElementById('client-phase-input');
+  const name = nameInp.value.trim();
+  if (!name) return;
+  clients.push({ id: Date.now().toString(36), name, phase: phaseInp.value, note: '' });
+  saveClients();
+  renderClients();
+  nameInp.value = '';
+  nameInp.focus();
+}
+
+function deleteClient(id) {
+  if (!confirm('Remove this client?')) return;
+  clients = clients.filter(c => c.id !== id);
+  saveClients();
+  renderClients();
+}
+
+document.getElementById('client-name-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addClient();
+});
+
+// ── PROJECTS ────────────────────────────────────────────────────────
+let projects = JSON.parse(localStorage.getItem('mtc-projects') || '[]');
+
+function saveProjects() {
+  localStorage.setItem('mtc-projects', JSON.stringify(projects));
+  updateStatusBar();
+}
+
+function renderProjects() {
+  const list = document.getElementById('project-list');
+  list.innerHTML = '';
+  document.getElementById('project-count-badge').textContent = projects.length + ' PROJECT' + (projects.length !== 1 ? 'S' : '');
+  if (projects.length === 0) {
+    list.innerHTML = '<p class="list-empty">No projects added yet.</p>';
+    return;
+  }
+  projects.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'list-entry';
+    const phaseClass = 'phase-' + p.phase;
+    const phaseLabel = { active:'In Progress', prospect:'Scoping', paused:'Paused', complete:'Complete' }[p.phase] || p.phase;
+    div.innerHTML =
+      '<div class="list-entry-name">' + escHtml(p.name) + '</div>' +
+      (p.note ? '<div class="list-entry-detail">' + escHtml(p.note) + '</div>' : '') +
+      '<span class="list-entry-phase ' + phaseClass + '">' + phaseLabel + '</span>' +
+      '<button class="list-entry-del" onclick="deleteProject(\'' + p.id + '\')" title="Remove">\u2715</button>';
+    div.addEventListener('dblclick', () => {
+      const note = prompt('Notes for ' + p.name + ':', p.note || '');
+      if (note !== null) {
+        p.note = note;
+        saveProjects();
+        renderProjects();
+      }
+    });
+    list.appendChild(div);
+  });
+}
+
+function addProject() {
+  const nameInp = document.getElementById('project-name-input');
+  const phaseInp = document.getElementById('project-phase-input');
+  const name = nameInp.value.trim();
+  if (!name) return;
+  projects.push({ id: Date.now().toString(36), name, phase: phaseInp.value, note: '' });
+  saveProjects();
+  renderProjects();
+  nameInp.value = '';
+  nameInp.focus();
+}
+
+function deleteProject(id) {
+  if (!confirm('Remove this project?')) return;
+  projects = projects.filter(p => p.id !== id);
+  saveProjects();
+  renderProjects();
+}
+
+document.getElementById('project-name-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addProject();
+});
+
+// ── FOLLOW-UPS ──────────────────────────────────────────────────────
+let followups = JSON.parse(localStorage.getItem('mtc-followups') || '[]');
+
+function saveFollowups() {
+  localStorage.setItem('mtc-followups', JSON.stringify(followups));
+}
+
+function renderFollowups() {
+  const list = document.getElementById('followup-list');
+  list.innerHTML = '';
+  // Sort by date
+  const sorted = [...followups].sort((a, b) => (a.date || '9999') > (b.date || '9999') ? 1 : -1);
+  const activeCount = followups.filter(f => !f.done).length;
+  document.getElementById('followup-count-badge').textContent = activeCount + ' UPCOMING';
+  if (sorted.length === 0) {
+    list.innerHTML = '<p class="list-empty">No follow-ups scheduled.</p>';
+    return;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  sorted.forEach(f => {
+    const div = document.createElement('div');
+    div.className = 'list-entry' + (f.done ? ' done' : '');
+    if (f.done) div.style.opacity = '0.5';
+    const isOverdue = f.date && f.date < today && !f.done;
+    const dateLabel = f.date ? formatDate(f.date) : 'No date';
+    div.innerHTML =
+      '<div style="display:flex;align-items:center;gap:8px;">' +
+        '<span class="task-check" onclick="toggleFollowup(\'' + f.id + '\')" title="Toggle complete">' +
+          (f.done
+            ? '<span style="color:var(--green);font-size:1.1rem;">\u2713</span>'
+            : '<span style="color:var(--gold);font-size:1rem;">\u25CB</span>') +
+        '</span>' +
+        '<div style="flex:1">' +
+          '<div class="list-entry-name" style="' + (f.done ? 'text-decoration:line-through;color:var(--text-light)' : '') + '">' + escHtml(f.name) + '</div>' +
+          '<span class="followup-date ' + (isOverdue ? 'followup-overdue' : '') + '">' +
+            (isOverdue ? 'OVERDUE: ' : '') + dateLabel +
+          '</span>' +
+        '</div>' +
+      '</div>' +
+      '<button class="list-entry-del" onclick="deleteFollowup(\'' + f.id + '\')" title="Remove">\u2715</button>';
+    list.appendChild(div);
+  });
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+}
+
+function addFollowup() {
+  const nameInp = document.getElementById('followup-name-input');
+  const dateInp = document.getElementById('followup-date-input');
+  const name = nameInp.value.trim();
+  if (!name) return;
+  followups.push({ id: Date.now().toString(36), name, date: dateInp.value || '', done: false });
+  saveFollowups();
+  renderFollowups();
+  nameInp.value = '';
+  dateInp.value = '';
+  nameInp.focus();
+}
+
+function toggleFollowup(id) {
+  followups = followups.map(f => f.id === id ? { ...f, done: !f.done } : f);
+  saveFollowups();
+  renderFollowups();
+}
+
+function deleteFollowup(id) {
+  followups = followups.filter(f => f.id !== id);
+  saveFollowups();
+  renderFollowups();
+}
+
+document.getElementById('followup-name-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addFollowup();
+});
+
+// ── STATUS BAR ──────────────────────────────────────────────────────
+function updateStatusBar() {
+  const activeClients = clients.filter(c => c.phase === 'active').length;
+  const activeProjects = projects.filter(p => p.phase === 'active' || p.phase === 'prospect').length;
+
+  document.getElementById('stat-clients').textContent = activeClients;
+  document.getElementById('stat-projects').textContent = activeProjects;
+
+  // Pipeline is a rough estimate based on active clients
+  const pipeline = activeClients * 2500;
+  document.getElementById('stat-pipeline').textContent = '$' + pipeline.toLocaleString();
+  document.getElementById('stat-pipeline-sub').textContent = activeClients + ' active clients';
+}
+
+// ── STICKY NOTE ─────────────────────────────────────────────────────
+const stickyEl   = document.getElementById('sticky-note');
+const stickySaved = document.getElementById('sticky-saved');
+let stickyTimer;
+
+stickyEl.value = localStorage.getItem('mtc-sticky') || '';
+stickyEl.addEventListener('input', () => {
+  clearTimeout(stickyTimer);
+  stickyTimer = setTimeout(() => {
+    localStorage.setItem('mtc-sticky', stickyEl.value);
+    stickySaved.classList.add('show');
+    setTimeout(() => stickySaved.classList.remove('show'), 1800);
+  }, 600);
+});
+
+// ── INIT ─────────────────────────────────────────────────────────────
+updateGreetingDate();
+setDailyQuote();
+initCheckboxes();
+initPlannerFields();
+renderTasks();
+renderCounters();
+renderClients();
+renderProjects();
+renderFollowups();
+updateStatusBar();
+
+// Update time every minute
+setInterval(updateGreetingDate, 60000);
+</script>
+</body>
+</html>
