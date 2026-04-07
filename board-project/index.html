@@ -60,6 +60,10 @@
 
     /* Drag over style */
     .drag-over { border-color: #C8A850 !important; background: rgba(200,168,80,0.05) !important; }
+
+    /* Hide toolbar scrollbar but keep it scrollable */
+    .toolbar-scroll::-webkit-scrollbar { display: none; }
+    .toolbar-scroll { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body>
@@ -505,65 +509,60 @@ function Toolbar({
   const ghostBtn = { ...btnBase, background:'#1A1A1A', color:'#F5F0E8', border:'1px solid #2A2A2A' };
 
   return (
-    <div style={{
-      background:'#111111',borderTop:'1px solid #2A2A2A',padding:'8px 16px',
-      display:'flex',alignItems:'center',gap:10,flexWrap:'wrap',zIndex:10,
-      justifyContent:'space-between'
+    <div className="toolbar-scroll" style={{
+      background:'#111111',borderTop:'1px solid #2A2A2A',padding:'8px 12px',
+      display:'flex',alignItems:'center',gap:8,flexWrap:'nowrap',
+      overflowX:'auto',WebkitOverflowScrolling:'touch',
+      zIndex:10,flexShrink:0
     }}>
-      {/* Left: board controls */}
-      <div style={{display:'flex',alignItems:'center',gap:8,flex:'0 0 auto'}}>
-        <input
-          className="toolbar-input"
-          value={boardName}
-          onChange={e => setBoardName(e.target.value)}
-          placeholder="Untitled Board"
-          style={{background:'#1A1A1A',border:'1px solid #2A2A2A',borderRadius:6,color:'#F5F0E8',padding:'6px 10px',fontSize:13,minWidth:140,minHeight:36}}
-        />
-        {Object.keys(savedBoards).length > 0 && (
-          <select
-            value={selectedBoard}
-            onChange={e => onLoadBoard(e.target.value)}
-            style={{background:'#1A1A1A',border:'1px solid #2A2A2A',borderRadius:6,color:'#F5F0E8',padding:'6px 10px',fontSize:13,minHeight:36,cursor:'pointer'}}
-          >
-            <option value="">Switch board…</option>
-            {Object.keys(savedBoards).map(name => (
-              <option key={name} value={name}>{name}</option>
-            ))}
-          </select>
-        )}
-        <button style={goldBtn} onClick={onSave}>Save</button>
-        <button style={{...goldBtn, background:'#1B3A2D', color:'#F5F0E8'}} onClick={onAddNode}>+ Add Node</button>
-        <button style={ghostBtn} onClick={onNewBoard}>New Board</button>
-        <button style={ghostBtn} onClick={onExportJson}>Export JSON</button>
-      </div>
+      <input
+        className="toolbar-input"
+        value={boardName}
+        onChange={e => setBoardName(e.target.value)}
+        placeholder="Untitled Board"
+        style={{background:'#1A1A1A',border:'1px solid #2A2A2A',borderRadius:6,color:'#F5F0E8',padding:'6px 10px',fontSize:13,minWidth:110,maxWidth:160,minHeight:36}}
+      />
+      {Object.keys(savedBoards).length > 0 && (
+        <select
+          value={selectedBoard}
+          onChange={e => onLoadBoard(e.target.value)}
+          style={{background:'#1A1A1A',border:'1px solid #2A2A2A',borderRadius:6,color:'#F5F0E8',padding:'6px 10px',fontSize:13,minHeight:36,cursor:'pointer'}}
+        >
+          <option value="">Switch board…</option>
+          {Object.keys(savedBoards).map(name => (
+            <option key={name} value={name}>{name}</option>
+          ))}
+        </select>
+      )}
+      <button style={goldBtn} onClick={onSave}>Save</button>
+      <button style={{...goldBtn, background:'#1B3A2D', color:'#F5F0E8'}} onClick={onAddNode}>+ Add Node</button>
+      <button style={ghostBtn} onClick={onNewBoard}>New Board</button>
+      <button style={ghostBtn} onClick={onExportJson}>Export</button>
 
-      {/* Center: templates */}
-      <div style={{display:'flex',alignItems:'center',gap:6,flex:'1 1 auto',justifyContent:'center'}}>
-        <span style={{color:'#555',fontSize:11,marginRight:4}}>Templates:</span>
-        {['Dashboard Build','Intake Form','Blank'].map(t => (
-          <button
-            key={t}
-            style={ghostBtn}
-            onClick={() => onTemplate(t)}
-          >{t}</button>
-        ))}
-      </div>
+      <div style={{width:1,height:24,background:'#2A2A2A',flexShrink:0}} />
 
-      {/* Right: API key + Generate */}
-      <div style={{display:'flex',alignItems:'center',gap:8,flex:'0 1 auto'}}>
-        <input
-          className="toolbar-input"
-          type="password"
-          value={apiKey}
-          onChange={e => setApiKey(e.target.value)}
-          placeholder="API Key"
-          style={{background:'#1A1A1A',border:'1px solid #2A2A2A',borderRadius:6,color:'#F5F0E8',padding:'6px 10px',fontSize:13,minWidth:100,maxWidth:180,width:'100%',minHeight:36}}
-        />
+      {['Dashboard Build','Intake Form','Blank'].map(t => (
         <button
-          style={{...goldBtn, fontSize:14, padding:'8px 20px', minHeight:40, whiteSpace:'nowrap'}}
-          onClick={onGenerateBrief}
-        >Generate Brief</button>
-      </div>
+          key={t}
+          style={{...ghostBtn, whiteSpace:'nowrap'}}
+          onClick={() => onTemplate(t)}
+        >{t}</button>
+      ))}
+
+      <div style={{width:1,height:24,background:'#2A2A2A',flexShrink:0}} />
+
+      <input
+        className="toolbar-input"
+        type="password"
+        value={apiKey}
+        onChange={e => setApiKey(e.target.value)}
+        placeholder="API Key"
+        style={{background:'#1A1A1A',border:'1px solid #2A2A2A',borderRadius:6,color:'#F5F0E8',padding:'6px 10px',fontSize:13,minWidth:100,maxWidth:160,minHeight:36}}
+      />
+      <button
+        style={{...goldBtn, whiteSpace:'nowrap'}}
+        onClick={onGenerateBrief}
+      >Generate Brief</button>
     </div>
   );
 }
@@ -878,9 +877,9 @@ function App() {
   };
 
   return (
-    <div style={{display:'flex',flexDirection:'column',height:'100vh',overflow:'hidden'}}>
+    <div style={{display:'flex',flexDirection:'column',height:'100dvh',overflow:'hidden'}}>
       {/* Main area: canvas + claude panel */}
-      <div style={{flex:1,display:'flex',overflow:'hidden',position:'relative'}}>
+      <div style={{flex:1,display:'flex',overflow:'hidden',position:'relative',minHeight:0}}>
         <div style={{flex:1,position:'relative'}}>
           <FlowWithInstance
             nodes={nodesWithCallbacks}
