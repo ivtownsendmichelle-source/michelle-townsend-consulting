@@ -495,7 +495,7 @@ function FlowCanvas({ nodes, edges, onNodesChange, onEdgesChange, onConnect, onP
 function Toolbar({
   boardName, setBoardName, apiKey, setApiKey,
   onSave, onNewBoard, savedBoards, onLoadBoard, selectedBoard,
-  onTemplate, onGenerateBrief, onExportJson
+  onTemplate, onGenerateBrief, onExportJson, onAddNode
 }) {
   const btnBase = {
     border:'none',borderRadius:6,padding:'6px 14px',cursor:'pointer',fontWeight:600,fontSize:13,
@@ -507,7 +507,8 @@ function Toolbar({
   return (
     <div style={{
       background:'#111111',borderTop:'1px solid #2A2A2A',padding:'8px 16px',
-      display:'flex',alignItems:'center',gap:10,flexWrap:'wrap',zIndex:10
+      display:'flex',alignItems:'center',gap:10,flexWrap:'wrap',zIndex:10,
+      justifyContent:'space-between'
     }}>
       {/* Left: board controls */}
       <div style={{display:'flex',alignItems:'center',gap:8,flex:'0 0 auto'}}>
@@ -531,6 +532,7 @@ function Toolbar({
           </select>
         )}
         <button style={goldBtn} onClick={onSave}>Save</button>
+        <button style={{...goldBtn, background:'#1B3A2D', color:'#F5F0E8'}} onClick={onAddNode}>+ Add Node</button>
         <button style={ghostBtn} onClick={onNewBoard}>New Board</button>
         <button style={ghostBtn} onClick={onExportJson}>Export JSON</button>
       </div>
@@ -548,17 +550,17 @@ function Toolbar({
       </div>
 
       {/* Right: API key + Generate */}
-      <div style={{display:'flex',alignItems:'center',gap:8,flex:'0 0 auto'}}>
+      <div style={{display:'flex',alignItems:'center',gap:8,flex:'0 1 auto'}}>
         <input
           className="toolbar-input"
           type="password"
           value={apiKey}
           onChange={e => setApiKey(e.target.value)}
-          placeholder="Anthropic API Key"
-          style={{background:'#1A1A1A',border:'1px solid #2A2A2A',borderRadius:6,color:'#F5F0E8',padding:'6px 10px',fontSize:13,minWidth:180,minHeight:36}}
+          placeholder="API Key"
+          style={{background:'#1A1A1A',border:'1px solid #2A2A2A',borderRadius:6,color:'#F5F0E8',padding:'6px 10px',fontSize:13,minWidth:100,maxWidth:180,width:'100%',minHeight:36}}
         />
         <button
-          style={{...goldBtn, fontSize:14, padding:'8px 20px', minHeight:40}}
+          style={{...goldBtn, fontSize:14, padding:'8px 20px', minHeight:40, whiteSpace:'nowrap'}}
           onClick={onGenerateBrief}
         >Generate Brief</button>
       </div>
@@ -695,6 +697,20 @@ function App() {
     if (!projectFn) return;
     const flowPos = projectFn({ x: e.clientX, y: e.clientY });
     setPickerState({ x: flowPos.x, y: flowPos.y, clientX: e.clientX, clientY: e.clientY });
+  }, []);
+
+  const handleAddNodeButton = useCallback(() => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    if (reactFlowInstance.current) {
+      const projectFn = reactFlowInstance.current.screenToFlowPosition || reactFlowInstance.current.project;
+      if (projectFn) {
+        const flowPos = projectFn({ x: centerX, y: centerY });
+        setPickerState({ x: flowPos.x, y: flowPos.y, clientX: centerX, clientY: centerY });
+        return;
+      }
+    }
+    setPickerState({ x: 300, y: 300, clientX: centerX, clientY: centerY });
   }, []);
 
   const handlePickerSelect = useCallback((type) => {
@@ -902,6 +918,7 @@ function App() {
         onTemplate={handleTemplate}
         onGenerateBrief={handleGenerateBrief}
         onExportJson={handleExportJson}
+        onAddNode={handleAddNodeButton}
       />
 
       {/* Node picker modal */}
