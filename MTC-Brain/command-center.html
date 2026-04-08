@@ -1355,8 +1355,18 @@ function initPlannerFields() {
   });
 }
 
+// ── HELPERS ─────────────────────────────────────────────────────────
+const VALID_PHASES = ['active', 'prospect', 'paused', 'complete'];
+function safePhase(phase) {
+  return VALID_PHASES.includes(phase) ? phase : 'active';
+}
+function safeParse(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key)) || fallback; }
+  catch(e) { return fallback; }
+}
+
 // ── CUSTOM TASKS ────────────────────────────────────────────────────
-let tasks = JSON.parse(localStorage.getItem('mtc-tasks') || '[]');
+let tasks = safeParse('mtc-tasks', []);
 
 function saveTasks() {
   localStorage.setItem('mtc-tasks', JSON.stringify(tasks));
@@ -1432,7 +1442,7 @@ function resetDay() {
 
 // ── WEEKLY SCORECARD ────────────────────────────────────────────────
 const COUNTER_KEYS = ['messages','calls','posts','practice','proposals','leads','followups','meetings'];
-let counters = JSON.parse(localStorage.getItem('mtc-counters') || '{}');
+let counters = safeParse('mtc-counters', {});
 // Ensure all keys exist
 COUNTER_KEYS.forEach(k => { if (counters[k] === undefined) counters[k] = 0; });
 
@@ -1475,7 +1485,7 @@ function resetWeek() {
 }
 
 // ── CLIENTS ─────────────────────────────────────────────────────────
-let clients = JSON.parse(localStorage.getItem('mtc-clients') || '[]');
+let clients = safeParse('mtc-clients', []);
 
 function saveClients() {
   localStorage.setItem('mtc-clients', JSON.stringify(clients));
@@ -1493,8 +1503,9 @@ function renderClients() {
   clients.forEach(c => {
     const div = document.createElement('div');
     div.className = 'list-entry';
-    const phaseClass = 'phase-' + c.phase;
-    const phaseLabel = { active:'Active', prospect:'Prospect', paused:'Paused', complete:'Complete' }[c.phase] || c.phase;
+    const phase = safePhase(c.phase);
+    const phaseClass = 'phase-' + phase;
+    const phaseLabel = { active:'Active', prospect:'Prospect', paused:'Paused', complete:'Complete' }[phase] || 'Active';
     div.innerHTML =
       '<div class="list-entry-name">' + escHtml(c.name) + '</div>' +
       (c.note ? '<div class="list-entry-detail">' + escHtml(c.note) + '</div>' : '') +
@@ -1537,7 +1548,7 @@ document.getElementById('client-name-input').addEventListener('keydown', e => {
 });
 
 // ── PROJECTS ────────────────────────────────────────────────────────
-let projects = JSON.parse(localStorage.getItem('mtc-projects') || '[]');
+let projects = safeParse('mtc-projects', []);
 
 function saveProjects() {
   localStorage.setItem('mtc-projects', JSON.stringify(projects));
@@ -1555,8 +1566,9 @@ function renderProjects() {
   projects.forEach(p => {
     const div = document.createElement('div');
     div.className = 'list-entry';
-    const phaseClass = 'phase-' + p.phase;
-    const phaseLabel = { active:'In Progress', prospect:'Scoping', paused:'Paused', complete:'Complete' }[p.phase] || p.phase;
+    const phase = safePhase(p.phase);
+    const phaseClass = 'phase-' + phase;
+    const phaseLabel = { active:'In Progress', prospect:'Scoping', paused:'Paused', complete:'Complete' }[phase] || 'In Progress';
     div.innerHTML =
       '<div class="list-entry-name">' + escHtml(p.name) + '</div>' +
       (p.note ? '<div class="list-entry-detail">' + escHtml(p.note) + '</div>' : '') +
@@ -1598,7 +1610,7 @@ document.getElementById('project-name-input').addEventListener('keydown', e => {
 });
 
 // ── FOLLOW-UPS ──────────────────────────────────────────────────────
-let followups = JSON.parse(localStorage.getItem('mtc-followups') || '[]');
+let followups = safeParse('mtc-followups', []);
 
 function saveFollowups() {
   localStorage.setItem('mtc-followups', JSON.stringify(followups));
