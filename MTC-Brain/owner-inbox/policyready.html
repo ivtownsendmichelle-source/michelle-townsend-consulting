@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1B4332">
+<title>PolicyReady — AI Policy Builder</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green-deep:#1B4332;--green:#2D6A4F;--green-mid:#40916C;--green-light:#D8F3DC;
+  --gold:#C9A84C;--gold-light:#E8C96A;--gold-pale:#F5EDD6;
+  --cream:#FAF7F0;--cream-dark:#F0EAD8;--white:#FFFFFF;
+  --text-dark:#1A1A1A;--text-mid:#444444;--text-light:#888888;
+  --red:#DC2626;--red-light:#FEE2E2;--orange:#EA580C;--orange-light:#FED7AA;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--text-dark);font-size:15px;line-height:1.6;min-height:100vh}
+
+.site-header{background:linear-gradient(135deg,var(--green-deep),var(--green));color:var(--cream);position:relative}
+.site-header::before{content:'';display:block;height:4px;background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--gold))}
+.header-inner{max-width:800px;margin:0 auto;padding:20px 24px;text-align:center}
+.header-brand{font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.header-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;margin:6px 0 4px}
+.header-sub{font-size:0.9rem;color:rgba(250,247,240,0.7);max-width:520px;margin:0 auto}
+
+.container{max-width:800px;margin:0 auto;padding:24px}
+
+/* Welcome */
+.welcome{text-align:center;padding:48px 24px}
+.welcome h2{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--green-deep);margin-bottom:12px}
+.welcome p{color:var(--text-mid);max-width:560px;margin:0 auto 8px;font-size:0.95rem}
+.stat-row{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin:28px 0}
+.stat-card{background:var(--white);border:1px solid var(--green-light);border-radius:10px;padding:16px 20px;min-width:140px;flex:1;max-width:200px}
+.stat-card .num{font-size:1.8rem;font-weight:700;color:var(--green-deep)}
+.stat-card .label{font-size:0.78rem;color:var(--text-light);margin-top:2px}
+.start-btn{display:inline-block;background:var(--gold);color:var(--green-deep);border:none;padding:14px 36px;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:24px;transition:background 0.2s}
+.start-btn:hover{background:var(--gold-light)}
+.welcome .note{font-size:0.78rem;color:var(--text-light);margin-top:12px;font-style:italic}
+
+/* Progress */
+.progress-wrap{background:var(--cream-dark);padding:12px 24px;position:sticky;top:0;z-index:40;border-bottom:1px solid var(--green-light);display:none}
+.progress-inner{max-width:800px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.progress-label{font-size:0.78rem;color:var(--text-mid);font-weight:600;white-space:nowrap}
+.progress-track{flex:1;height:8px;background:var(--cream-dark);border-radius:4px;border:1px solid var(--green-light);overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:4px;transition:width 0.4s ease}
+
+/* Steps */
+.step{display:none}
+.step.active{display:block}
+.step-header{background:var(--green-deep);color:var(--cream);padding:16px 20px;border-radius:10px 10px 0 0;display:flex;align-items:center;gap:12px}
+.step-icon{font-size:1.4rem}
+.step-name{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600}
+.step-desc{font-size:0.8rem;color:rgba(250,247,240,0.65);margin-top:2px}
+.step-body{background:var(--white);border:1px solid var(--green-light);border-top:none;border-radius:0 0 10px 10px;padding:20px}
+
+.field{margin-bottom:18px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-weight:600;color:var(--green-deep);margin-bottom:6px;font-size:0.95rem}
+.field .help{font-size:0.78rem;color:var(--text-light);font-style:italic;margin-bottom:8px}
+.field input[type=text],.field textarea,.field select{width:100%;padding:10px 14px;border:1px solid var(--cream-dark);border-radius:8px;font-family:inherit;font-size:0.9rem;transition:border 0.2s}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--gold)}
+.field textarea{min-height:60px;resize:vertical}
+
+.check-grid{display:flex;flex-direction:column;gap:6px}
+.check-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;border:1px solid var(--cream-dark);cursor:pointer;transition:all 0.15s}
+.check-item:hover{border-color:var(--gold);background:var(--gold-pale)}
+.check-item.checked{border-color:var(--gold);background:var(--gold-pale);font-weight:500}
+.check-item input{display:none}
+.cbox{width:18px;height:18px;border-radius:4px;border:2px solid var(--text-light);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.check-item.checked .cbox{border-color:var(--gold);background:var(--gold)}
+.check-item.checked .cbox::after{content:'✓';color:var(--white);font-size:12px;font-weight:700}
+
+.radio-grid{display:flex;flex-direction:column;gap:6px}
+.radio-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;border:1px solid var(--cream-dark);cursor:pointer;transition:all 0.15s}
+.radio-item:hover{border-color:var(--gold);background:var(--gold-pale)}
+.radio-item.selected{border-color:var(--gold);background:var(--gold-pale);font-weight:500}
+.radio-item input{display:none}
+.rbtn{width:18px;height:18px;border-radius:50%;border:2px solid var(--text-light);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.radio-item.selected .rbtn{border-color:var(--gold);background:var(--gold)}
+.radio-item.selected .rbtn::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--white)}
+
+.risk-flag{background:var(--red-light);border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:12px 16px;margin-top:12px;display:none}
+.risk-flag.visible{display:block}
+.risk-flag .rf-title{font-weight:700;color:var(--red);font-size:0.85rem;margin-bottom:4px}
+.risk-flag .rf-text{font-size:0.85rem;color:var(--text-mid)}
+
+.nav-row{display:flex;justify-content:space-between;margin-top:24px;gap:12px}
+.nav-btn{padding:10px 24px;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;border:none;transition:all 0.2s}
+.btn-back{background:var(--cream-dark);color:var(--text-mid)}
+.btn-back:hover{background:var(--cream)}
+.btn-next{background:var(--gold);color:var(--green-deep)}
+.btn-next:hover{background:var(--gold-light)}
+
+/* Policy Output */
+#policyOutput{display:none}
+.policy-doc{background:var(--white);border:1px solid var(--green-light);border-radius:12px;overflow:hidden;margin-bottom:24px}
+.policy-title-bar{background:var(--green-deep);color:var(--cream);padding:20px 24px;text-align:center}
+.policy-title-bar h2{font-family:'Playfair Display',serif;font-size:1.5rem}
+.policy-title-bar .org{font-size:0.9rem;color:var(--gold);margin-top:4px}
+.policy-title-bar .date{font-size:0.78rem;color:rgba(250,247,240,0.5);margin-top:2px}
+
+.policy-section{padding:20px 24px;border-bottom:1px solid var(--cream-dark)}
+.policy-section:last-child{border-bottom:none}
+.ps-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.ps-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--green-deep);font-weight:600}
+.ps-edit{font-size:0.78rem;color:var(--gold);cursor:pointer;font-weight:600;border:none;background:none;padding:4px 8px}
+.ps-edit:hover{text-decoration:underline}
+.ps-why{font-size:0.8rem;color:var(--text-light);font-style:italic;background:var(--gold-pale);padding:8px 12px;border-radius:6px;margin-bottom:10px}
+.ps-content{font-size:0.9rem;color:var(--text-mid);line-height:1.7}
+.ps-content p{margin-bottom:8px}
+.ps-content ul{margin:6px 0 10px 20px}
+.ps-content li{margin-bottom:4px}
+.ps-content .org-name{font-weight:600;color:var(--green-deep)}
+.ps-textarea{width:100%;min-height:120px;padding:12px;border:1px solid var(--gold);border-radius:8px;font-family:inherit;font-size:0.9rem;line-height:1.7;display:none;resize:vertical}
+.ps-textarea.editing{display:block}
+.ps-content.editing{display:none}
+.ps-save{display:none;background:var(--gold);color:var(--green-deep);border:none;padding:6px 16px;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;margin-top:8px}
+.ps-save.editing{display:inline-block}
+
+.policy-risks{margin-bottom:24px}
+.policy-risks h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--red);margin-bottom:10px}
+.pr-card{background:var(--white);border:1px solid var(--red-light);border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:8px}
+.pr-card h4{font-weight:700;color:var(--red);font-size:0.9rem;margin-bottom:4px}
+.pr-card p{font-size:0.85rem;color:var(--text-mid)}
+
+.policy-footer{text-align:center;padding:24px;background:var(--green-deep);border-radius:10px;color:var(--cream)}
+.policy-footer h3{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:6px}
+.policy-footer p{font-size:0.88rem;color:rgba(250,247,240,0.7);max-width:480px;margin:0 auto 14px}
+.pf-buttons{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.pf-btn{display:inline-block;padding:10px 28px;border-radius:8px;font-size:0.9rem;font-weight:700;cursor:pointer;border:none;transition:all 0.2s;text-decoration:none}
+.pf-btn-gold{background:var(--gold);color:var(--green-deep)}
+.pf-btn-gold:hover{background:var(--gold-light)}
+.pf-btn-outline{background:rgba(250,247,240,0.15);color:var(--cream);border:1px solid rgba(250,247,240,0.2)}
+.pf-btn-outline:hover{background:rgba(250,247,240,0.25)}
+
+.site-footer{text-align:center;padding:20px;border-top:2px solid var(--gold);margin-top:32px}
+.site-footer .brand{font-family:'Playfair Display',serif;color:var(--green-deep);font-size:0.9rem;font-weight:600}
+.site-footer .tagline{font-size:0.78rem;color:var(--gold);font-style:italic;margin-top:2px}
+.site-footer .contact{font-size:0.78rem;color:var(--text-light);margin-top:4px}
+
+@media(max-width:600px){
+  .header-title{font-size:1.5rem}
+  .stat-card{min-width:110px}
+  .nav-btn{padding:10px 16px;font-size:0.85rem}
+}
+@media print{
+  .progress-wrap,.nav-row,.ps-edit,.ps-save,.pf-btn-outline,.start-btn,.site-header::before{display:none!important}
+  .site-header,.policy-title-bar,.step-header,.pr-card{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ps-textarea{display:none!important}
+  .ps-content{display:block!important}
+  body{font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">Michelle Townsend Consulting</div>
+    <h1 class="header-title">PolicyReady</h1>
+    <p class="header-sub">Build a complete AI use policy for your organization. Step by step. Plain language. No tech background needed.</p>
+  </div>
+</header>
+
+<div id="welcome" class="container welcome">
+  <h2>Your organization is using AI. Do you have a policy for it?</h2>
+  <p>Most small nonprofits and community businesses started using AI tools before anyone wrote down the rules. That is normal. But it means you are flying without guardrails.</p>
+  <p>PolicyReady walks you through a set of plain-language questions about how your organization works. At the end, you get a complete, customized AI use policy. Ready to print, share with your board, and put into practice.</p>
+  <div class="stat-row">
+    <div class="stat-card"><div class="num">92%</div><div class="label">of nonprofits use AI</div></div>
+    <div class="stat-card"><div class="num">47%</div><div class="label">have no AI policy</div></div>
+    <div class="stat-card"><div class="num">4%</div><div class="label">have documented AI workflows</div></div>
+    <div class="stat-card"><div class="num">7%</div><div class="label">see real strategic impact</div></div>
+  </div>
+  <button class="start-btn" onclick="startBuilder()">Build Your Policy</button>
+  <div class="note">Takes about 15 minutes. No account required. Your answers stay in your browser.</div>
+</div>
+
+<div id="progressBar" class="progress-wrap">
+  <div class="progress-inner">
+    <span class="progress-label" id="progressLabel">Step 1 of 6</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<div id="stepsContainer" class="container"></div>
+<div id="policyOutput" class="container"></div>
+
+<div class="site-footer">
+  <div class="brand">Michelle Townsend Consulting</div>
+  <div class="tagline">Organizational health for the organizations that need it most.</div>
+  <div class="contact">ivtownsend.michelle@gmail.com | 541-415-2460</div>
+</div>
+
+<script>
+const STEPS = [
+  {
+    icon:'🏢', name:'About Your Organization', desc:'Basic information to personalize your policy.',
+    fields:[
+      {id:'orgName',type:'text',label:'Organization name',help:'This will appear throughout your policy document.'},
+      {id:'orgType',type:'radio',label:'What kind of organization are you?',options:['Nonprofit','Mission-driven for-profit business','Government or public agency','Other']},
+      {id:'orgSize',type:'radio',label:'How many people work at your organization?',help:'Include staff, regular volunteers, and contractors.',options:['1 to 5','6 to 15','16 to 30','31 to 50','More than 50']},
+      {id:'orgServes',type:'text',label:'Who does your organization serve?',help:'Example: families in rural Southern Oregon, small farmers, youth in foster care, etc.'}
+    ]
+  },
+  {
+    icon:'🤖', name:'Current AI Use', desc:'What tools your team is already using.',
+    fields:[
+      {id:'toolsUsed',type:'checks',label:'Which AI tools does your team currently use?',help:'Check all that apply. If you are not sure, check the ones you think people might be using.',
+        options:['ChatGPT or other AI chatbots','Grammarly','AI features in Canva','AI features in Google Workspace (Gemini)','AI features in Microsoft 365 (Copilot)','AI writing tools for grants or reports','AI transcription (Otter, Rev, etc.)','AI scheduling or email tools','AI in your donor database or CRM','Other AI tools not listed']},
+      {id:'toolsHow',type:'radio',label:'How are staff currently deciding which AI tools to use?',
+        options:['We have an approved list of tools','Staff ask a manager before using something new','People use whatever they find helpful','We have not discussed it']},
+      {id:'toolsFreq',type:'radio',label:'How often does your team use AI tools?',
+        options:['Daily','A few times a week','Occasionally','Rarely or never']}
+    ]
+  },
+  {
+    icon:'📋', name:'Sensitive Data', desc:'What kind of information your organization handles.',
+    fields:[
+      {id:'dataTypes',type:'checks',label:'What types of sensitive data does your organization handle?',help:'Check all that apply. This determines what your policy needs to protect.',
+        options:['Client or beneficiary personal information','Donor names and giving amounts','Financial records (banking, payroll, budgets)','Health or medical information','Information about minors (under 18)','Social Security numbers or government IDs','Case notes or service records','Employee personnel files','Confidential board or governance documents','Grant applications with proprietary information']},
+      {id:'dataAI',type:'radio',label:'Has anyone on your team put sensitive data into an AI tool?',help:'Be honest. This is common and the policy will address it.',
+        options:['Yes, definitely','Probably, but I am not sure','No, we have been careful about this','I have no idea']},
+      {id:'dataRegs',type:'checks',label:'Does your organization need to comply with any of these?',help:'Check any that apply. If you are not sure, check "Not sure."',
+        options:['HIPAA (health data)','FERPA (student data)','State privacy laws','Grant agreements with data requirements','Not sure','None of these']}
+    ]
+  },
+  {
+    icon:'✅', name:'Approval and Oversight', desc:'Who makes decisions about AI at your organization.',
+    fields:[
+      {id:'approver',type:'text',label:'Who should approve new AI tools before staff use them?',help:'A name or title. Example: Executive Director, Operations Manager, etc.'},
+      {id:'reviewer',type:'text',label:'Who reviews AI-generated content before it goes out?',help:'This is the person who checks AI-written emails, grants, reports, or social posts before they are sent.'},
+      {id:'oversight',type:'radio',label:'How often should your AI policy be reviewed and updated?',
+        options:['Every 6 months','Once a year','Only when something changes','We have not thought about this']},
+      {id:'training',type:'radio',label:'Do you plan to train staff on AI use?',
+        options:['Yes, we want regular training','Yes, at least once during onboarding','We will share the policy and expect people to follow it','We are not sure yet']}
+    ]
+  },
+  {
+    icon:'📝', name:'Acceptable Use', desc:'What your team should and should not do with AI.',
+    fields:[
+      {id:'useYes',type:'checks',label:'What should staff be allowed to use AI for?',help:'Check all that apply.',
+        options:['Drafting internal emails and memos','Brainstorming and idea generation','Summarizing meeting notes','Research and background reading','Drafting social media content','Drafting grant applications or reports','Creating presentations or slide decks','Editing or proofreading text','Data analysis (non-sensitive data only)','Generating images or graphics']},
+      {id:'useNo',type:'checks',label:'What should staff NOT use AI for?',help:'Check all that apply.',
+        options:['Any task involving sensitive client data','Final versions of legal or compliance documents','Making decisions about people (hiring, services, discipline)','Communicating with clients without human review','Financial transactions or approvals','Anything covered by a confidentiality agreement','Creating content that impersonates a real person']},
+      {id:'disclosure',type:'radio',label:'Should your organization disclose when AI was used?',help:'For example, telling a funder that AI helped draft a grant, or noting on your website that AI assisted with content.',
+        options:['Yes, always disclose','Yes, for external-facing work only','Only when required by a funder or partner','No disclosure needed','We are not sure']}
+    ]
+  },
+  {
+    icon:'⚠️', name:'Incident Response', desc:'What happens when something goes wrong.',
+    fields:[
+      {id:'incidentWho',type:'text',label:'If a staff member thinks AI exposed sensitive data or produced harmful content, who do they report it to?',help:'A name or title.'},
+      {id:'incidentSteps',type:'radio',label:'What should happen when an AI-related incident is reported?',
+        options:['We have a documented incident response plan','The manager handles it case by case','We would figure it out in the moment','We have not thought about this']},
+      {id:'incidentLog',type:'radio',label:'Should AI-related incidents be logged?',
+        options:['Yes, always','Only if they involve sensitive data','Only if there is actual harm','We are not sure']}
+    ]
+  }
+];
+
+let data = {};
+let risks = [];
+
+function startBuilder(){
+  document.getElementById('welcome').style.display='none';
+  document.getElementById('progressBar').style.display='block';
+  buildSteps();
+  showStep(0);
+}
+
+function buildSteps(){
+  const c=document.getElementById('stepsContainer');
+  c.innerHTML='';
+  STEPS.forEach((step,si)=>{
+    let h=`<div class="step" id="step-${si}">
+      <div class="step-header"><span class="step-icon">${step.icon}</span><div><div class="step-name">${step.name}</div><div class="step-desc">${step.desc}</div></div></div>
+      <div class="step-body">`;
+    step.fields.forEach(f=>{
+      h+=`<div class="field"><label>${f.label}</label>`;
+      if(f.help) h+=`<div class="help">${f.help}</div>`;
+      if(f.type==='text'){
+        h+=`<input type="text" id="${f.id}" onchange="saveField('${f.id}',this.value)">`;
+      } else if(f.type==='radio'){
+        h+=`<div class="radio-grid">`;
+        f.options.forEach((opt,oi)=>{
+          h+=`<label class="radio-item" id="ri-${f.id}-${oi}" onclick="selectRadio('${f.id}',${oi},'${opt.replace(/'/g,"\\'")}')"><span class="rbtn"></span><span>${opt}</span></label>`;
+        });
+        h+=`</div>`;
+      } else if(f.type==='checks'){
+        h+=`<div class="check-grid">`;
+        f.options.forEach((opt,oi)=>{
+          h+=`<label class="check-item" id="ci-${f.id}-${oi}" onclick="toggleCheck('${f.id}',${oi},'${opt.replace(/'/g,"\\'")}')"><span class="cbox"></span><span>${opt}</span></label>`;
+        });
+        h+=`</div>`;
+      }
+      h+=`</div>`;
+    });
+    // Risk flags for step 2 (data)
+    if(si===2){
+      h+=`<div class="risk-flag" id="risk-dataAI"><div class="rf-title">Risk Flag: Sensitive data may have been entered into AI tools</div><div class="rf-text">This is common and it is not too late to fix. Your policy will include clear rules about what data should never go into AI tools, and guidance for staff who may have already done this.</div></div>`;
+    }
+    h+=`</div><div class="nav-row">`;
+    if(si>0) h+=`<button class="nav-btn btn-back" onclick="showStep(${si-1})">Back</button>`;
+    else h+=`<div></div>`;
+    if(si<STEPS.length-1) h+=`<button class="nav-btn btn-next" onclick="showStep(${si+1})">Next Step</button>`;
+    else h+=`<button class="nav-btn btn-next" onclick="generatePolicy()">Generate My Policy</button>`;
+    h+=`</div></div>`;
+    c.innerHTML+=h;
+  });
+}
+
+function saveField(id,val){ data[id]=val; }
+function selectRadio(id,idx,val){
+  data[id]=val;
+  document.querySelectorAll(`[id^="ri-${id}-"]`).forEach(el=>el.classList.remove('selected'));
+  document.getElementById(`ri-${id}-${idx}`).classList.add('selected');
+  if(id==='dataAI' && (val==='Yes, definitely'||val==='Probably, but I am not sure')){
+    document.getElementById('risk-dataAI').classList.add('visible');
+  } else if(id==='dataAI'){
+    document.getElementById('risk-dataAI').classList.remove('visible');
+  }
+}
+function toggleCheck(id,idx,val){
+  if(!data[id]) data[id]=[];
+  const el=document.getElementById(`ci-${id}-${idx}`);
+  if(el.classList.contains('checked')){
+    el.classList.remove('checked');
+    data[id]=data[id].filter(v=>v!==val);
+  } else {
+    el.classList.add('checked');
+    data[id].push(val);
+  }
+}
+
+function showStep(idx){
+  document.querySelectorAll('.step').forEach(el=>el.classList.remove('active'));
+  document.getElementById(`step-${idx}`).classList.add('active');
+  const pct=((idx)/STEPS.length*100);
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressLabel').textContent=`Step ${idx+1} of ${STEPS.length}`;
+  window.scrollTo({top:0});
+}
+
+function org(){ return data.orgName||'[Your Organization]'; }
+function approver(){ return data.approver||'[Designated Approver]'; }
+function reviewer(){ return data.reviewer||'[Designated Reviewer]'; }
+function incidentContact(){ return data.incidentWho||'[Designated Contact]'; }
+
+function generatePolicy(){
+  document.getElementById('stepsContainer').style.display='none';
+  document.getElementById('progressBar').style.display='none';
+  const out=document.getElementById('policyOutput');
+  out.style.display='block';
+
+  risks=[];
+  if(data.dataAI==='Yes, definitely'||data.dataAI==='Probably, but I am not sure'){
+    risks.push({title:'Sensitive data may have already been entered into AI tools',text:'Your answers indicate that staff may have put protected information into AI tools without guidelines. This is common. Your policy now includes clear rules to prevent this going forward. You should also review recent AI usage with staff to understand what data may have been exposed and whether any action is needed.'});
+  }
+  if(data.toolsHow==='People use whatever they find helpful'||data.toolsHow==='We have not discussed it'){
+    risks.push({title:'No approval process for AI tools',text:'Staff are currently choosing their own AI tools without oversight. This means you may have sensitive organizational data in systems you do not know about and cannot control. Your policy now requires approval before any new AI tool is used for work.'});
+  }
+  if(data.incidentSteps==='We would figure it out in the moment'||data.incidentSteps==='We have not thought about this'){
+    risks.push({title:'No plan for AI-related incidents',text:'If something goes wrong with an AI tool (data exposure, harmful content, inaccurate output sent to a client), your team does not have a clear process to follow. Your policy now includes a basic incident response procedure.'});
+  }
+  if(data.dataTypes && data.dataTypes.some(d=>d.includes('minors')||d.includes('Health'))){
+    risks.push({title:'Your organization handles high-sensitivity data',text:'You work with health information or information about minors. These data types carry additional legal obligations. Your policy includes protections for this data, but you should also consult with an attorney to confirm compliance with applicable regulations (HIPAA, FERPA, state laws).'});
+  }
+
+  const toolsList = (data.toolsUsed||[]).map(t=>`<li>${t}</li>`).join('')||'<li>No specific tools identified</li>';
+  const dataList = (data.dataTypes||[]).map(t=>`<li>${t}</li>`).join('')||'<li>No sensitive data types identified</li>';
+  const allowedUses = (data.useYes||[]).map(t=>`<li>${t}</li>`).join('')||'<li>No approved uses specified</li>';
+  const prohibitedUses = (data.useNo||[]).map(t=>`<li>${t}</li>`).join('')||'<li>No prohibited uses specified</li>';
+  const regs = (data.dataRegs||[]).filter(r=>r!=='Not sure'&&r!=='None of these');
+  const reviewFreq = data.oversight||'every 6 months';
+  const disclosurePolicy = data.disclosure||'to be determined';
+  const trainingPlan = data.training||'to be determined';
+  const today = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+  const sections = [
+    {
+      title:'Purpose',
+      why:'This section tells everyone why the policy exists. It sets the tone.',
+      content:`<p><span class="org-name">${org()}</span> uses artificial intelligence tools to support our work. This policy establishes clear guidelines for how AI tools are used within our organization. It exists to protect the people we serve, our staff, and our reputation.</p><p>AI is a tool. Like any tool, it works best when there are clear rules for how to use it. This policy is those rules.</p>`
+    },
+    {
+      title:'Scope',
+      why:'People need to know if this applies to them. This section answers that.',
+      content:`<p>This policy applies to all staff, volunteers, contractors, and board members of <span class="org-name">${org()}</span> who use AI tools in connection with organizational work. It covers any AI-powered tool, feature, or service, whether it is a standalone application or a feature built into software we already use.</p>`
+    },
+    {
+      title:'AI Tools Currently in Use',
+      why:'You cannot manage what you do not name. This section creates accountability.',
+      content:`<p>The following AI tools are currently used by staff at <span class="org-name">${org()}</span>:</p><ul>${toolsList}</ul><p>No additional AI tools may be used for organizational work without approval from ${approver()}.</p>`
+    },
+    {
+      title:'Approved Uses of AI',
+      why:'Staff need to know what they CAN do, not just what they cannot.',
+      content:`<p>Staff at <span class="org-name">${org()}</span> may use approved AI tools for the following purposes:</p><ul>${allowedUses}</ul><p>All AI-generated content that will be shared externally (with clients, donors, funders, the public, or partners) must be reviewed by ${reviewer()} before it is sent.</p>`
+    },
+    {
+      title:'Prohibited Uses of AI',
+      why:'These are the lines that should not be crossed. Make them clear.',
+      content:`<p>The following uses of AI tools are not permitted:</p><ul>${prohibitedUses}</ul><p>If you are unsure whether a specific use is allowed, ask ${approver()} before proceeding.</p>`
+    },
+    {
+      title:'Data Protection',
+      why:'This is the most important section. It protects the people you serve.',
+      content:`<p><span class="org-name">${org()}</span> handles the following types of sensitive data:</p><ul>${dataList}</ul><p><strong>None of this information should ever be entered into an AI tool.</strong> This includes typing it, pasting it, uploading documents that contain it, or sharing it through an AI-powered feature in any software.</p><p>If you need to use AI for a task that involves sensitive data, remove all identifying information first. Use placeholder names, remove addresses, and strip out any details that could identify a specific person.</p>${regs.length>0?`<p><span class="org-name">${org()}</span> is subject to the following regulatory requirements: ${regs.join(', ')}. Staff must ensure that AI use complies with these obligations at all times.</p>`:''}`
+    },
+    {
+      title:'Approval Process for New Tools',
+      why:'This prevents shadow IT. One person decides. Everyone follows.',
+      content:`<p>Before using any AI tool that is not on the approved list, staff must get approval from ${approver()}. To request approval:</p><ol><li>Name the tool and describe what you want to use it for.</li><li>Note whether it is free or paid.</li><li>Check the tool's privacy policy: does it say they can use your data to train their AI?</li><li>Confirm that you will not enter any sensitive data into it.</li></ol><p>${approver()} will review the request and respond within one week. If approved, the tool will be added to the approved list.</p>`
+    },
+    {
+      title:'Human Review Requirement',
+      why:'AI makes mistakes. Confidently. Someone needs to catch them.',
+      content:`<p>All AI-generated content must be reviewed by a human before it is used. This includes text, images, data summaries, and any other output.</p><p>The person who uses the AI tool is responsible for reviewing its output for accuracy, tone, and appropriateness. For any content going to external audiences, ${reviewer()} provides final review.</p><p>AI output should never be copied and sent without reading it first. If it contains factual claims, verify them. If it references data, check the numbers. If it sounds wrong, it probably is.</p>`
+    },
+    {
+      title:'Disclosure',
+      why:'Transparency builds trust. Your stakeholders deserve honesty.',
+      content:`<p><span class="org-name">${org()}</span> will disclose the use of AI as follows: <strong>${disclosurePolicy}</strong>.</p><p>When disclosure is required, a simple statement is sufficient. Example: "This document was drafted with AI assistance and reviewed by [staff name]." Disclosure does not need to be complicated. It needs to be honest.</p>`
+    },
+    {
+      title:'Training',
+      why:'A policy without training is just a document nobody reads.',
+      content:`<p><span class="org-name">${org()}</span> will train staff on AI use as follows: <strong>${trainingPlan}</strong>.</p><p>Training will cover: what AI tools are approved, what data is off-limits, how to review AI output, and how to report problems. New staff will receive this training during onboarding. Existing staff will be updated when this policy changes.</p>`
+    },
+    {
+      title:'Incident Response',
+      why:'Things will go wrong. Having a plan means they do not become crises.',
+      content:`<p>If you believe that an AI tool has exposed sensitive data, produced harmful or inaccurate content that was shared externally, or been used in a way that violates this policy, report it immediately to ${incidentContact()}.</p><p>When an incident is reported:</p><ol><li>Stop using the tool for the task in question.</li><li>Document what happened: what tool was used, what data was involved, what was the output, and who saw it.</li><li>${incidentContact()} will assess the situation and determine next steps.</li><li>If sensitive data was exposed, follow your organization's existing data breach procedures.</li></ol><p>Incidents will be logged: <strong>${data.incidentLog||'policy to be determined'}</strong>.</p>`
+    },
+    {
+      title:'Policy Review',
+      why:'AI changes fast. Your policy should keep up.',
+      content:`<p>This policy will be reviewed and updated <strong>${reviewFreq}</strong>. Reviews will be led by ${approver()}.</p><p>Between scheduled reviews, this policy may be updated if there is a significant change in the AI tools available, a new regulation that affects our work, or an incident that reveals a gap in coverage.</p><p>All updates will be communicated to staff and the current version will be kept in an accessible shared location.</p>`
+    }
+  ];
+
+  let html=`<div class="policy-doc">
+    <div class="policy-title-bar">
+      <h2>Artificial Intelligence Use Policy</h2>
+      <div class="org">${org()}</div>
+      <div class="date">Generated ${today}</div>
+    </div>`;
+
+  sections.forEach((sec,i)=>{
+    const plainText = sec.content.replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ');
+    html+=`<div class="policy-section" id="psec-${i}">
+      <div class="ps-header">
+        <div class="ps-title">${sec.title}</div>
+        <button class="ps-edit" id="edit-${i}" onclick="toggleEdit(${i})">Edit</button>
+      </div>
+      <div class="ps-why">${sec.why}</div>
+      <div class="ps-content" id="content-${i}">${sec.content}</div>
+      <textarea class="ps-textarea" id="textarea-${i}">${plainText}</textarea>
+      <button class="ps-save" id="save-${i}" onclick="saveEdit(${i})">Save Changes</button>
+    </div>`;
+  });
+
+  html+=`</div>`;
+
+  if(risks.length>0){
+    html+=`<div class="policy-risks"><h3>Risk Flags Identified</h3>`;
+    risks.forEach(r=>{
+      html+=`<div class="pr-card"><h4>${r.title}</h4><p>${r.text}</p></div>`;
+    });
+    html+=`</div>`;
+  }
+
+  html+=`<div class="policy-footer">
+    <h3>Your policy is ready.</h3>
+    <p>Print it. Share it with your board. Put it in your employee handbook. And if you want help implementing it, training your team, or going deeper, that is what I do.</p>
+    <div class="pf-buttons">
+      <button class="pf-btn pf-btn-gold" onclick="window.print()">Print / Save as PDF</button>
+      <a class="pf-btn pf-btn-outline" href="mailto:ivtownsend.michelle@gmail.com?subject=PolicyReady%20-%20Need%20Implementation%20Help">Email Michelle</a>
+    </div>
+  </div>`;
+
+  out.innerHTML=html;
+  window.scrollTo({top:0});
+}
+
+function toggleEdit(i){
+  const content=document.getElementById(`content-${i}`);
+  const textarea=document.getElementById(`textarea-${i}`);
+  const saveBtn=document.getElementById(`save-${i}`);
+  const editBtn=document.getElementById(`edit-${i}`);
+  const isEditing=textarea.classList.contains('editing');
+  if(isEditing){
+    textarea.classList.remove('editing');
+    saveBtn.classList.remove('editing');
+    content.classList.remove('editing');
+    editBtn.textContent='Edit';
+  } else {
+    textarea.classList.add('editing');
+    saveBtn.classList.add('editing');
+    content.classList.add('editing');
+    editBtn.textContent='Cancel';
+    textarea.focus();
+  }
+}
+
+function saveEdit(i){
+  const textarea=document.getElementById(`textarea-${i}`);
+  const content=document.getElementById(`content-${i}`);
+  const text=textarea.value;
+  const paragraphs=text.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('');
+  content.innerHTML=paragraphs;
+  toggleEdit(i);
+}
+</script>
+
+</body>
+</html>

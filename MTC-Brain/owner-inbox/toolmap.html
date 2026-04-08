@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1B4332">
+<title>ToolMap — Systems Inventory and Migration Planner</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green-deep:#1B4332;--green:#2D6A4F;--green-mid:#40916C;--green-light:#D8F3DC;
+  --gold:#C9A84C;--gold-light:#E8C96A;--gold-pale:#F5EDD6;
+  --cream:#FAF7F0;--cream-dark:#F0EAD8;--white:#FFFFFF;
+  --text-dark:#1A1A1A;--text-mid:#444444;--text-light:#888888;
+  --red:#DC2626;--red-light:#FEE2E2;--orange:#EA580C;--orange-light:#FED7AA;
+  --blue:#2563EB;--blue-light:#DBEAFE;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--text-dark);font-size:15px;line-height:1.6;min-height:100vh}
+
+.site-header{background:linear-gradient(135deg,var(--green-deep),var(--green));color:var(--cream);position:relative}
+.site-header::before{content:'';display:block;height:4px;background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--gold))}
+.header-inner{max-width:880px;margin:0 auto;padding:20px 24px;text-align:center}
+.header-brand{font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.header-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;margin:6px 0 4px}
+.header-sub{font-size:0.9rem;color:rgba(250,247,240,0.7);max-width:540px;margin:0 auto}
+
+.container{max-width:880px;margin:0 auto;padding:24px}
+
+/* Welcome */
+.welcome{text-align:center;padding:48px 24px}
+.welcome h2{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--green-deep);margin-bottom:12px}
+.welcome p{color:var(--text-mid);max-width:580px;margin:0 auto 8px;font-size:0.95rem}
+.stat-row{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin:28px 0}
+.stat-card{background:var(--white);border:1px solid var(--green-light);border-radius:10px;padding:16px 20px;min-width:150px;flex:1;max-width:210px}
+.stat-card .num{font-size:1.8rem;font-weight:700;color:var(--green-deep)}
+.stat-card .label{font-size:0.78rem;color:var(--text-light);margin-top:2px}
+.start-btn{display:inline-block;background:var(--gold);color:var(--green-deep);border:none;padding:14px 36px;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:24px;transition:background 0.2s}
+.start-btn:hover{background:var(--gold-light)}
+.welcome .note{font-size:0.78rem;color:var(--text-light);margin-top:12px;font-style:italic}
+
+/* Progress */
+.progress-wrap{background:var(--cream-dark);padding:12px 24px;position:sticky;top:0;z-index:40;border-bottom:1px solid var(--green-light);display:none}
+.progress-inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.progress-label{font-size:0.78rem;color:var(--text-mid);font-weight:600;white-space:nowrap}
+.progress-track{flex:1;height:8px;background:var(--cream-dark);border-radius:4px;border:1px solid var(--green-light);overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:4px;transition:width 0.4s ease}
+
+/* Inventory Steps */
+.inv-step{display:none}
+.inv-step.active{display:block}
+.step-header{background:var(--green-deep);color:var(--cream);padding:16px 20px;border-radius:10px 10px 0 0;display:flex;align-items:center;gap:12px}
+.step-icon{font-size:1.4rem}
+.step-name{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600}
+.step-desc{font-size:0.8rem;color:rgba(250,247,240,0.65);margin-top:2px}
+.step-body{background:var(--white);border:1px solid var(--green-light);border-top:none;border-radius:0 0 10px 10px;padding:20px}
+
+.tool-entry{background:var(--cream);border:1px solid var(--cream-dark);border-radius:8px;padding:14px;margin-bottom:10px}
+.tool-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+.tool-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:8px}
+.tool-field label{font-size:0.78rem;font-weight:600;color:var(--green);display:block;margin-bottom:3px}
+.tool-field input,.tool-field select{width:100%;padding:7px 10px;border:1px solid var(--cream-dark);border-radius:6px;font-family:inherit;font-size:0.85rem}
+.tool-field input:focus,.tool-field select:focus{outline:none;border-color:var(--gold)}
+.remove-tool{font-size:0.78rem;color:var(--red);cursor:pointer;border:none;background:none;font-weight:600;padding:4px 0}
+.remove-tool:hover{text-decoration:underline}
+.add-tool-btn{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);color:var(--green-deep);border:none;padding:8px 16px;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;margin-top:4px;transition:background 0.2s}
+.add-tool-btn:hover{background:var(--gold-pale)}
+.common-tools{margin-top:12px;padding-top:12px;border-top:1px solid var(--cream-dark)}
+.common-label{font-size:0.78rem;color:var(--text-light);margin-bottom:6px}
+.common-chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:5px 12px;border-radius:20px;border:1px solid var(--cream-dark);font-size:0.78rem;cursor:pointer;transition:all 0.15s;background:var(--white)}
+.chip:hover{border-color:var(--gold);background:var(--gold-pale)}
+
+.nav-row{display:flex;justify-content:space-between;margin-top:24px;gap:12px}
+.nav-btn{padding:10px 24px;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;border:none;transition:all 0.2s}
+.btn-back{background:var(--cream-dark);color:var(--text-mid)}
+.btn-back:hover{background:var(--cream)}
+.btn-next{background:var(--gold);color:var(--green-deep)}
+.btn-next:hover{background:var(--gold-light)}
+
+/* Results */
+#results{display:none}
+.results-section{margin-bottom:24px}
+.rs-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--green-deep);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+
+/* Cost Summary */
+.cost-hero{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+.cost-card{background:var(--white);border:1px solid var(--green-light);border-radius:10px;padding:16px;text-align:center}
+.cost-card .val{font-size:1.6rem;font-weight:700;color:var(--green-deep)}
+.cost-card .lbl{font-size:0.78rem;color:var(--text-light);margin-top:2px}
+.cost-table{width:100%;border-collapse:collapse;font-size:0.88rem;background:var(--white);border-radius:8px;overflow:hidden;border:1px solid var(--green-light)}
+.cost-table th{background:var(--green-deep);color:var(--cream);padding:8px 12px;text-align:left;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.3px}
+.cost-table td{padding:8px 12px;border-bottom:1px solid var(--cream-dark)}
+.cost-table tr:last-child td{border-bottom:none}
+.status-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.72rem;font-weight:700;text-transform:uppercase}
+.badge-critical{background:var(--red-light);color:var(--red)}
+.badge-useful{background:var(--blue-light);color:var(--blue)}
+.badge-unused{background:var(--orange-light);color:var(--orange)}
+
+/* Visual Map */
+.map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.map-area{background:var(--white);border:1px solid var(--green-light);border-radius:10px;padding:16px;position:relative}
+.map-area-title{font-weight:700;font-size:0.85rem;color:var(--green-deep);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.map-tool{font-size:0.82rem;padding:4px 0;color:var(--text-mid);display:flex;align-items:center;gap:6px}
+.map-tool .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-critical{background:var(--red)}
+.dot-useful{background:var(--blue)}
+.dot-unused{background:var(--orange)}
+.map-empty{font-size:0.8rem;color:var(--red);font-style:italic;font-weight:500}
+.map-overlap{background:var(--orange-light);color:var(--orange);font-size:0.72rem;font-weight:700;padding:2px 8px;border-radius:4px;position:absolute;top:10px;right:10px}
+
+/* Findings */
+.finding-card{background:var(--white);border-radius:10px;border:1px solid var(--green-light);padding:16px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start}
+.finding-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px}
+.finding-type{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.type-overlap{color:var(--orange)}
+.type-gap{color:var(--red)}
+.type-risk{color:var(--red)}
+.type-savings{color:var(--green-mid)}
+.finding-text{font-size:0.88rem;color:var(--text-mid)}
+
+/* Migration Plan */
+.migration-card{background:var(--white);border:1px solid var(--green-light);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.mc-header{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer}
+.mc-priority{font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:4px;text-transform:uppercase;flex-shrink:0}
+.pri-1{background:var(--red-light);color:var(--red)}
+.pri-2{background:var(--orange-light);color:var(--orange)}
+.pri-3{background:var(--blue-light);color:var(--blue)}
+.mc-title{flex:1;font-weight:600;font-size:0.9rem}
+.mc-diff{font-size:0.78rem;color:var(--text-light);flex-shrink:0}
+.mc-details{padding:0 16px 14px;display:none}
+.mc-details.open{display:block}
+.mc-meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px}
+.mc-meta span{font-size:0.78rem;color:var(--text-light)}
+.mc-meta strong{color:var(--text-mid)}
+.mc-why{font-size:0.88rem;color:var(--text-mid);margin-bottom:10px}
+.mc-checklist{list-style:none;padding:0}
+.mc-checklist li{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:0.85rem}
+.mc-check{width:16px;height:16px;border:2px solid var(--green-mid);border-radius:4px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.mc-check.done{background:var(--green-mid);border-color:var(--green-mid)}
+.mc-check.done::after{content:'✓';color:var(--white);font-size:11px;font-weight:700}
+
+.results-footer{text-align:center;padding:24px;background:var(--green-deep);border-radius:10px;color:var(--cream)}
+.results-footer h3{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:6px}
+.results-footer p{font-size:0.88rem;color:rgba(250,247,240,0.7);max-width:480px;margin:0 auto 14px}
+.rf-buttons{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.rf-btn{padding:10px 28px;border-radius:8px;font-size:0.9rem;font-weight:700;cursor:pointer;border:none;transition:all 0.2s;text-decoration:none;display:inline-block}
+.rf-gold{background:var(--gold);color:var(--green-deep)}
+.rf-gold:hover{background:var(--gold-light)}
+.rf-outline{background:rgba(250,247,240,0.15);color:var(--cream);border:1px solid rgba(250,247,240,0.2)}
+.rf-outline:hover{background:rgba(250,247,240,0.25)}
+
+.site-footer{text-align:center;padding:20px;border-top:2px solid var(--gold);margin-top:32px}
+.site-footer .brand{font-family:'Playfair Display',serif;color:var(--green-deep);font-size:0.9rem;font-weight:600}
+.site-footer .tagline{font-size:0.78rem;color:var(--gold);font-style:italic;margin-top:2px}
+.site-footer .contact{font-size:0.78rem;color:var(--text-light);margin-top:4px}
+
+@media(max-width:600px){
+  .header-title{font-size:1.5rem}
+  .tool-row,.tool-row-3{grid-template-columns:1fr}
+  .cost-hero{grid-template-columns:1fr}
+  .map-grid{grid-template-columns:1fr}
+  .mc-meta{flex-direction:column;gap:4px}
+}
+@media print{
+  .progress-wrap,.nav-row,.add-tool-btn,.remove-tool,.common-tools,.start-btn,.rf-outline,.mc-check,.chip{display:none!important}
+  .site-header,.step-header,.mc-header,.map-area,.cost-table th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .mc-details{display:block!important}
+  body{font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">Michelle Townsend Consulting</div>
+    <h1 class="header-title">ToolMap</h1>
+    <p class="header-sub">Catalog your systems. See the overlaps. Build a plan to fix what is not working.</p>
+  </div>
+</header>
+
+<div id="welcome" class="container welcome">
+  <h2>Do you know what your organization is actually paying for?</h2>
+  <p>Most small nonprofits have tools layered on top of tools. Some are critical. Some nobody uses. Some do the same thing. But nobody has mapped it all out, so the subscriptions keep renewing and the workarounds keep piling up.</p>
+  <p>ToolMap walks you through your organization function by function. At the end, you get a full inventory, a visual map of your systems, a cost breakdown, and a prioritized plan for what to keep, replace, or retire.</p>
+  <div class="stat-row">
+    <div class="stat-card"><div class="num">~50%</div><div class="label">of nonprofits still run on spreadsheets for core ops</div></div>
+    <div class="stat-card"><div class="num">60%</div><div class="label">say budget is the top tech barrier</div></div>
+    <div class="stat-card"><div class="num">3+</div><div class="label">overlapping tools is typical</div></div>
+  </div>
+  <button class="start-btn" onclick="startInventory()">Map Your Systems</button>
+  <div class="note">Takes about 20 minutes. No account required. Nothing leaves your browser.</div>
+</div>
+
+<div id="progressBar" class="progress-wrap">
+  <div class="progress-inner">
+    <span class="progress-label" id="progressLabel">Area 1 of 8</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<div id="stepsContainer" class="container"></div>
+<div id="results" class="container"></div>
+
+<div class="site-footer">
+  <div class="brand">Michelle Townsend Consulting</div>
+  <div class="tagline">Organizational health for the organizations that need it most.</div>
+  <div class="contact">ivtownsend.michelle@gmail.com | 541-415-2460</div>
+</div>
+
+<script>
+const AREAS = [
+  {id:'org',icon:'🏢',name:'Your Organization',desc:'Basic info to personalize your report.',type:'info'},
+  {id:'comms',icon:'📧',name:'Communications',desc:'Email, messaging, newsletters, social media.',
+    common:['Gmail','Google Workspace','Microsoft 365 / Outlook','Mailchimp','Constant Contact','Slack','Microsoft Teams','Zoom','Facebook','Instagram','Hootsuite','Buffer','Canva']},
+  {id:'donor',icon:'💝',name:'Donor and Fundraising',desc:'Donor tracking, giving, campaigns, thank-you letters.',
+    common:['Bloomerang','Little Green Light','DonorPerfect','Network for Good','PayPal','Stripe','GoFundMe','GiveButter','Spreadsheet (manual tracking)','No system in place']},
+  {id:'finance',icon:'💰',name:'Finance and Accounting',desc:'Bookkeeping, payroll, budgets, expense tracking.',
+    common:['QuickBooks','Wave','Xero','FreshBooks','ADP','Gusto','Spreadsheet (manual tracking)','Paper records','No system in place']},
+  {id:'programs',icon:'📊',name:'Program Delivery and Data',desc:'Client tracking, case management, program outcomes, reporting.',
+    common:['Salesforce','Apricot','ETO','Survey Monkey','Google Forms','Spreadsheet (manual tracking)','Paper records','No system in place']},
+  {id:'files',icon:'📁',name:'File Storage and Documents',desc:'Where files live. Shared drives, cloud storage, local machines.',
+    common:['Google Drive','OneDrive','Dropbox','SharePoint','Box','USB drives','Local hard drives','Paper files','No central system']},
+  {id:'hr',icon:'👥',name:'HR and Operations',desc:'Staff records, scheduling, time tracking, onboarding.',
+    common:['BambooHR','Gusto','Deputy','When I Work','Google Calendar','Spreadsheet (manual tracking)','Paper records','No system in place']},
+  {id:'website',icon:'🌐',name:'Website and Public Presence',desc:'Your website, domain, hosting, online listings.',
+    common:['WordPress','Squarespace','Wix','GoDaddy','Google Sites','GitHub Pages','Netlify','No website','Facebook page only']}
+];
+
+let inventory = {};
+let orgInfo = {};
+
+function startInventory(){
+  document.getElementById('welcome').style.display='none';
+  document.getElementById('progressBar').style.display='block';
+  buildSteps();
+  showStep(0);
+}
+
+function buildSteps(){
+  const c=document.getElementById('stepsContainer');
+  c.innerHTML='';
+  AREAS.forEach((area,ai)=>{
+    let h=`<div class="inv-step" id="step-${ai}">
+      <div class="step-header"><span class="step-icon">${area.icon}</span><div><div class="step-name">${area.name}</div><div class="step-desc">${area.desc}</div></div></div>
+      <div class="step-body">`;
+
+    if(area.type==='info'){
+      h+=`<div class="tool-row"><div class="tool-field"><label>Organization name</label><input type="text" id="org-name" onchange="orgInfo.name=this.value"></div>
+        <div class="tool-field"><label>Number of staff</label><input type="text" id="org-size" placeholder="e.g. 8" onchange="orgInfo.size=this.value"></div></div>
+        <div class="tool-row"><div class="tool-field"><label>Annual operating budget (approximate)</label><input type="text" id="org-budget" placeholder="e.g. $350,000" onchange="orgInfo.budget=this.value"></div>
+        <div class="tool-field"><label>Who manages technology decisions?</label><input type="text" id="org-tech" placeholder="Name or title" onchange="orgInfo.techLead=this.value"></div></div>`;
+    } else {
+      if(!inventory[area.id]) inventory[area.id]=[];
+      h+=`<div id="tools-${area.id}"></div>
+        <button class="add-tool-btn" onclick="addTool('${area.id}')">+ Add a Tool</button>
+        <div class="common-tools"><div class="common-label">Common tools for this area (click to add):</div><div class="common-chips">`;
+      area.common.forEach(t=>{
+        h+=`<span class="chip" onclick="addToolWithName('${area.id}','${t.replace(/'/g,"\\'")}')">${t}</span>`;
+      });
+      h+=`</div></div>`;
+    }
+
+    h+=`</div><div class="nav-row">`;
+    if(ai>0) h+=`<button class="nav-btn btn-back" onclick="showStep(${ai-1})">Back</button>`;
+    else h+=`<div></div>`;
+    if(ai<AREAS.length-1) h+=`<button class="nav-btn btn-next" onclick="showStep(${ai+1})">Next Area</button>`;
+    else h+=`<button class="nav-btn btn-next" onclick="generateReport()">Generate My Report</button>`;
+    h+=`</div></div>`;
+    c.innerHTML+=h;
+  });
+}
+
+function showStep(idx){
+  document.querySelectorAll('.inv-step').forEach(el=>el.classList.remove('active'));
+  document.getElementById(`step-${idx}`).classList.add('active');
+  document.getElementById('progressFill').style.width=((idx)/AREAS.length*100)+'%';
+  document.getElementById('progressLabel').textContent=`Area ${idx+1} of ${AREAS.length}`;
+  window.scrollTo({top:0});
+}
+
+function addTool(areaId,prefill=''){
+  if(!inventory[areaId]) inventory[areaId]=[];
+  const idx=inventory[areaId].length;
+  inventory[areaId].push({name:prefill,users:'',cost:'',frequency:'monthly',status:'useful'});
+  renderTools(areaId);
+  if(prefill){
+    document.getElementById(`t-${areaId}-${idx}-name`).value=prefill;
+  }
+}
+
+function addToolWithName(areaId,name){
+  const existing=inventory[areaId]||[];
+  if(existing.some(t=>t.name===name)) return;
+  addTool(areaId,name);
+}
+
+function renderTools(areaId){
+  const wrap=document.getElementById(`tools-${areaId}`);
+  const tools=inventory[areaId]||[];
+  let h='';
+  tools.forEach((t,i)=>{
+    h+=`<div class="tool-entry" id="te-${areaId}-${i}">
+      <div class="tool-row"><div class="tool-field"><label>Tool name</label><input type="text" id="t-${areaId}-${i}-name" value="${t.name}" onchange="updateTool('${areaId}',${i},'name',this.value)"></div>
+      <div class="tool-field"><label>Who uses it?</label><input type="text" id="t-${areaId}-${i}-users" value="${t.users}" placeholder="e.g. All staff, ED only" onchange="updateTool('${areaId}',${i},'users',this.value)"></div></div>
+      <div class="tool-row-3"><div class="tool-field"><label>Monthly cost</label><input type="text" id="t-${areaId}-${i}-cost" value="${t.cost}" placeholder="e.g. $12 or Free" onchange="updateTool('${areaId}',${i},'cost',this.value)"></div>
+      <div class="tool-field"><label>Payment frequency</label><select onchange="updateTool('${areaId}',${i},'frequency',this.value)">
+        <option value="monthly"${t.frequency==='monthly'?' selected':''}>Monthly</option>
+        <option value="annual"${t.frequency==='annual'?' selected':''}>Annual</option>
+        <option value="free"${t.frequency==='free'?' selected':''}>Free</option>
+        <option value="included"${t.frequency==='included'?' selected':''}>Included in another tool</option></select></div>
+      <div class="tool-field"><label>How critical is it?</label><select onchange="updateTool('${areaId}',${i},'status',this.value)">
+        <option value="critical"${t.status==='critical'?' selected':''}>Critical. Cannot operate without it.</option>
+        <option value="useful"${t.status==='useful'?' selected':''}>Useful but not essential.</option>
+        <option value="unused"${t.status==='unused'?' selected':''}>Rarely or never used.</option></select></div></div>
+      <button class="remove-tool" onclick="removeTool('${areaId}',${i})">Remove this tool</button>
+    </div>`;
+  });
+  wrap.innerHTML=h;
+}
+
+function updateTool(areaId,idx,field,val){ inventory[areaId][idx][field]=val; }
+function removeTool(areaId,idx){ inventory[areaId].splice(idx,1); renderTools(areaId); }
+
+function parseCost(str){
+  if(!str) return 0;
+  const n=parseFloat(str.replace(/[^0-9.]/g,''));
+  return isNaN(n)?0:n;
+}
+
+function getMonthlyCost(t){
+  const c=parseCost(t.cost);
+  if(t.frequency==='annual') return c/12;
+  if(t.frequency==='free'||t.frequency==='included') return 0;
+  return c;
+}
+
+function generateReport(){
+  document.getElementById('stepsContainer').style.display='none';
+  document.getElementById('progressBar').style.display='none';
+  const out=document.getElementById('results');
+  out.style.display='block';
+
+  const allTools=[];
+  const areaTools={};
+  AREAS.forEach(a=>{
+    if(a.type==='info') return;
+    const tools=(inventory[a.id]||[]).filter(t=>t.name.trim());
+    areaTools[a.id]={area:a,tools};
+    tools.forEach(t=>allTools.push({...t,areaId:a.id,areaName:a.name,areaIcon:a.icon}));
+  });
+
+  let totalMonthly=0;
+  allTools.forEach(t=>{ totalMonthly+=getMonthlyCost(t); });
+  const totalAnnual=totalMonthly*12;
+  const toolCount=allTools.length;
+  const unusedTools=allTools.filter(t=>t.status==='unused');
+
+  // Overlaps: tools appearing in multiple areas
+  const toolAreas={};
+  allTools.forEach(t=>{
+    const key=t.name.toLowerCase().trim();
+    if(!toolAreas[key]) toolAreas[key]={name:t.name,areas:[]};
+    toolAreas[key].areas.push(t.areaName);
+  });
+  const multiAreaTools=Object.values(toolAreas).filter(t=>t.areas.length>1);
+
+  // Gaps: areas with no tools
+  const emptyAreas=AREAS.filter(a=>a.type!=='info'&&(!inventory[a.id]||inventory[a.id].filter(t=>t.name.trim()).length===0));
+
+  // Single-person dependencies
+  const singlePerson=allTools.filter(t=>{
+    if(!t.users) return false;
+    const u=t.users.toLowerCase();
+    return t.status==='critical'&&!u.includes('all')&&!u.includes('team')&&!u.includes('staff')&&!u.includes('everyone');
+  });
+
+  // Findings
+  const findings=[];
+  unusedTools.forEach(t=>{
+    findings.push({type:'savings',icon:'💰',text:`<strong>${t.name}</strong> in ${t.areaName} is marked as rarely or never used.${getMonthlyCost(t)>0?` It costs $${getMonthlyCost(t).toFixed(0)}/month. Consider canceling.`:' Consider removing it.'}`});
+  });
+  multiAreaTools.forEach(t=>{
+    findings.push({type:'overlap',icon:'🔄',text:`<strong>${t.name}</strong> is used across multiple areas: ${t.areas.join(', ')}. This is not necessarily a problem, but make sure it is intentional and that it is the right tool for all of those functions.`});
+  });
+  emptyAreas.forEach(a=>{
+    findings.push({type:'gap',icon:'⚠️',text:`<strong>${a.name}</strong> has no tools listed. This could mean you are handling this function manually, using paper, or it is covered by a tool you listed in another area. Either way, document it.`});
+  });
+  singlePerson.forEach(t=>{
+    findings.push({type:'risk',icon:'🚨',text:`<strong>${t.name}</strong> is critical and appears to be managed by a single person (${t.users}). If that person leaves, your organization could lose access or institutional knowledge. Document credentials and train a backup.`});
+  });
+
+  // Migration recommendations
+  const migrations=[];
+  unusedTools.forEach(t=>{
+    if(getMonthlyCost(t)>0){
+      migrations.push({pri:1,title:`Cancel or replace ${t.name}`,diff:'Easy',budget:`Save $${(getMonthlyCost(t)*12).toFixed(0)}/year`,timeline:'This week',
+        why:`${t.name} is marked as unused but costs $${getMonthlyCost(t).toFixed(0)}/month. That is $${(getMonthlyCost(t)*12).toFixed(0)} a year for something nobody is using.`,
+        checklist:['Confirm with staff that nobody depends on it','Export or back up any data stored in it','Cancel the subscription','Remove it from your inventory','Redirect the budget to a higher-priority need']});
+    }
+  });
+  singlePerson.forEach(t=>{
+    migrations.push({pri:1,title:`Document and cross-train on ${t.name}`,diff:'Easy',budget:'Free',timeline:'This month',
+      why:`${t.name} is critical to your operations and only ${t.users} knows how to use it. If they are unavailable, this function stops.`,
+      checklist:['Have the primary user document login credentials in your password manager','Write a one-page guide covering the most common tasks','Train at least one other person on basic operations','Store documentation in a shared location','Review every 6 months']});
+  });
+  emptyAreas.forEach(a=>{
+    migrations.push({pri:2,title:`Evaluate tools for ${a.name}`,diff:'Moderate',budget:'Varies ($0 to $50/month typical)',timeline:'Next 30 days',
+      why:`You have no system listed for ${a.name}. This likely means you are handling it manually or not at all. Determine if a tool would save time, reduce errors, or improve reporting.`,
+      checklist:['List what tasks this function involves','Estimate how many hours per week are spent on it manually','Research 2 to 3 tools that fit (start with free options)','Test one for 30 days before committing','Document your decision either way']});
+  });
+
+  const overlapAreas={};
+  Object.values(areaTools).forEach(({area,tools})=>{
+    if(tools.length>2){
+      const useful=tools.filter(t=>t.status!=='unused');
+      if(useful.length>2){
+        migrations.push({pri:2,title:`Consolidate tools in ${area.name}`,diff:'Moderate',budget:'Potential savings',timeline:'Next 60 days',
+          why:`You have ${useful.length} active tools in ${area.name}. Check whether some of these could be consolidated into fewer systems to reduce complexity and cost.`,
+          checklist:['List what each tool does that the others do not','Identify the one tool that covers the most needs','Determine what would be lost by dropping each of the others','If consolidation makes sense, plan the migration','Cancel redundant subscriptions after migration']});
+      }
+    }
+  });
+
+  migrations.sort((a,b)=>a.pri-b.pri);
+
+  // Build HTML
+  let html=`<div class="results-section">
+    <div class="rs-title">💰 Cost Summary</div>
+    <div class="cost-hero">
+      <div class="cost-card"><div class="val">${toolCount}</div><div class="lbl">total tools</div></div>
+      <div class="cost-card"><div class="val">$${totalMonthly.toFixed(0)}</div><div class="lbl">per month</div></div>
+      <div class="cost-card"><div class="val">$${totalAnnual.toFixed(0)}</div><div class="lbl">per year</div></div>
+    </div>`;
+
+  if(allTools.length>0){
+    html+=`<table class="cost-table"><thead><tr><th>Tool</th><th>Area</th><th>Status</th><th>Monthly Cost</th><th>Users</th></tr></thead><tbody>`;
+    allTools.sort((a,b)=>getMonthlyCost(b)-getMonthlyCost(a)).forEach(t=>{
+      const badge=t.status==='critical'?'badge-critical':t.status==='unused'?'badge-unused':'badge-useful';
+      html+=`<tr><td><strong>${t.name}</strong></td><td>${t.areaName}</td><td><span class="status-badge ${badge}">${t.status}</span></td><td>$${getMonthlyCost(t).toFixed(0)}</td><td>${t.users||'Not specified'}</td></tr>`;
+    });
+    html+=`</tbody></table>`;
+  }
+  html+=`</div>`;
+
+  // Visual Map
+  html+=`<div class="results-section"><div class="rs-title">🗺️ Systems Map</div><div class="map-grid">`;
+  AREAS.forEach(a=>{
+    if(a.type==='info') return;
+    const tools=(inventory[a.id]||[]).filter(t=>t.name.trim());
+    const hasOverlap=tools.length>2;
+    html+=`<div class="map-area">${hasOverlap?'<span class="map-overlap">'+tools.length+' tools</span>':''}
+      <div class="map-area-title">${a.icon} ${a.name}</div>`;
+    if(tools.length===0){
+      html+=`<div class="map-empty">No tools listed</div>`;
+    } else {
+      tools.forEach(t=>{
+        const dc=t.status==='critical'?'dot-critical':t.status==='unused'?'dot-unused':'dot-useful';
+        html+=`<div class="map-tool"><span class="dot ${dc}"></span>${t.name}</div>`;
+      });
+    }
+    html+=`</div>`;
+  });
+  html+=`</div></div>`;
+
+  // Findings
+  if(findings.length>0){
+    html+=`<div class="results-section"><div class="rs-title">🔍 Key Findings</div>`;
+    findings.forEach(f=>{
+      html+=`<div class="finding-card"><span class="finding-icon">${f.icon}</span><div><div class="finding-type type-${f.type}">${f.type}</div><div class="finding-text">${f.text}</div></div></div>`;
+    });
+    html+=`</div>`;
+  }
+
+  // Migration Plan
+  if(migrations.length>0){
+    html+=`<div class="results-section"><div class="rs-title">📋 Migration Plan</div>`;
+    migrations.forEach((m,i)=>{
+      html+=`<div class="migration-card"><div class="mc-header" onclick="toggleMC(${i})">
+        <span class="mc-priority pri-${m.pri}">${m.pri===1?'High Priority':m.pri===2?'Medium':'Low'}</span>
+        <span class="mc-title">${m.title}</span>
+        <span class="mc-diff">${m.diff}</span>
+      </div><div class="mc-details" id="mc-${i}">
+        <div class="mc-meta"><span>💰 <strong>${m.budget}</strong></span><span>⏱ <strong>${m.timeline}</strong></span><span>📐 <strong>${m.diff}</strong></span></div>
+        <div class="mc-why">${m.why}</div>
+        <ul class="mc-checklist">`;
+      m.checklist.forEach((c,ci)=>{
+        html+=`<li><div class="mc-check" id="mcc-${i}-${ci}" onclick="event.stopPropagation();this.classList.toggle('done')"></div>${c}</li>`;
+      });
+      html+=`</ul></div></div>`;
+    });
+    html+=`</div>`;
+  }
+
+  if(findings.length===0&&migrations.length===0){
+    html+=`<div class="results-section"><div class="rs-title">✅ Looking Good</div><p style="color:var(--text-mid)">No major overlaps, gaps, or risks detected based on what you entered. Review the systems map and cost table to make sure everything looks right. If it does, your tech stack is in decent shape.</p></div>`;
+  }
+
+  html+=`<div class="results-footer">
+    <h3>Want help making sense of this?</h3>
+    <p>I help small organizations untangle their systems and build a plan that actually fits their budget and capacity. Book a 2-hour working session and we will walk through your ToolMap results together.</p>
+    <div class="rf-buttons">
+      <button class="rf-btn rf-gold" onclick="window.print()">Print / Save as PDF</button>
+      <a class="rf-btn rf-outline" href="mailto:ivtownsend.michelle@gmail.com?subject=ToolMap%20Results%20-%20Book%20a%20Session">Email Michelle</a>
+    </div>
+  </div>`;
+
+  out.innerHTML=html;
+  window.scrollTo({top:0});
+}
+
+function toggleMC(i){document.getElementById(`mc-${i}`).classList.toggle('open')}
+</script>
+
+</body>
+</html>
