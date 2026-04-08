@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1B4332">
+<title>SafeBase — Org Security Checkup</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --green-deep:#1B4332;--green:#2D6A4F;--green-mid:#40916C;--green-light:#D8F3DC;
+  --gold:#C9A84C;--gold-light:#E8C96A;--gold-pale:#F5EDD6;
+  --cream:#FAF7F0;--cream-dark:#F0EAD8;--white:#FFFFFF;
+  --text-dark:#1A1A1A;--text-mid:#444444;--text-light:#888888;
+  --red:#DC2626;--red-light:#FEE2E2;--red-bg:#FEF2F2;
+  --orange:#EA580C;--orange-light:#FED7AA;--orange-bg:#FFF7ED;
+  --yellow:#CA8A04;--yellow-light:#FEF08A;--yellow-bg:#FEFCE8;
+  --score-green:#16A34A;
+}
+
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--text-dark);font-size:15px;line-height:1.6;min-height:100vh}
+
+/* ── Header ── */
+.site-header{background:linear-gradient(135deg,var(--green-deep),var(--green));color:var(--cream);position:relative;overflow:hidden}
+.site-header::before{content:'';display:block;height:4px;background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--gold))}
+.header-inner{max-width:800px;margin:0 auto;padding:20px 24px;text-align:center}
+.header-brand{font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.header-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;margin:6px 0 4px}
+.header-sub{font-size:0.9rem;color:rgba(250,247,240,0.7);max-width:500px;margin:0 auto}
+
+/* ── Container ── */
+.container{max-width:800px;margin:0 auto;padding:24px}
+
+/* ── Welcome Screen ── */
+.welcome{text-align:center;padding:48px 24px}
+.welcome h2{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--green-deep);margin-bottom:12px}
+.welcome p{color:var(--text-mid);max-width:560px;margin:0 auto 8px;font-size:0.95rem}
+.welcome .stat-row{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin:28px 0}
+.stat-card{background:var(--white);border:1px solid var(--green-light);border-radius:10px;padding:16px 20px;min-width:140px;flex:1;max-width:200px}
+.stat-card .num{font-size:1.8rem;font-weight:700;color:var(--green-deep)}
+.stat-card .label{font-size:0.78rem;color:var(--text-light);margin-top:2px}
+.start-btn{display:inline-block;background:var(--gold);color:var(--green-deep);border:none;padding:14px 36px;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:24px;transition:background 0.2s;letter-spacing:0.3px}
+.start-btn:hover{background:var(--gold-light)}
+.welcome .note{font-size:0.78rem;color:var(--text-light);margin-top:12px;font-style:italic}
+
+/* ── Progress Bar ── */
+.progress-wrap{background:var(--cream-dark);padding:12px 24px;position:sticky;top:0;z-index:40;border-bottom:1px solid var(--green-light)}
+.progress-inner{max-width:800px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.progress-label{font-size:0.78rem;color:var(--text-mid);font-weight:600;white-space:nowrap}
+.progress-track{flex:1;height:8px;background:var(--cream-dark);border-radius:4px;border:1px solid var(--green-light);overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:4px;transition:width 0.4s ease}
+
+/* ── Question Sections ── */
+.section-screen{display:none}
+.section-screen.active{display:block}
+.section-intro{background:var(--green-deep);color:var(--cream);padding:16px 20px;border-radius:10px 10px 0 0;display:flex;align-items:center;gap:12px}
+.section-icon{font-size:1.4rem}
+.section-name{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600}
+.section-desc{font-size:0.8rem;color:rgba(250,247,240,0.65);margin-top:2px}
+.questions-wrap{background:var(--white);border:1px solid var(--green-light);border-top:none;border-radius:0 0 10px 10px;padding:20px}
+
+.question{margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--cream-dark)}
+.question:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.q-text{font-weight:600;color:var(--green-deep);margin-bottom:10px;font-size:0.95rem}
+.q-help{font-size:0.78rem;color:var(--text-light);margin-bottom:10px;font-style:italic}
+
+.options{display:flex;flex-direction:column;gap:6px}
+.option{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;border:1px solid var(--cream-dark);cursor:pointer;transition:all 0.15s}
+.option:hover{border-color:var(--gold);background:var(--gold-pale)}
+.option.selected{border-color:var(--gold);background:var(--gold-pale);font-weight:500}
+.option input{display:none}
+.option .radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--text-light);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.option.selected .radio{border-color:var(--gold);background:var(--gold)}
+.option.selected .radio::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--white)}
+
+.nav-row{display:flex;justify-content:space-between;margin-top:24px;gap:12px}
+.nav-btn{padding:10px 24px;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;border:none;transition:all 0.2s}
+.btn-back{background:var(--cream-dark);color:var(--text-mid)}
+.btn-back:hover{background:var(--cream)}
+.btn-next{background:var(--gold);color:var(--green-deep)}
+.btn-next:hover{background:var(--gold-light)}
+.btn-next:disabled{opacity:0.4;cursor:not-allowed}
+
+/* ── Results ── */
+.results-screen{display:none}
+.results-screen.active{display:block}
+
+.score-hero{text-align:center;padding:32px 24px;background:var(--white);border-radius:12px;border:1px solid var(--green-light);margin-bottom:24px}
+.score-ring{width:160px;height:160px;margin:0 auto 16px;position:relative}
+.score-ring svg{transform:rotate(-90deg)}
+.score-ring .score-val{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2.4rem;font-weight:700}
+.score-label-text{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:600;margin-bottom:4px}
+.score-summary{font-size:0.9rem;color:var(--text-mid);max-width:480px;margin:0 auto}
+
+.breakdown{margin-bottom:24px}
+.breakdown h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--green-deep);margin-bottom:12px}
+.area-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--white);border:1px solid var(--green-light);border-radius:8px;margin-bottom:6px}
+.area-icon{font-size:1.1rem;flex-shrink:0}
+.area-name{flex:1;font-weight:500;font-size:0.9rem}
+.area-bar-wrap{width:120px;height:8px;background:var(--cream-dark);border-radius:4px;overflow:hidden;flex-shrink:0}
+.area-bar{height:100%;border-radius:4px;transition:width 0.6s ease}
+.area-pct{font-size:0.85rem;font-weight:700;width:40px;text-align:right;flex-shrink:0}
+
+.actions-section{margin-bottom:24px}
+.actions-section h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--green-deep);margin-bottom:4px}
+.actions-section .actions-sub{font-size:0.85rem;color:var(--text-light);margin-bottom:14px}
+
+.action-card{background:var(--white);border-radius:10px;border:1px solid var(--green-light);margin-bottom:10px;overflow:hidden;transition:all 0.2s}
+.action-header{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer}
+.action-risk{font-size:0.7rem;font-weight:700;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:0.5px;flex-shrink:0}
+.risk-high{background:var(--red-light);color:var(--red)}
+.risk-medium{background:var(--orange-light);color:var(--orange)}
+.risk-low{background:var(--yellow-light);color:var(--yellow)}
+.action-title{flex:1;font-weight:600;font-size:0.9rem}
+.action-check{width:22px;height:22px;border:2px solid var(--green-mid);border-radius:6px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.action-check.done{background:var(--green-mid);border-color:var(--green-mid)}
+.action-check.done::after{content:'✓';color:var(--white);font-size:13px;font-weight:700}
+.action-details{padding:0 16px 14px;display:none}
+.action-details.open{display:block}
+.action-meta{display:flex;gap:16px;margin-bottom:8px;flex-wrap:wrap}
+.action-meta span{font-size:0.78rem;color:var(--text-light)}
+.action-meta strong{color:var(--text-mid)}
+.action-steps{font-size:0.88rem;color:var(--text-mid);line-height:1.7}
+.action-steps li{margin-bottom:4px}
+
+.results-footer{text-align:center;padding:24px;background:var(--green-deep);border-radius:10px;color:var(--cream)}
+.results-footer h3{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:6px}
+.results-footer p{font-size:0.88rem;color:rgba(250,247,240,0.7);max-width:480px;margin:0 auto 14px}
+.results-footer .cta-btn{display:inline-block;background:var(--gold);color:var(--green-deep);border:none;padding:10px 28px;border-radius:8px;font-size:0.9rem;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.2s}
+.results-footer .cta-btn:hover{background:var(--gold-light)}
+.print-btn{display:inline-block;background:rgba(250,247,240,0.15);color:var(--cream);border:1px solid rgba(250,247,240,0.2);padding:10px 28px;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;margin-left:8px;transition:all 0.2s}
+.print-btn:hover{background:rgba(250,247,240,0.25)}
+
+.site-footer{text-align:center;padding:20px;border-top:2px solid var(--gold);margin-top:32px}
+.site-footer .brand{font-family:'Playfair Display',serif;color:var(--green-deep);font-size:0.9rem;font-weight:600}
+.site-footer .tagline{font-size:0.78rem;color:var(--gold);font-style:italic;margin-top:2px}
+.site-footer .contact{font-size:0.78rem;color:var(--text-light);margin-top:4px}
+
+@media(max-width:600px){
+  .header-title{font-size:1.5rem}
+  .stat-card{min-width:110px}
+  .area-bar-wrap{width:80px}
+  .action-meta{flex-direction:column;gap:4px}
+  .nav-btn{padding:10px 16px;font-size:0.85rem}
+}
+
+@media print{
+  .progress-wrap,.nav-row,.print-btn,.start-btn,.action-check{display:none!important}
+  .site-header,.section-intro,.action-header,.area-row,.score-hero{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .action-details{display:block!important}
+  body{font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">Michelle Townsend Consulting</div>
+    <h1 class="header-title">SafeBase</h1>
+    <p class="header-sub">A security checkup for your organization. Plain language. No tech background needed.</p>
+  </div>
+</header>
+
+<!-- WELCOME -->
+<div id="welcome" class="container welcome">
+  <h2>How secure is your organization?</h2>
+  <p>Most small nonprofits and community businesses know their security could be better. They just do not know how much better, or where to start.</p>
+  <p>This checkup takes about 10 minutes. You will answer questions about how your team works today. No technical knowledge required. At the end you will get a scored report with specific, prioritized steps you can take right away.</p>
+  <div class="stat-row">
+    <div class="stat-card"><div class="num">4/5</div><div class="label">nonprofits have no cybersecurity plan</div></div>
+    <div class="stat-card"><div class="num">467</div><div class="label">days average to discover a breach</div></div>
+    <div class="stat-card"><div class="num">60%</div><div class="label">attacked in the last two years</div></div>
+    <div class="stat-card"><div class="num">$2M</div><div class="label">average cost of a data breach</div></div>
+  </div>
+  <button class="start-btn" onclick="startAssessment()">Start Your Checkup</button>
+  <div class="note">No passwords or sensitive data will be collected. This is a self-assessment, not a system scan.</div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div id="progressBar" class="progress-wrap" style="display:none">
+  <div class="progress-inner">
+    <span class="progress-label" id="progressLabel">Section 1 of 6</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- QUESTION SECTIONS (generated by JS) -->
+<div id="questionsContainer" class="container" style="display:none"></div>
+
+<!-- RESULTS -->
+<div id="results" class="container results-screen"></div>
+
+<!-- FOOTER -->
+<div class="site-footer">
+  <div class="brand">Michelle Townsend Consulting</div>
+  <div class="tagline">Organizational health for the organizations that need it most.</div>
+  <div class="contact">ivtownsend.michelle@gmail.com | 541-415-2460</div>
+</div>
+
+<script>
+const SECTIONS = [
+  {
+    id: 'passwords', icon: '🔑', name: 'Passwords and Access',
+    desc: 'How your team logs in and who has access to what.',
+    questions: [
+      {
+        text: 'How does your organization manage passwords?',
+        help: 'Think about how staff log into email, donor databases, banking, social media, etc.',
+        options: [
+          { label: 'We use a password manager (like LastPass, 1Password, Bitwarden)', score: 3 },
+          { label: 'Some staff use a password manager, but it is not required', score: 2 },
+          { label: 'We have a shared document or spreadsheet with passwords', score: 1 },
+          { label: 'Each person manages their own passwords however they want', score: 0 }
+        ]
+      },
+      {
+        text: 'Does your organization use multi-factor authentication (MFA)?',
+        help: 'MFA means you need a second step to log in, like a code texted to your phone.',
+        options: [
+          { label: 'Yes, on all critical accounts (email, banking, donor database)', score: 3 },
+          { label: 'On some accounts but not all', score: 2 },
+          { label: 'Only where a service forces us to', score: 1 },
+          { label: 'No, or I am not sure what that is', score: 0 }
+        ]
+      },
+      {
+        text: 'When someone leaves the organization, how quickly is their access removed?',
+        help: 'Email, shared drives, software accounts, building access, etc.',
+        options: [
+          { label: 'Same day, using a documented offboarding checklist', score: 3 },
+          { label: 'Within a week, but there is no formal checklist', score: 2 },
+          { label: 'Eventually, when someone remembers', score: 1 },
+          { label: 'We have former staff who probably still have access', score: 0 }
+        ]
+      },
+      {
+        text: 'Do you know exactly who has admin access to your critical systems?',
+        help: 'Admin access means the ability to change settings, add or remove users, or delete data.',
+        options: [
+          { label: 'Yes, we have a documented list that is reviewed regularly', score: 3 },
+          { label: 'We have a general idea but it is not written down', score: 2 },
+          { label: 'One or two people probably know', score: 1 },
+          { label: 'No, we are not sure who has access to what', score: 0 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'devices', icon: '💻', name: 'Devices and Networks',
+    desc: 'The computers, phones, and connections your team uses for work.',
+    questions: [
+      {
+        text: 'Do staff use personal devices (phones, laptops, tablets) for work?',
+        help: 'Checking work email on a personal phone counts.',
+        options: [
+          { label: 'No, we provide dedicated work devices', score: 3 },
+          { label: 'Yes, but with clear security requirements (passcode, updates, etc.)', score: 2 },
+          { label: 'Yes, with no specific requirements', score: 1 },
+          { label: 'Yes, and we have no idea what devices staff are using', score: 0 }
+        ]
+      },
+      {
+        text: 'Are work computers and devices kept up to date with software updates?',
+        help: 'Operating system updates, browser updates, and app updates.',
+        options: [
+          { label: 'Yes, updates are applied automatically or within a week', score: 3 },
+          { label: 'Mostly, but some machines fall behind', score: 2 },
+          { label: 'Only when someone notices or something breaks', score: 1 },
+          { label: 'I am not sure if anyone manages updates', score: 0 }
+        ]
+      },
+      {
+        text: 'Does your organization use antivirus or endpoint protection?',
+        help: 'Software that detects malware, ransomware, or suspicious activity on computers.',
+        options: [
+          { label: 'Yes, on all work devices, centrally managed', score: 3 },
+          { label: 'Yes, but only on some devices or individually managed', score: 2 },
+          { label: 'We rely on whatever came with the operating system', score: 1 },
+          { label: 'No, or I am not sure', score: 0 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'data', icon: '📁', name: 'Data Storage and Handling',
+    desc: 'Where your organization keeps its information and who can get to it.',
+    questions: [
+      {
+        text: 'Where does your organization store sensitive files?',
+        help: 'Client records, donor data, financial documents, personnel files.',
+        options: [
+          { label: 'Cloud storage with access controls (Google Workspace, Microsoft 365, etc.)', score: 3 },
+          { label: 'A mix of cloud and local drives, with some access controls', score: 2 },
+          { label: 'On individual computers or USB drives', score: 1 },
+          { label: 'Wherever people happen to save them', score: 0 }
+        ]
+      },
+      {
+        text: 'Do you have a policy about what types of data can be shared outside the organization?',
+        help: 'For example, rules about emailing client information, sharing spreadsheets with funders, etc.',
+        options: [
+          { label: 'Yes, written and reviewed with staff', score: 3 },
+          { label: 'Informally understood but not written down', score: 2 },
+          { label: 'We handle it case by case', score: 1 },
+          { label: 'No, we have not discussed this', score: 0 }
+        ]
+      },
+      {
+        text: 'Do you know what sensitive data your organization collects and where it lives?',
+        help: 'Client names, addresses, SSNs, health info, donor records, financials.',
+        options: [
+          { label: 'Yes, we have a documented data inventory', score: 3 },
+          { label: 'We have a general sense but no formal inventory', score: 2 },
+          { label: 'Some staff probably know, but it is not centralized', score: 1 },
+          { label: 'No, we have not mapped this out', score: 0 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'backups', icon: '💾', name: 'Backups and Recovery',
+    desc: 'What happens if something goes wrong. Ransomware, hardware failure, accidental deletion.',
+    questions: [
+      {
+        text: 'Does your organization back up its critical data?',
+        help: 'Donor database, financial records, client files, website, email archives.',
+        options: [
+          { label: 'Yes, automatically, to a separate location, on a regular schedule', score: 3 },
+          { label: 'Yes, but manually or inconsistently', score: 2 },
+          { label: 'Some things are backed up but not everything critical', score: 1 },
+          { label: 'No, or I am not sure', score: 0 }
+        ]
+      },
+      {
+        text: 'Have you ever tested restoring data from a backup?',
+        help: 'A backup is only useful if you can actually get the data back when you need it.',
+        options: [
+          { label: 'Yes, we test restores at least once a year', score: 3 },
+          { label: 'We have done it once but not on a schedule', score: 2 },
+          { label: 'No, but we assume it works', score: 1 },
+          { label: 'No, and we would not know how', score: 0 }
+        ]
+      },
+      {
+        text: 'If your office computers were all destroyed tomorrow, could your organization keep running?',
+        help: 'Think about whether essential data and systems are accessible from other locations.',
+        options: [
+          { label: 'Yes, everything critical is in the cloud or backed up offsite', score: 3 },
+          { label: 'Mostly, but some important things would be lost', score: 2 },
+          { label: 'It would be very difficult', score: 1 },
+          { label: 'We would be in serious trouble', score: 0 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'email', icon: '📧', name: 'Email and Communication',
+    desc: 'Your biggest attack surface. Most breaches start with an email.',
+    questions: [
+      {
+        text: 'Has your staff received any training on recognizing phishing emails?',
+        help: 'Phishing is when someone sends a fake email pretending to be a trusted source to steal information.',
+        options: [
+          { label: 'Yes, we do training at least once a year', score: 3 },
+          { label: 'We have discussed it informally', score: 2 },
+          { label: 'We sent an article once', score: 1 },
+          { label: 'No, we have not covered this', score: 0 }
+        ]
+      },
+      {
+        text: 'Does your organization use professional email (like yourname@yourorg.org)?',
+        help: 'As opposed to free accounts like Gmail, Yahoo, or Outlook.com for official business.',
+        options: [
+          { label: 'Yes, everyone uses our organization domain', score: 3 },
+          { label: 'Most staff do, but some use personal accounts for work', score: 2 },
+          { label: 'We use a mix, no clear policy', score: 1 },
+          { label: 'We mostly use free personal email accounts', score: 0 }
+        ]
+      },
+      {
+        text: 'How does your team share sensitive information internally?',
+        help: 'Client info, passwords, financial data, personnel matters.',
+        options: [
+          { label: 'Through secure, encrypted channels with access controls', score: 3 },
+          { label: 'Through our regular work email or messaging, but carefully', score: 2 },
+          { label: 'However is fastest. Email, text, whatever.', score: 1 },
+          { label: 'We have not thought about this', score: 0 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'practices', icon: '👥', name: 'Staff Practices and Culture',
+    desc: 'The human side. Policies only work if people follow them.',
+    questions: [
+      {
+        text: 'Does your organization have any written security or data policies?',
+        help: 'Even a one-page document counts. Acceptable use, data handling, password requirements.',
+        options: [
+          { label: 'Yes, documented and reviewed with staff regularly', score: 3 },
+          { label: 'Yes, but it has not been updated or reviewed recently', score: 2 },
+          { label: 'We have informal expectations but nothing written', score: 1 },
+          { label: 'No written policies', score: 0 }
+        ]
+      },
+      {
+        text: 'Do new staff go through any security orientation when they join?',
+        help: 'Covering password expectations, data handling, what to do if something looks suspicious.',
+        options: [
+          { label: 'Yes, it is part of onboarding', score: 3 },
+          { label: 'We cover some things informally during their first week', score: 2 },
+          { label: 'Only if they ask', score: 1 },
+          { label: 'No, we do not cover security during onboarding', score: 0 }
+        ]
+      },
+      {
+        text: 'If a staff member clicked a suspicious link or thought their account was compromised, would they know what to do?',
+        help: 'Is there a clear process? Who do they tell? What steps do they take?',
+        options: [
+          { label: 'Yes, we have a documented incident response plan', score: 3 },
+          { label: 'They would probably tell a manager, but there is no formal plan', score: 2 },
+          { label: 'They would try to figure it out themselves', score: 1 },
+          { label: 'Most staff would not realize it was a problem', score: 0 }
+        ]
+      }
+    ]
+  }
+];
+
+const RECOMMENDATIONS = {
+  passwords: [
+    { trigger: [0,1], risk: 'high', title: 'Set up a password manager for your organization',
+      time: '2 to 3 hours', cost: 'Free (Bitwarden) to $3/user/month (1Password)',
+      steps: ['Choose a password manager. Bitwarden has a free tier for small teams.','Create an organization account and invite all staff.','Start with your five most critical accounts: email admin, banking, donor database, website, social media.','Set a policy: all work passwords go in the manager. No exceptions.','Schedule 30 minutes to walk staff through how to use it.'] },
+    { trigger: [0,1], risk: 'high', title: 'Enable multi-factor authentication on all critical accounts',
+      time: '1 to 2 hours', cost: 'Free',
+      steps: ['List every account that holds sensitive data or money: email, banking, donor tools, payroll.','Google the name of each service plus "enable MFA" or "enable two-factor authentication."','Set it up on each account. Most services walk you through it in settings.','Require all staff to do the same on their individual accounts.','Authenticator apps (Google Authenticator, Microsoft Authenticator) are more secure than text messages.'] },
+    { trigger: [0,1], risk: 'medium', title: 'Create an offboarding checklist for departing staff',
+      time: '1 hour to create', cost: 'Free',
+      steps: ['List every system staff have access to: email, cloud storage, databases, social media, physical keys.','Write a checklist that covers revoking access to each one.','Assign one person to own the offboarding process.','Run through the checklist the same day someone leaves. Not next week.','Review the checklist every time someone new is hired to make sure it still covers everything.'] },
+    { trigger: [0,1], risk: 'medium', title: 'Document who has admin access to every critical system',
+      time: '1 to 2 hours', cost: 'Free',
+      steps: ['List every system your org depends on: email, website, banking, donor database, social media, cloud storage.','For each one, log in and check who has admin or owner privileges.','Write it down in a shared document. Name, system, access level.','Remove access for anyone who should not have it anymore.','Review this list every quarter.'] }
+  ],
+  devices: [
+    { trigger: [0,1], risk: 'high', title: 'Set minimum security requirements for personal devices used for work',
+      time: '1 hour to write policy, 30 minutes per device to verify', cost: 'Free',
+      steps: ['Write a short policy: any device used for work email or files must have a passcode or biometric lock, automatic updates turned on, and a screen lock after 5 minutes.','Share it with all staff and have them confirm their devices meet the requirements.','If someone cannot meet the requirements, discuss whether the org can provide a device.','Revisit this every time a new person joins.'] },
+    { trigger: [0,1], risk: 'medium', title: 'Turn on automatic software updates on all work devices',
+      time: '15 to 30 minutes per device', cost: 'Free',
+      steps: ['On each work computer, go to system settings and turn on automatic updates for the operating system.','Do the same for web browsers (Chrome, Firefox, Edge all have auto-update settings).','Set a recurring calendar reminder to check for updates monthly in case anything got missed.','If a device is too old to receive updates, it is time to replace it. An unpatched machine is an open door.'] },
+    { trigger: [0,1], risk: 'medium', title: 'Install endpoint protection on all work devices',
+      time: '30 minutes per device', cost: 'Free (Windows Defender, built in) to $3-5/device/month',
+      steps: ['For Windows: make sure Windows Defender is turned on and up to date. It is already installed.','For Mac: consider a free tool like Malwarebytes for basic scanning.','Make sure real-time protection is turned on, not just manual scanning.','If budget allows, a managed solution like Bitdefender or CrowdStrike Falcon Go gives you a central dashboard.'] }
+  ],
+  data: [
+    { trigger: [0,1], risk: 'high', title: 'Move sensitive files off individual computers and into secure cloud storage',
+      time: '2 to 4 hours', cost: 'Free (Google Drive) to $6-12/user/month (Google Workspace, Microsoft 365)',
+      steps: ['Identify where sensitive files currently live: desktops, USB drives, personal laptops.','Choose a cloud platform with access controls. Google Workspace and Microsoft 365 both work.','Create a folder structure with clear permissions. Not everyone needs access to everything.','Migrate files to the cloud. Delete local copies of sensitive data once migration is verified.','Set a rule: no sensitive files stored on local machines or USB drives going forward.'] },
+    { trigger: [0,1], risk: 'medium', title: 'Create a simple data inventory',
+      time: '2 to 3 hours', cost: 'Free',
+      steps: ['Make a spreadsheet with these columns: type of data, where it is stored, who has access, how sensitive it is.','Walk through your operations: client intake, donations, finances, HR, communications.','For each area, write down what data you collect, where it goes, and who touches it.','Flag anything that is highly sensitive (SSNs, health data, financial accounts) and check that access is restricted.','Review and update this inventory every 6 months.'] },
+    { trigger: [0,1], risk: 'medium', title: 'Write a one-page data sharing policy',
+      time: '1 to 2 hours', cost: 'Free',
+      steps: ['Define what counts as sensitive data for your organization.','Write clear rules: what can be emailed, what requires encryption, what should never leave the org.','Include specific scenarios staff actually encounter: sending reports to funders, sharing client info with partners.','Review it with staff and post it where people can find it.','Make it part of onboarding for new hires.'] }
+  ],
+  backups: [
+    { trigger: [0,1], risk: 'high', title: 'Set up automatic backups for critical data',
+      time: '2 to 3 hours', cost: 'Free (if using cloud storage) to $5-10/month for dedicated backup',
+      steps: ['List what absolutely cannot be lost: donor database, financial records, client files, website content.','If you use cloud storage (Google Drive, OneDrive), confirm that version history is turned on.','For data not in the cloud, set up an automatic backup to a separate location. Backblaze ($7/month) or a second cloud drive.','Make sure backups run at least daily for critical data.','Store at least one backup copy somewhere separate from your main systems.'] },
+    { trigger: [0,1], risk: 'medium', title: 'Test your backup recovery process',
+      time: '1 to 2 hours', cost: 'Free',
+      steps: ['Pick one critical file or dataset.','Delete it from its primary location (or rename it temporarily).','Restore it from your backup.','Verify the restored version is complete and recent.','Document the steps so anyone on the team could do it in an emergency. If you cannot restore it, your backup is not working.'] }
+  ],
+  email: [
+    { trigger: [0,1], risk: 'high', title: 'Run a basic phishing awareness session with your team',
+      time: '30 to 60 minutes', cost: 'Free',
+      steps: ['Collect three to five real examples of phishing emails. Check your spam folder.','Show them to your team. Point out the red flags: urgency, misspelled URLs, requests for passwords, unexpected attachments.','Establish a rule: if something looks suspicious, do not click. Forward it to a designated person.','Do this at least once a year. Threats evolve. Your training should too.','Google "phishing quiz" for free interactive tools your team can practice with.'] },
+    { trigger: [0,1], risk: 'medium', title: 'Move to professional email on your organization domain',
+      time: '2 to 4 hours to set up, plus migration time', cost: '$6/user/month (Google Workspace) or $6/user/month (Microsoft 365)',
+      steps: ['Choose Google Workspace or Microsoft 365. Both include email, storage, and admin controls.','Register your domain (yourorg.org) if you do not already have one.','Set up accounts for each staff member.','Migrate important emails from old accounts.','Set a policy: all work communication uses the org email. Personal accounts are for personal use.'] },
+    { trigger: [0,1], risk: 'medium', title: 'Establish secure channels for sharing sensitive information',
+      time: '1 hour', cost: 'Free to $4/user/month',
+      steps: ['Decide what counts as sensitive: client data, financials, passwords, personnel matters.','Pick a secure channel. Signal (free) for quick messages. Your cloud platform shared drives for files.','Set a rule: sensitive information never goes over regular text message or personal email.','Make sure the secure channel is easy to use. If it is harder than texting, nobody will use it.'] }
+  ],
+  practices: [
+    { trigger: [0,1], risk: 'high', title: 'Write a one-page security policy',
+      time: '2 to 3 hours', cost: 'Free',
+      steps: ['Cover the basics: password requirements, data handling, acceptable use of devices, what to do if something goes wrong.','Keep it short. One page, plain language. If it is longer than that, nobody will read it.','Review it with all staff. Ask questions. Make sure everyone understands it.','Post it somewhere accessible: shared drive, break room, onboarding folder.','Review and update every 6 months or whenever something changes.'] },
+    { trigger: [0,1], risk: 'medium', title: 'Add security basics to your onboarding process',
+      time: '1 hour to create, 30 minutes per new hire', cost: 'Free',
+      steps: ['Write a short security checklist for new hires: set up password manager, enable MFA, review data policy, know who to contact if something looks wrong.','Walk through it during their first week. Do not just hand them a document.','Have them sign off that they have completed each item.','Include it in your onboarding folder so it does not get forgotten.'] },
+    { trigger: [0,1], risk: 'high', title: 'Create a simple incident response plan',
+      time: '1 to 2 hours', cost: 'Free',
+      steps: ['Define what counts as an incident: suspected phishing, compromised account, lost device, unauthorized access, ransomware.','For each type, write the first three things to do. Keep it simple.','Assign one person as the point of contact for all security concerns.','Post the plan where everyone can find it. Include the contact person phone number.','Practice it once. Walk through a scenario: "You clicked a link and now your email is sending messages you did not write. What do you do?"'] }
+  ]
+};
+
+let currentSection = 0;
+let answers = {};
+
+function startAssessment() {
+  document.getElementById('welcome').style.display = 'none';
+  document.getElementById('progressBar').style.display = 'block';
+  document.getElementById('questionsContainer').style.display = 'block';
+  buildSections();
+  showSection(0);
+}
+
+function buildSections() {
+  const c = document.getElementById('questionsContainer');
+  c.innerHTML = '';
+  SECTIONS.forEach((sec, si) => {
+    let html = `<div class="section-screen" id="section-${si}">
+      <div class="section-intro">
+        <span class="section-icon">${sec.icon}</span>
+        <div><div class="section-name">${sec.name}</div><div class="section-desc">${sec.desc}</div></div>
+      </div>
+      <div class="questions-wrap">`;
+    sec.questions.forEach((q, qi) => {
+      const key = `${si}-${qi}`;
+      html += `<div class="question"><div class="q-text">${q.text}</div>`;
+      if (q.help) html += `<div class="q-help">${q.help}</div>`;
+      html += `<div class="options">`;
+      q.options.forEach((opt, oi) => {
+        html += `<label class="option" id="opt-${key}-${oi}" onclick="selectOption(${si},${qi},${oi},${opt.score})">
+          <span class="radio"></span><span>${opt.label}</span></label>`;
+      });
+      html += `</div></div>`;
+    });
+    html += `</div><div class="nav-row">`;
+    if (si > 0) html += `<button class="nav-btn btn-back" onclick="showSection(${si-1})">Back</button>`;
+    else html += `<div></div>`;
+    if (si < SECTIONS.length - 1) {
+      html += `<button class="nav-btn btn-next" id="next-${si}" onclick="showSection(${si+1})">Next Section</button>`;
+    } else {
+      html += `<button class="nav-btn btn-next" id="next-${si}" onclick="showResults()">See My Results</button>`;
+    }
+    html += `</div></div>`;
+    c.innerHTML += html;
+  });
+}
+
+function selectOption(si, qi, oi, score) {
+  const key = `${si}-${qi}`;
+  answers[key] = { option: oi, score };
+  const q = SECTIONS[si].questions[qi];
+  q.options.forEach((_, i) => {
+    document.getElementById(`opt-${key}-${i}`).classList.remove('selected');
+  });
+  document.getElementById(`opt-${key}-${oi}`).classList.add('selected');
+}
+
+function showSection(idx) {
+  currentSection = idx;
+  document.querySelectorAll('.section-screen').forEach(el => el.classList.remove('active'));
+  document.getElementById(`section-${idx}`).classList.add('active');
+  const pct = ((idx) / SECTIONS.length * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Section ${idx + 1} of ${SECTIONS.length}`;
+  window.scrollTo({ top: 0 });
+}
+
+function calcScores() {
+  const scores = {};
+  let total = 0, maxTotal = 0;
+  SECTIONS.forEach((sec, si) => {
+    let secScore = 0, secMax = sec.questions.length * 3;
+    sec.questions.forEach((q, qi) => {
+      const key = `${si}-${qi}`;
+      if (answers[key]) secScore += answers[key].score;
+    });
+    scores[sec.id] = { score: secScore, max: secMax, pct: Math.round((secScore / secMax) * 100) };
+    total += secScore;
+    maxTotal += secMax;
+  });
+  scores._total = { score: total, max: maxTotal, pct: Math.round((total / maxTotal) * 100) };
+  return scores;
+}
+
+function getScoreColor(pct) {
+  if (pct >= 75) return 'var(--score-green)';
+  if (pct >= 50) return 'var(--yellow)';
+  if (pct >= 25) return 'var(--orange)';
+  return 'var(--red)';
+}
+
+function getScoreLabel(pct) {
+  if (pct >= 75) return 'Strong foundation. Keep it up.';
+  if (pct >= 50) return 'Decent start, but gaps need attention.';
+  if (pct >= 25) return 'Significant vulnerabilities. Time to act.';
+  return 'Critical gaps. Start with the basics today.';
+}
+
+function getScoreSummary(pct) {
+  if (pct >= 75) return 'Your organization has solid security practices in place. The recommendations below will help you close the remaining gaps and stay ahead of new threats.';
+  if (pct >= 50) return 'You have some good practices but there are areas that leave your organization exposed. The recommendations below are prioritized so you can focus on what matters most first.';
+  if (pct >= 25) return 'Your organization has meaningful security gaps that put your data and your people at risk. The good news is that many of the most impactful fixes are free and take less than a day. Start with the high-priority items below.';
+  return 'Your organization is significantly exposed. This is not unusual for small orgs and it is fixable. The recommendations below start with the most critical, lowest-cost actions. Pick one and do it this week.';
+}
+
+function buildRecommendations(scores) {
+  const recs = [];
+  SECTIONS.forEach((sec) => {
+    const areaScore = scores[sec.id];
+    if (areaScore.pct < 75 && RECOMMENDATIONS[sec.id]) {
+      RECOMMENDATIONS[sec.id].forEach(r => {
+        recs.push({ ...r, area: sec.name, areaIcon: sec.icon });
+      });
+    }
+  });
+  const riskOrder = { high: 0, medium: 1, low: 2 };
+  recs.sort((a, b) => riskOrder[a.risk] - riskOrder[b.risk]);
+  return recs;
+}
+
+function showResults() {
+  document.getElementById('questionsContainer').style.display = 'none';
+  document.getElementById('progressBar').style.display = 'none';
+  const r = document.getElementById('results');
+  r.classList.add('active');
+
+  const scores = calcScores();
+  const totalPct = scores._total.pct;
+  const color = getScoreColor(totalPct);
+  const circumference = 2 * Math.PI * 68;
+  const dashOffset = circumference - (circumference * totalPct / 100);
+
+  let html = `
+    <div class="score-hero">
+      <div class="score-ring">
+        <svg width="160" height="160" viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="68" fill="none" stroke="var(--cream-dark)" stroke-width="12"/>
+          <circle cx="80" cy="80" r="68" fill="none" stroke="${color}" stroke-width="12"
+            stroke-dasharray="${circumference}" stroke-dashoffset="${dashOffset}" stroke-linecap="round"/>
+        </svg>
+        <div class="score-val" style="color:${color}">${totalPct}</div>
+      </div>
+      <div class="score-label-text" style="color:${color}">${getScoreLabel(totalPct)}</div>
+      <div class="score-summary">${getScoreSummary(totalPct)}</div>
+    </div>
+
+    <div class="breakdown">
+      <h3>Score by Area</h3>`;
+
+  SECTIONS.forEach(sec => {
+    const s = scores[sec.id];
+    const c = getScoreColor(s.pct);
+    html += `<div class="area-row">
+      <span class="area-icon">${sec.icon}</span>
+      <span class="area-name">${sec.name}</span>
+      <div class="area-bar-wrap"><div class="area-bar" style="width:${s.pct}%;background:${c}"></div></div>
+      <span class="area-pct" style="color:${c}">${s.pct}%</span>
+    </div>`;
+  });
+
+  html += `</div>`;
+
+  const recs = buildRecommendations(scores);
+  if (recs.length > 0) {
+    html += `<div class="actions-section">
+      <h3>Your Action Plan</h3>
+      <div class="actions-sub">Prioritized by risk level. Start at the top. Check them off as you go.</div>`;
+
+    recs.forEach((r, i) => {
+      html += `<div class="action-card" id="action-${i}">
+        <div class="action-header" onclick="toggleAction(${i})">
+          <span class="action-risk risk-${r.risk}">${r.risk}</span>
+          <span class="action-title">${r.title}</span>
+          <div class="action-check" id="check-${i}" onclick="event.stopPropagation();toggleCheck(${i})"></div>
+        </div>
+        <div class="action-details" id="details-${i}">
+          <div class="action-meta">
+            <span>⏱ <strong>${r.time}</strong></span>
+            <span>💰 <strong>${r.cost}</strong></span>
+            <span>📂 <strong>${r.area}</strong></span>
+          </div>
+          <ol class="action-steps">`;
+      r.steps.forEach(s => { html += `<li>${s}</li>`; });
+      html += `</ol></div></div>`;
+    });
+    html += `</div>`;
+  }
+
+  html += `
+    <div class="results-footer">
+      <h3>Need help getting started?</h3>
+      <p>Your report identified specific gaps. I help small organizations close them. No jargon, no $50,000 contracts. Just practical help at your pace.</p>
+      <a class="cta-btn" href="mailto:ivtownsend.michelle@gmail.com?subject=SafeBase%20Results%20-%20Need%20Help">Email Michelle</a>
+      <button class="print-btn" onclick="window.print()">Print Report</button>
+    </div>`;
+
+  r.innerHTML = html;
+  window.scrollTo({ top: 0 });
+}
+
+function toggleAction(i) {
+  document.getElementById(`details-${i}`).classList.toggle('open');
+}
+
+function toggleCheck(i) {
+  const el = document.getElementById(`check-${i}`);
+  el.classList.toggle('done');
+}
+</script>
+
+</body>
+</html>
