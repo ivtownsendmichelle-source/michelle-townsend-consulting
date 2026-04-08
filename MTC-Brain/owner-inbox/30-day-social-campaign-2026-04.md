@@ -502,7 +502,8 @@ I put together a free one-page AI use policy starter. It is not a template you w
 
 No email required. No sign-up. Just a resource because I think every small org deserves a starting point.
 
-Link in the comments.
+Grab it here:
+https://missionfirst.ai/MTC-Brain/owner-inbox/ai-policy-starter.html
 
 INSTAGRAM:
 I made a free one-page AI policy starter for small orgs.
@@ -511,7 +512,8 @@ Five questions. One meeting. A basic policy by the time you walk out.
 
 No sign-up. No email list. Just a starting point because every org deserves one.
 
-Link in bio.
+Link in bio:
+https://missionfirst.ai/MTC-Brain/owner-inbox/ai-policy-starter.html
 
 #AIPolicy #SmallNonprofit #NonprofitTech
 
