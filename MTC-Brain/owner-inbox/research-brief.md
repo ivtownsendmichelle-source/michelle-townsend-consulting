@@ -13,7 +13,7 @@
 The options are thin. There is no established cleaning company in Cave Junction that specializes in elderly or disabled clients.
 
 - **Redwood Cleaning Service** (Facebook-based, Cave Junction). General residential cleaning. No mention of senior specialization. Limited online presence.
-- **Homeaglow** lists 49 independent cleaners in the Cave Junction area. Average rate: ~$24.50/hr. These are gig-platform cleaners, not specialized services. No screening for working with elderly or disabled clients.
+- **Homeaglow** lists approximately 43 independent cleaners in the Cave Junction area (count fluctuates). These are gig-platform cleaners, not specialized services. No screening for working with elderly or disabled clients. Average cost for a house cleaner in Cave Junction is ~$24.50/hr per Care.com.
 - **Dano's Cleaning** and **Garcia Cleaning** appear in local reviews. Both are general residential cleaners. No senior or disability focus.
 - **Care.com** lists individual housekeepers but none with stated elderly/disability specialization in Cave Junction.
 
@@ -26,8 +26,8 @@ More options exist, but none own the elderly/disabled niche outright.
 - **Clean Works** (cleanworksgrantspass.com). General residential and commercial cleaning. Offers a 10% senior discount. No specialized elderly/disability services described.
 - **Jade Cleaning** (jadecleaning.com). Residential, commercial, and deep cleaning. Mentions "deep cleaning services for seniors" in marketing copy but does not describe a specialized program. Serves Grants Pass, Medford, Ashland, Rogue River. Hours: M-F 7am-6pm. No weekend availability. Phone: 530-572-1038.
 - **Clean Freaks** (cleanfreaks.net / gpcleanfreaks.com). Maid service in Grants Pass. Home and business cleaning. No senior specialization mentioned.
-- **Homeaglow** lists 30 cleaners in Grants Pass. Average rate: ~$19.96/hr.
-- **Care.com** lists 28 local house cleaners in Grants Pass.
+- **Homeaglow** lists approximately 52 cleaners in Grants Pass (count fluctuates). Average cost for a house cleaner in Grants Pass is ~$19.96/hr per Care.com.
+- **Care.com** lists approximately 24 local house cleaners in Grants Pass (count fluctuates).
 
 Bottom line: Some Grants Pass companies mention seniors in their copy, but no one has built their brand around it. Senior cleaning is a checkbox, not a specialty.
 
@@ -50,11 +50,11 @@ A business that does all three would be the only one of its kind in the Illinois
 ### Josephine County (source: U.S. Census Bureau, American Community Survey)
 
 - **Total population:** ~87,591 (2026 estimate)
-- **Median age:** 47.3 years (well above national median of ~38)
+- **Median age:** 47.3 years (well above national median of 39.1)
 - **Population 65+:** ~27% (~23,999 people). National average is 16%. This county is significantly older.
 - **Households with someone 65+ living alone:** 16.1% of all households
 - **Rural population:** 43.1% of county residents live in rural areas
-- **Median household income:** $60,098 (below Oregon median of ~$76,000)
+- **Median household income:** $60,098 (well below Oregon median of ~$83,000)
 - **Poverty rate:** 15.6% (national average: 12.4%)
 - **Largest demographic in poverty:** Women ages 55-64, followed by men 55-64
 
@@ -147,10 +147,10 @@ Google My Business and Facebook are the two most important platforms for local d
 - **Mobility-aware cleaning** (cleaning around walkers, wheelchairs, medical equipment)
 - **Consistency of cleaner** (seniors need to see the same face, not a rotating crew)
 - **Flexible scheduling** for medical appointments, caregiver coordination
-- **Rural coverage.** Neither operates in Cave Junction. Nearest Molly Maid is in Medford. MaidPro has no Southern Oregon location.
+- **Rural coverage.** Neither operates in Cave Junction. Molly Maid may serve the Medford area but has no confirmed standalone Southern Oregon office. MaidPro has no Southern Oregon location (only Oregon franchise, in Beaverton, is now closed).
 - **Coordination with care teams** (family members, case managers, AAA referral partners)
 
-**Maid on Call** is a niche national brand that does specialize in elderly/disabled cleaning (including meal assistance, wheelchair cleaning, mobility support). But they are not in Oregon. Their model proves the concept but does not serve this market.
+**Maid on Call** is a niche national brand that does specialize in elderly/disabled cleaning (including meal assistance, wheelchair cleaning, mobility support). No evidence of Maid on Call operating in Oregon. Their model proves the concept but does not appear to serve this market.
 
 A local business that combines cleaning, organization, and genuine understanding of elderly/disabled needs would own a space that no national chain is filling in Josephine County.
 
