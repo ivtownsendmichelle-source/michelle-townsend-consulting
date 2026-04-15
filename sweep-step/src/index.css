@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-cream: #F5F1E8;
+  --color-ink: #1A1A1A;
+  --color-oxblood: #7A1F2B;
+  --color-violet: #6B2FBF;
+  --color-acid: #9FD53D;
+  --color-ochre: #D4A52A;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
+
+@font-face {
+  font-family: 'Fraunces';
+  src: url('/fonts/Fraunces-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+body {
+  @apply bg-cream text-ink font-body antialiased;
+  min-height: 100dvh;
+}
