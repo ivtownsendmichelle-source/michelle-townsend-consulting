@@ -14,12 +14,34 @@ export default function PinGate({ store, onWipe, children }) {
   const [lockoutRemaining, setLockoutRemaining] = useState(0);
   const [showWipeConfirm, setShowWipeConfirm] = useState(false);
   const timerRef = useRef(null);
+  const backgroundTimeRef = useRef(null);
 
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (!unlocked) return;
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        backgroundTimeRef.current = Date.now();
+      } else if (backgroundTimeRef.current) {
+        const elapsed = Date.now() - backgroundTimeRef.current;
+        if (elapsed > 5 * 60 * 1000) {
+          setUnlocked(false);
+          setPin('');
+          setAttempts(0);
+        }
+        backgroundTimeRef.current = null;
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [unlocked]);
 
   function startLockout() {
     setLockedOut(true);
