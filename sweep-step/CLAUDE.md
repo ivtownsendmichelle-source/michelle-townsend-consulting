@@ -1,142 +1,48 @@
 # Sweep Step
 
-A progressive web app for people working the 12 steps, starting with the 4th Step. Mobile-first. Installable. Offline-capable. Built for the non-traditional recovery crowd. LGBTQ+ inclusive in voice, design, and structure — not as decoration.
-
-## Layer Roadmap
-
-### Layer 1 (current)
-Onboarding, PIN lock, sobriety tracker + milestones, 4th Step inventories (Resentments, Fears, Sex Inventory, Harms), Pim companion stages 1-4, export to JSON and plain text.
-
-### Layer 2 (future)
-Meeting log, gratitude journal, phone list, daily reflection, Google Sheets sync, Pim stages 5-6.
-
-### Layer 3 (future)
-Step progress tracker, promises checklist, Pim stage 7.
+A mobile-first PWA for people in 12-step recovery. Inclusive, non-traditional, dark wellness aesthetic. LGBTQ+ representation woven naturally throughout. No frameworks — vanilla HTML, CSS, JavaScript.
 
 ## Tech Stack
 
-- React 19 + Vite 6
-- React Router v6
-- Tailwind CSS v4 (custom design system via @theme in index.css, no tailwind.config.js)
-- Workbox via vite-plugin-pwa (offline-first)
-- Vitest + React Testing Library
-- localStorage for all user data — no backend, no analytics, no external calls
-- Netlify for deploy
+- Vanilla HTML/CSS/JS — no build step, no frameworks
+- localStorage for all data — no backend, no accounts
+- PWA: manifest.json + service-worker.js for offline + home screen install
+- Google Fonts: Inter (body) + Cinzel (headings)
+- Google Sheets public URL import for phone list
+
+## File Structure
+
+```
+/index.html           — SPA shell, all screens as sections
+/manifest.json        — PWA manifest
+/service-worker.js    — Cache-first offline strategy
+/css/style.css        — Full dark theme, Pip CSS animations, 1900+ lines
+/js/storage.js        — localStorage abstraction
+/js/quotes.js         — 35 daily quotes, 12 steps/traditions/concepts rotation
+/js/pip.js            — Pip character scoring, stages, rendering
+/js/inventory.js      — 4th Step resentment inventory (4 columns)
+/js/fears.js          — Fear inventory with chaining
+/js/sex-inventory.js  — Relationship/sex inventory
+/js/steps.js          — 12 Step progress tracker
+/js/community.js      — Phone list, Google Sheets import, meeting log
+/js/me.js             — Settings, milestones, gratitude, export/import
+/js/app.js            — Router, nav, modal, harms aggregation, boot
+/icons/               — PWA icons (192, 512)
+```
+
+## localStorage Keys
+
+All prefixed `sweepstep_`: inventory, fears, sex, harms, steps, meetings, contacts, gratitude, settings, pip.
 
 ## Key Decisions
 
-### Name
-**Sweep Step.** The broom is the metaphor. Pim carries a broom.
+- **Pip** is the companion character, built entirely in CSS. 4 growth stages based on score. Gender-fluid, no face that reads as gendered.
+- **Higher Power** language: user chooses their own HP name in Settings, used throughout via `Storage.getSettings().hpName`.
+- **Gender-neutral language** everywhere. "Sponsor or support person", "partner or person", never gendered assumptions.
+- **Dark mode only**. Accent color switchable: violet (default), teal, gold.
+- **Inventory** follows Big Book Awakening 4th Step guide: 4 columns (person, causes, 7 areas of self with fears, my part), plus fear chaining and harms aggregation.
+- **Export/Import** as JSON backup — user's only backup option.
 
-### Pim (the companion)
-- Pim is a dust creature that grows as the user does the work.
-- Hand-drawn style SVG, slightly imperfect, charming. Fluid in identity — no gendered design cues.
-- Stage 1: Pile of dust (default)
-- Stage 2: Dust with two small eyes (first inventory entry saved)
-- Stage 3: Dust bunny with a broom bristle (10 total entries OR 3+ entries in one section)
-- Stage 4: Small fuzzy creature holding a tiny broom (all 4 sections have entries AND 25+ total) — Layer 1 cap
-- Stages 5-7 reserved for Layer 2/3. Stage logic in `src/utils/pimStage.js` supports extension.
-- Neglect: dust particles accumulate around (not on) Pim after 3/7/14 days of inactivity. Message at 14 days: "Pim's been waiting. No rush." Never guilt. Never sad. Never death.
-- Tap messages rotate: "Pim is here." "Pim sees you." etc. When neglected 3+ days: "Pim's been waiting."
-- Breathing animation (subtle scale) always active.
+## Voice
 
-### PIN Lock
-- 4-6 digit numeric, hashed locally with a salted djb2 variant (`src/store/pin.js`)
-- Required on every app open and after 5 minutes in background
-- 5 wrong attempts: 60-second lockout
-- 10 wrong attempts: wipe confirmation screen → erases all data
-- No "forgot PIN" link. No recovery. User warned at setup with mandatory "I understand" checkbox.
-
-### Higher Power Language
-User chooses during onboarding. Options:
-- Higher Power
-- God
-- G.O.D. (Group Of Drunks)
-- The Universe
-- Nature
-- The Group
-- Custom free text
-- Skip (uses neutral framing: "something larger than yourself")
-
-The chosen term replaces `{{HP}}` everywhere the worksheet says "God."
-
-### Dual Guidance Pattern
-Each inventory section shows:
-1. **Original guidance** — AA worksheet voice, shown by default in a styled callout
-2. **"Learn more" toggle** — expands a rewritten modern, inclusive version. Same information, different voice. No clinical AA language, no assumed gender, no assumed faith path. HP term inserted where relevant.
-
-Both versions are in `src/data/guidance.js`. The `insertHP()` function handles substitution.
-
-### Inventory Structure
-All 4 follow the same component pattern: `GuidanceBox` + `InventoryEntryForm` + `InventoryEntryList`.
-
-**Resentments** (4 columns): resentfulAt, cause, affects (checkboxes + other), myPart (checkboxes + other)
-**Fears**: fear, why, selfCause, hpDirection
-**Sex Inventory**: whom, whatIDid, aroused, myFault, shouldHaveDone
-**Harms**: person, whatIDid, howAffected, amendsType (select: Direct/Indirect/Living)
-
-### Sobriety Milestones
-Calculated from sobriety date: 24h, 30d, 60d, 90d, 6mo, 9mo, 1yr, then yearly.
-Milestone hit → Pim reacts, chip appears, message: "[N] days. You're here." Quiet dignity.
-
-### Export
-- JSON: full store, re-importable
-- Plain text: formatted by section, numbered entries, dates, printable
-- Both via Blob download. Filename: `sweep-step-export-YYYY-MM-DD.json|txt`
-
-## Design System
-
-### Colors
-- Background: cream `#F5F1E8`
-- Primary text: ink `#1A1A1A`
-- Accent 1: oxblood `#7A1F2B`
-- Accent 2: electric violet `#6B2FBF`
-- Accent 3: acid green `#9FD53D`
-- Accent 4: warm ochre `#D4A52A`
-
-No gradients. No rainbows. Inclusivity is in the boldness and unexpected pairings.
-
-### Typography
-- Display/headers: Fraunces (variable, self-hosted)
-- Body: Inter (variable, self-hosted)
-- Inventory entry text: body font, slightly larger for readability during emotional work
-
-### Voice
-- Direct. Warm. Not soft. Not clinical.
-- No exclamation points except milestone moments.
-- No emoji in UI (Pim's expressions are visual).
-- Never assume gender, faith, or relationship structure.
-
-### Layout
-- Mobile-first, breakpoints up to tablet. Not optimized for desktop.
-- Generous whitespace — the 4th Step is heavy work. Room to breathe.
-- Tap targets minimum 44px.
-- WCAG AA contrast minimum.
-
-## localStorage Schema
-
-```js
-{
-  version: 1,
-  user: { pronouns, higherPowerTerm, sobrietyDate, pinHash, onboardingComplete },
-  pim: { stage, lastInteraction, dustLevel },
-  inventories: { resentments: [], fears: [], sex: [], harms: [] },
-  // Reserved Layer 2: meetings, gratitude, phoneList, dailyReflection
-  // Reserved Layer 3: stepProgress, promises
-}
-```
-
-Key: `"sweep-step"` in localStorage.
-
-## Implementation Plan
-
-Full plan with 15 tasks and ~80 steps:
-`docs/superpowers/plans/2026-04-14-sweep-step-layer1.md`
-
-## Session Log
-
-### 2026-04-14 — Initial planning + scaffold
-- Created implementation plan (15 tasks, Layer 1 full scope)
-- Created this CLAUDE.md as source of truth
-- Execution method: subagent-driven development
-- Task 1 complete: project scaffolded with Vite 6 (pinned for vite-plugin-pwa compat), React 19, Tailwind v4, PWA manifest. Fraunces font is placeholder, Inter downloaded. Build verified.
+Direct. Warm. Not soft. Not clinical. Never assumes gender, faith, or relationship structure.
