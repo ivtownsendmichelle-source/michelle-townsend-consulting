@@ -377,7 +377,7 @@
     .hero-inner {
       position: relative;
       z-index: 1;
-      padding: 72px 0;
+      padding: 72px 0 48px;
     }
 
     .hero-eyebrow {
@@ -440,28 +440,6 @@
       color: #b8b8b0;
     }
 
-    /* ── HERO FLOATING WORDS ─────────────────────────────── */
-    @keyframes floatWord {
-      0%   { transform: translate(0px, 0px);   opacity: 0.35; }
-      100% { transform: translate(20px, -15px); opacity: 0.55; }
-    }
-
-    .hero-words {
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .hw {
-      position: absolute;
-      color: #C8A850;
-      font-family: var(--mono);
-      font-weight: 400;
-      letter-spacing: 0.05em;
-      white-space: nowrap;
-    }
 
     /* ── STATS ────────────────────────────────────────────── */
     #stats {
@@ -472,6 +450,7 @@
       border-top: 1px solid rgba(201,168,48,0.3);
       border-bottom: 1px solid rgba(201,168,48,0.3);
       isolation: isolate;
+      text-align: center;
     }
 
     /* Grain texture overlay */
@@ -491,116 +470,43 @@
       z-index: 1;
     }
 
-    .stats-row {
-      display: grid;
-      grid-template-columns: 1.6fr 1fr;
-      gap: 0;
-      align-items: start;
-    }
-
-    /* Counter takes the full left column */
-    .stat-counter {
-      padding: 40px;
-      border: 1px solid rgba(201,168,48,0.2);
-      background: rgba(201,168,48,0.03);
-      margin-right: 32px;
-    }
-
     .stat-live-label {
+      display: inline-block;
       font-family: var(--mono);
       font-size: 0.625rem;
       font-weight: 500;
       letter-spacing: 0.3em;
       color: #c9a830;
       text-transform: uppercase;
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    /* Right column: stack the three small stats */
-    .stats-right {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      padding-left: 0;
-    }
-
-    .stat {
-      padding: 24px;
-      border: 1px solid rgba(201,168,48,0.2);
-      background: rgba(201,168,48,0.03);
+      margin-bottom: 24px;
+      border: 1px solid rgba(201,168,48,0.4);
+      padding: 4px 14px;
     }
 
     .stat-num {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 3rem;
+      font-size: clamp(72px, 14vw, 120px);
       font-weight: 700;
       color: #C8A850;
       line-height: 1;
-      margin-bottom: 14px;
-    }
-
-    .stats-right .stat-num {
-      font-family: 'Space Grotesk', sans-serif !important;
-      font-size: 56px !important;
-      font-weight: 700 !important;
-      color: #C8A850 !important;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
     }
 
     .stat-label {
       font-family: var(--mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.06em;
-      color: #888;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--cream);
       line-height: 1.65;
       text-transform: uppercase;
+      font-variant-caps: small-caps;
     }
 
-    .stat-counter .stat-num {
-      font-size: clamp(4rem, 8vw, 7.5rem);
-      font-weight: 700;
-      color: #d4b438;
-      letter-spacing: -0.03em;
-      line-height: 1;
-      margin-bottom: 22px;
-    }
-
-    @media (max-width: 900px) {
-      .stats-row {
-        grid-template-columns: 1fr;
-        gap: 0;
+    @media (max-width: 660px) {
+      #stats {
+        padding: 64px 0;
       }
-
-      .stat-counter {
-        padding: 32px;
-        margin-right: 0;
-        margin-bottom: 16px;
-        text-align: center;
-      }
-
-      .stat-counter .stat-num {
-        font-size: clamp(4rem, 14vw, 6.5rem);
-      }
-
-      .stats-right {
-        padding: 0;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 16px;
-      }
-
-      .stats-right .stat {
-        flex: 1 1 140px;
-      }
-    }
-
-    @media (max-width: 500px) {
-      .stats-right {
-        flex-direction: column;
-        gap: 36px;
-      }
-
-      .stat { text-align: center; }
     }
 
     /* ── DARK SECTION ─────────────────────────────────────── */
@@ -665,7 +571,7 @@
 
     /* ── WHO I SERVE / WHAT I DO ─────────────────────────── */
     .two-col-section {
-      padding: 80px 40px;
+      padding: 96px 40px;
       background: #0a0a0a;
     }
 
@@ -674,23 +580,26 @@
       margin: 0 auto;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 32px;
+      gap: 48px;
     }
 
     .two-col-box {
-      border: 1px solid #C8A850;
-      padding: 40px;
-      background: #111;
+      border: none;
+      border-left: 1px solid #C8A850;
+      padding: 8px 0 8px 32px;
+      background: rgba(255,255,255,0.02);
     }
 
     .two-col-label {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 11px;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.22em;
       color: #C8A850;
-      margin: 0 0 28px 0;
-      padding-bottom: 16px;
-      border-bottom: 1px solid #C8A850;
+      text-transform: uppercase;
+      font-variant-caps: small-caps;
+      margin: 0 0 24px 0;
+      padding: 0;
+      border: none;
     }
 
     .two-col-list {
@@ -703,18 +612,34 @@
       font-family: 'Space Grotesk', sans-serif;
       font-size: 16px;
       color: #F5F0E8;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(200, 168, 80, 0.15);
+      padding: 8px 0;
+      border: none;
       line-height: 1.5;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
     }
 
-    .two-col-list li:last-child {
-      border-bottom: none;
+    .two-col-list li::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      min-width: 5px;
+      border-radius: 50%;
+      background: #C8A850;
+      position: relative;
+      top: -1px;
     }
 
     @media (max-width: 768px) {
+      .two-col-section {
+        padding: 48px 24px;
+      }
+
       .two-col-inner {
         grid-template-columns: 1fr;
+        gap: 40px;
       }
     }
 
@@ -722,25 +647,6 @@
     #contact {
       position: relative;
       overflow: hidden;
-    }
-
-    #contact::before {
-      content: "LET'S TALK";
-      position: absolute;
-      top: 50%;
-      left: 0;
-      width: 100%;
-      transform: translateY(-50%);
-      text-align: center;
-      font-family: var(--display);
-      font-size: 15vw;
-      font-weight: 700;
-      color: rgba(201, 168, 48, 0.025);
-      white-space: nowrap;
-      pointer-events: none;
-      user-select: none;
-      line-height: 1;
-      z-index: 0;
     }
 
     #contact > * {
@@ -942,40 +848,6 @@
 
 <!-- ── HERO ─────────────────────────────────────────────── -->
 <section id="hero">
-  <!-- Floating background words -->
-  <div class="hero-words" aria-hidden="true">
-    <span class="hw" style="left:8%;top:22%;font-size:13px;animation:floatWord 35s ease-in-out 0s infinite alternate">organizational health</span>
-    <span class="hw" style="left:55%;top:14%;font-size:15px;animation:floatWord 28s ease-in-out 1.5s infinite alternate">compliance</span>
-    <span class="hw" style="left:72%;top:38%;font-size:24px;animation:floatWord 22s ease-in-out 3s infinite alternate">resilience</span>
-    <span class="hw" style="left:19%;top:63%;font-size:13px;animation:floatWord 38s ease-in-out 0.5s infinite alternate">bylaws</span>
-    <span class="hw" style="left:41%;top:78%;font-size:16px;animation:floatWord 25s ease-in-out 7s infinite alternate">succession</span>
-    <span class="hw" style="left:83%;top:55%;font-size:14px;animation:floatWord 32s ease-in-out 4.5s infinite alternate">infrastructure</span>
-    <span class="hw" style="left:32%;top:31%;font-size:13px;animation:floatWord 20s ease-in-out 9s infinite alternate">risk</span>
-    <span class="hw" style="left:62%;top:88%;font-size:13px;animation:floatWord 40s ease-in-out 2s infinite alternate">institutional knowledge</span>
-    <span class="hw" style="left:15%;top:45%;font-size:16px;animation:floatWord 27s ease-in-out 6s infinite alternate">accountability</span>
-    <span class="hw" style="left:78%;top:20%;font-size:13px;animation:floatWord 34s ease-in-out 8s infinite alternate">documentation</span>
-    <span class="hw" style="left:47%;top:52%;font-size:17px;animation:floatWord 23s ease-in-out 1s infinite alternate">workflow</span>
-    <span class="hw" style="left:28%;top:84%;font-size:15px;animation:floatWord 36s ease-in-out 5.5s infinite alternate">consent</span>
-    <span class="hw" style="left:91%;top:73%;font-size:17px;animation:floatWord 30s ease-in-out 3.5s infinite alternate">protection</span>
-    <span class="hw" style="left:5%;top:71%;font-size:20px;animation:floatWord 26s ease-in-out 10s infinite alternate">security</span>
-    <span class="hw" style="left:63%;top:8%;font-size:21px;animation:floatWord 21s ease-in-out 4s infinite alternate">service</span>
-    <span class="hw" style="left:36%;top:95%;font-size:17px;animation:floatWord 39s ease-in-out 7.5s infinite alternate">data governance</span>
-    <span class="hw" style="left:88%;top:12%;font-size:18px;animation:floatWord 24s ease-in-out 0.5s infinite alternate">transparency</span>
-    <span class="hw" style="left:21%;top:18%;font-size:21px;animation:floatWord 31s ease-in-out 9.5s infinite alternate">oversight</span>
-    <span class="hw" style="left:74%;top:65%;font-size:17px;animation:floatWord 37s ease-in-out 2.5s infinite alternate">stewardship</span>
-    <span class="hw" style="left:44%;top:42%;font-size:13px;animation:floatWord 29s ease-in-out 6.5s infinite alternate">sustainability</span>
-    <span class="hw" style="left:11%;top:89%;font-size:15px;animation:floatWord 33s ease-in-out 1s infinite alternate">data privacy</span>
-    <span class="hw" style="left:57%;top:28%;font-size:16px;animation:floatWord 22s ease-in-out 8.5s infinite alternate">capacity</span>
-    <span class="hw" style="left:82%;top:82%;font-size:24px;animation:floatWord 40s ease-in-out 3s infinite alternate">purpose</span>
-    <span class="hw" style="left:38%;top:60%;font-size:22px;animation:floatWord 26s ease-in-out 5s infinite alternate">impact</span>
-    <span class="hw" style="left:68%;top:48%;font-size:19px;animation:floatWord 35s ease-in-out 7s infinite alternate">community</span>
-    <span class="hw" style="left:25%;top:74%;font-size:18px;animation:floatWord 20s ease-in-out 9.5s infinite alternate">belonging</span>
-    <span class="hw" style="left:50%;top:16%;font-size:28px;animation:floatWord 38s ease-in-out 0s infinite alternate">trust</span>
-    <span class="hw" style="left:6%;top:37%;font-size:17px;animation:floatWord 24s ease-in-out 4s infinite alternate">dignity</span>
-    <span class="hw" style="left:92%;top:34%;font-size:17px;animation:floatWord 30s ease-in-out 6s infinite alternate">AI policy</span>
-    <span class="hw" style="left:16%;top:56%;font-size:16px;animation:floatWord 27s ease-in-out 2s infinite alternate">mission drift</span>
-    <span class="hw" style="left:77%;top:92%;font-size:18px;animation:floatWord 33s ease-in-out 8s infinite alternate">the foundation</span>
-  </div>
   <!-- Dot grid — hero only -->
   <div class="hero-dots" aria-hidden="true">
     <div class="dots-layer"></div>
@@ -998,46 +870,22 @@
 </section>
 
 <!-- ── STATS ─────────────────────────────────────────────── -->
-<!-- SVG grain filter — hidden, referenced by CSS -->
-<svg width="0" height="0" style="position:absolute">
-  <defs>
-    <filter id="grain" x="0%" y="0%" width="100%" height="100%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" result="noise"/>
-      <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
-      <feBlend in="SourceGraphic" in2="grayNoise" mode="overlay" result="blended"/>
-      <feComposite in="blended" in2="SourceGraphic" operator="in"/>
-    </filter>
-  </defs>
-</svg>
-
 <section id="stats">
-  <div class="wrap-wide">
-    <div class="stats-row">
-
-      <div class="stat stat-counter reveal">
-        <span class="stat-live-label">Live</span>
-        <div class="stat-num" id="hours-counter">0</div>
-        <div class="stat-label">hours of being human</div>
-      </div>
-
-      <div class="stats-right">
-        <div class="stat reveal">
-          <div class="stat-num">20+</div>
-          <div class="stat-label">years inside mission-driven organizations</div>
-        </div>
-
-        <div class="stat reveal">
-          <div class="stat-num" style="font-size: 56px; font-weight: 700; color: #C8A850; font-family: 'Space Grotesk', sans-serif;">1</div>
-          <div class="stat-label">planet we all share</div>
-        </div>
-
-        <div class="stat reveal">
-          <div class="stat-num" style="font-size: 56px; font-weight: 700; color: #C8A850; font-family: 'Space Grotesk', sans-serif;">&infin;</div>
-          <div class="stat-label">making the world around me a better place</div>
-        </div>
-      </div>
-
-    </div>
+  <!-- SVG grain filter — hidden, referenced by CSS -->
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <filter id="grain" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" result="noise"/>
+        <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+        <feBlend in="SourceGraphic" in2="grayNoise" mode="overlay" result="blended"/>
+        <feComposite in="blended" in2="SourceGraphic" operator="in"/>
+      </filter>
+    </defs>
+  </svg>
+  <div class="wrap reveal">
+    <span class="stat-live-label">Live</span>
+    <div class="stat-num" id="hours-counter">0</div>
+    <div class="stat-label">hours of being human</div>
   </div>
 </section>
 
@@ -1161,7 +1009,7 @@
       <a href="tel:5414152460" class="contact-phone">541-415-2460</a>
       <span class="contact-location">Southern Oregon's Illinois Valley. Working with organizations everywhere.</span>
     </div>
-    <a href="mailto:hello@missionfirst.ai" class="btn">Let's talk</a>
+    <a href="mailto:hello@missionfirst.ai" class="btn">Email me</a>
   </div>
 </section>
 
