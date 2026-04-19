@@ -26,3 +26,9 @@ MTC-Brain/owner-inbox/
 MTC-Brain/builds/
 MTC-Brain/projects/
 MTC-Brain/resources/
+
+# Catch-all patterns for anything marked private
+**/private/
+**/_private/
+*.private.md
+*-private.md
