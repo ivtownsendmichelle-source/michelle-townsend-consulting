@@ -1,2 +1,28 @@
 # Internal strategy files (not for public repo)
 MTC-Brain/internal/
+
+# Claude Code working directories
+.claude/
+.claire/
+
+# Word temp files
+~$*
+
+# Windows junk
+*.lnk
+Thumbs.db
+.DS_Store
+
+# Node
+node_modules/
+
+# Environment files
+.env
+.env.local
+*.key
+
+# Internal Maxwell inbox and agent system (local only, never public)
+MTC-Brain/owner-inbox/
+MTC-Brain/builds/
+MTC-Brain/projects/
+MTC-Brain/resources/
