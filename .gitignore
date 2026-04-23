@@ -32,3 +32,10 @@ MTC-Brain/resources/
 **/_private/
 *.private.md
 *-private.md
+# MTC-Brain now lives outside this repo
+MTC-Brain/
+
+# OFMA-Brain moved out to top level
+OFMA-Brain/
+# Claude Code worktree cruft
+.claire/
