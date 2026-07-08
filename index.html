@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Michelle Townsend. Fractional Chief AI Officer.</title>
-  <meta name="description" content="Michelle Townsend is a Fractional Chief AI Officer for mission-driven organizations. Two decades inside nonprofits, food banks, and community groups. Based in Southern Oregon.">
+  <title>Mission First. AI Governance for Mission-Driven Organizations.</title>
+  <meta name="description" content="Mission First is Michelle Fradin's Fractional Chief AI Officer practice for mission-driven organizations. Two decades inside nonprofits, food banks, and community groups. Based in Southern Oregon.">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Michelle Townsend | Fractional Chief AI Officer">
+  <meta property="og:title" content="Mission First | Fractional Chief AI Officer for Mission-Driven Organizations">
   <meta property="og:description" content="AI governance and organizational health consulting for rural nonprofits, food banks, and mission-driven organizations. Based in Southern Oregon, serving clients nationwide.">
   <meta property="og:url" content="https://www.missionfirst.ai">
   <meta property="og:type" content="website">
@@ -15,7 +15,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Michelle Townsend | Fractional Chief AI Officer">
+  <meta name="twitter:title" content="Mission First | Fractional Chief AI Officer for Mission-Driven Organizations">
   <meta name="twitter:description" content="AI governance and organizational health consulting for rural nonprofits, food banks, and mission-driven organizations.">
   <meta name="twitter:image" content="https://www.missionfirst.ai/michelle-advocacy.jpg">
 
@@ -603,6 +603,78 @@
       .stat { text-align: center; }
     }
 
+    /* ── MISSION FIRST WORDMARK LOCKUP ────────────────────── */
+    .mf-wordmark {
+      font-family: var(--display);
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      font-variant-caps: normal;
+      color: var(--cream);
+    }
+    .mf-wordmark b { font-weight: 700; letter-spacing: 0.05em; }
+    .mf-wordmark i { font-style: normal; color: var(--gold); }
+
+    /* ── FREE TOOLS SECTION ───────────────────────────────── */
+    .tools-lede {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      color: #b3b2a6;
+      max-width: 56ch;
+      margin-bottom: 44px;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .tool-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 28px 26px 24px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.02);
+      text-decoration: none;
+      transition: border-color 0.25s ease-out, transform 0.25s ease-out, background 0.25s ease-out;
+    }
+    .tool-card:hover, .tool-card:focus-visible {
+      border-color: rgba(201, 168, 48, 0.55);
+      background: rgba(201, 168, 48, 0.04);
+      transform: translateY(-3px);
+      outline: none;
+    }
+    .tool-num {
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      color: rgba(201, 168, 48, 0.55);
+    }
+    .tool-card h3 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1.02rem;
+      color: var(--cream);
+      letter-spacing: 0.01em;
+    }
+    .tool-card p {
+      font-family: var(--serif);
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: #a3a297;
+      flex-grow: 1;
+    }
+    .tool-go {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .tool-go::after { content: ' \2192'; }
+    @media (max-width: 820px) {
+      .tools-grid { grid-template-columns: 1fr; }
+    }
+
     /* ── DARK SECTION ─────────────────────────────────────── */
     .s-dark {
       position: relative;
@@ -926,12 +998,12 @@
 <!-- ── NAV ──────────────────────────────────────────────── -->
 <nav id="nav">
   <div class="nav-inner">
-    <span class="nav-name">Michelle Townsend</span>
+    <span class="nav-name mf-wordmark"><b>MISSION</b>&nbsp;FIRST<i>.</i></span>
     <ul class="nav-links" id="nav-links">
       <li><a href="#work">Work</a></li>
       <li><a href="#who">Who</a></li>
       <li><a href="#story">Story</a></li>
-      <li><a href="#promise">Promise</a></li>
+      <li><a href="#tools">Tools</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
@@ -1122,7 +1194,7 @@
     <div class="prose">
       <p>I don't know exactly what I see that others don't. I just know I've always seen it.</p>
       <figure class="story-photo">
-        <img src="michelle-advocacy.jpg" alt="Michelle Townsend testifying before the Oregon Legislature">
+        <img src="michelle-advocacy.jpg" alt="Michelle Fradin testifying before the Oregon Legislature">
         <figcaption class="story-photo-caption">Testifying before the Oregon Legislature on HB2979</figcaption>
       </figure>
       <p>I have spent two decades inside organizations of every shape and size. Nonprofits. Private sector. Community groups. Farms. Food banks. Businesses trying to reach more people with less. I have been in the rooms where decisions get made. I have watched what happens when nobody asks the hard questions in time.</p>
@@ -1148,8 +1220,37 @@
   </div>
 </section>
 
+<!-- ── FREE TOOLS ─────────────────────────────────────────── -->
+<section id="tools" class="s-surface">
+  <div class="wrap-wide reveal">
+    <span class="label">Free tools</span>
+    <div class="gold-rule"></div>
+    <p class="tools-lede">Start without talking to anyone. Three self-serve checkups, free, no account, nothing leaves your browser.</p>
+    <div class="tools-grid">
+      <a class="tool-card" href="/readiness/">
+        <span class="tool-num">01</span>
+        <h3>AI Readiness Checkup</h3>
+        <p>Ten questions on governance, data, and where AI is already moving through your organization. Five minutes, instant results.</p>
+        <span class="tool-go">Take the checkup</span>
+      </a>
+      <a class="tool-card" href="/security-checkup/">
+        <span class="tool-num">02</span>
+        <h3>SafeBase Security Checkup</h3>
+        <p>A plain-language security self-assessment. Where you're vulnerable and what to fix first, no tech background needed.</p>
+        <span class="tool-go">Check your security</span>
+      </a>
+      <a class="tool-card" href="/toolmap/">
+        <span class="tool-num">03</span>
+        <h3>ToolMap</h3>
+        <p>Catalog every system you pay for, see the overlaps, and leave with a keep-replace-retire plan.</p>
+        <span class="tool-go">Map your systems</span>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- ── CONTACT ────────────────────────────────────────────── -->
-<section id="contact" class="s-surface">
+<section id="contact" class="s-dark">
   <div class="wrap reveal">
     <span class="label">Let's talk</span>
     <div class="gold-rule"></div>
@@ -1169,9 +1270,9 @@
 <footer>
   <div class="wrap">
     <p class="footer-quote">You are not behind. You are building.</p>
-    <p class="footer-name">Michelle Townsend Consulting</p>
-    <p class="footer-domain">missionfirst.ai</p>
-    <p class="footer-copy">&copy; 2026</p>
+    <p class="footer-name"><span class="mf-wordmark"><b>MISSION</b>&nbsp;FIRST<i>.</i></span></p>
+    <p class="footer-domain">missionfirst.ai &middot; <a href="/readiness/" style="color:inherit;">AI readiness checkup</a> &middot; <a href="/security-checkup/" style="color:inherit;">Security checkup</a> &middot; <a href="/toolmap/" style="color:inherit;">ToolMap</a></p>
+    <p class="footer-copy">&copy; 2026 Mission First</p>
   </div>
 </footer>
 

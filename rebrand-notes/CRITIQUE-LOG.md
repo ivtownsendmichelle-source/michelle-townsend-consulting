@@ -23,3 +23,14 @@ Per DESIGN-PLAYBOOK §11: defect lists per loop, kept as the ship-gate record.
 ## /security-checkup/ (SafeBase port) and /toolmap/ (port)
 
 **Round 1:** token re-theme + font swap + identity strings verified by grep (zero "Townsend|ivtownsend|Playfair|Inter'"); screenshots at 1440/375 reviewed — coherent under the new identity; ToolMap `theme-color` meta still old green → fixed to #1a1a18. No further defects at the port quality bar (content unchanged by design).
+
+## / (main site pass)
+
+**Round 1:** reveal-animation blind spot found in harness (full-page shots missed IntersectionObserver sections) → harness now scroll-throughs + forces `.reveal.visible`. Tools grid squeezed in 760px wrap → moved to wrap-wide. Contact switched s-surface→s-dark to keep band rhythm around the new Tools section.
+**Round 2:** re-render + element zooms (nav wordmark, tools grid) clean. Identity strings verified below.
+
+## /intake/ (revival port)
+
+**Round 1 (after subagent port):** header band still rendered old-brand GREEN — three hardcoded greens outside :root (linear-gradient #243f20, rgba(45,90,39,*), rgba(30,61,26,*)) → all remapped to charcoal/gold family. Em dashes in visible copy (voice rule) → replaced throughout. Re-render: charcoal header, on brand.
+**Accepted at port scope:** legacy emoji pin/globe/clock/lock pills and rural-button emoji (predate the rebrand; content pass deferred).
+**Operator note:** form posts via FormSubmit.co to hello@missionfirst.ai — first live submission triggers a one-time activation email to that inbox.
